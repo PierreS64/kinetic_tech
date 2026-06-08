@@ -1,5 +1,40 @@
-**/node_modules/
-**/dist/
-.DS_Store
+# Thư mục phụ thuộc (Dependencies) - Cực kỳ nặng, không được push lên Git
+node_modules/
+/dist/
+/build/
+
+# Các file chứa thông tin bảo mật, key cấu hình (Cực kỳ quan trọng cho PayOS, Cloudinary, Gemini API)
 .env
-.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Các file log hệ thống phát sinh trong quá trình chạy NestJS/ReactJS
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Bộ nhớ đệm của các công cụ code (IDE/Editor cache)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# File phát sinh theo hệ điều hành (OS junk files)
+.DS_Store
+Thumbs.db
+
+# Thư mục kiểm thử (Testing coverage)
+/coverage
+.nyc_output
+
+# Các file cơ sở dữ liệu tạm thời (nếu có dùng SQLite chạy thử qua Prisma)
+/prisma/*.db
+/prisma/*.db-journal
