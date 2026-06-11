@@ -485,7 +485,7 @@ export default function Navbar({
             }}
           >
             <Cpu size={15} />
-            <span className="hide-mobile" style={{ whiteSpace: 'nowrap' }}>Tự Build PC</span>
+            <b className="hide-mobile" style={{ whiteSpace: 'nowrap' }}>Tự Build PC</b>
             <span className="show-mobile">Build PC</span>
           </button>
 
@@ -540,12 +540,12 @@ export default function Navbar({
                   gap: '6px',
                   fontSize: '13px',
                   padding: '8px 12px',
-                  borderRadius: 'var(--rounded-md)'
+                  borderRadius: 'var(--rounded-md)',
                 }}
               >
                 <User size={14} />
-                <span className="hide-mobile">Đăng Nhập</span>
-                <span className="show-mobile">Login</span>
+                <b className="hide-mobile">Đăng Nhập</b>
+                <b className="show-mobile">Login</b>
               </button>
             )}
 

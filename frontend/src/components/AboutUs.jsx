@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Cpu, 
-  Terminal, 
-  Layers, 
-  ShieldCheck, 
-  Sparkles, 
-  Zap, 
-  Monitor, 
+import {
+  Cpu,
+  Terminal,
+  Layers,
+  ShieldCheck,
+  Sparkles,
+  Zap,
+  Monitor,
   Activity,
   User,
   Heart,
@@ -53,10 +53,10 @@ function ScrollReveal({ children, delay = 0, duration = 800, direction = 'up', d
   };
 
   return (
-    <div 
-      ref={ref} 
+    <div
+      ref={ref}
       className={`reveal-on-scroll ${isIntersecting ? 'revealed' : ''}`}
-      style={{ 
+      style={{
         opacity: isIntersecting ? 1 : 0,
         transform: getTransform(),
         transition: `opacity ${duration}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${duration}ms cubic-bezier(0.16, 1, 0.3, 1)`,
@@ -69,6 +69,7 @@ function ScrollReveal({ children, delay = 0, duration = 800, direction = 'up', d
 }
 
 export default function AboutUs({ theme, setActiveView }) {
+  const isLight = theme === 'light';
   const [bootStep, setBootStep] = useState(0);
   const [isBooted, setIsBooted] = useState(false);
   const terminalEndRef = useRef(null);
@@ -325,26 +326,28 @@ export default function AboutUs({ theme, setActiveView }) {
 
   return (
     <div style={{ minHeight: '80vh', padding: '0 0 60px' }} className="animate-fade-in-up">
-      
+
       {/* Cinematic Hero Section */}
-      <div 
-        className="about-hero" 
+      <div
+        className="about-hero"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(4, 7, 17, 0.45), rgba(4, 7, 17, 0.98)), url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80')`
+          backgroundImage: isLight
+            ? `linear-gradient(to bottom, rgba(0, 51, 62, 0.45), rgba(255, 255, 255, 0.98)), url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80')`
+            : `linear-gradient(to bottom, rgba(4, 7, 17, 0.45), rgba(4, 7, 17, 0.98)), url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80')`
         }}
       >
         <div className="about-hero-container">
           <ScrollReveal direction="down">
-            <span className="about-eyebrow">HÀNH TRÌNH KINETIC TECH</span>
-            <h1 className="about-title">Kiến tạo <em>cỗ máy</em><br />nâng tầm trải nghiệm</h1>
+            <b className="about-eyebrow">HÀNH TRÌNH KINETIC TECH</b>
+            <h1 className="about-title" style={{ color: isLight ? 'var(--color-on-surface)' : 'white' }}>Kiến tạo <em>cỗ máy</em><br />nâng tầm trải nghiệm</h1>
             <p className="about-subtitle">Chúng tôi tin rằng mọi cỗ máy đều là một tác phẩm nghệ thuật công nghệ, là người bạn đồng hành chắp cánh ước mơ.</p>
           </ScrollReveal>
-          
+
           <div className="scroll-indicator">
-            <span className="mouse-icon">
+            <span className="mouse-icon" style={{ borderColor: isLight ? 'rgba(15, 23, 42, 0.35)' : 'rgba(255, 255, 255, 0.45)' }}>
               <span className="mouse-wheel"></span>
             </span>
-            <span className="scroll-text">Cuộn để khám phá câu chuyện</span>
+            <span className="scroll-text" style={{ color: isLight ? 'var(--color-outline)' : 'rgba(255, 255, 255, 0.55)' }}>Cuộn để khám phá câu chuyện</span>
           </div>
         </div>
       </div>
@@ -373,7 +376,7 @@ export default function AboutUs({ theme, setActiveView }) {
           <ScrollReveal direction="up">
             <h2 className="section-title text-center" style={{ textTransform: 'uppercase', marginBottom: '3rem' }}>Giá trị cốt lõi</h2>
           </ScrollReveal>
-          
+
           <div className="bento-grid">
             {/* Cell 1: Vision */}
             <ScrollReveal direction="up" delay={100}>
@@ -427,7 +430,7 @@ export default function AboutUs({ theme, setActiveView }) {
                 <div className="bento-content bento-community-content">
                   <div className="community-text">
                     <h3>Sát cánh & Đồng hành</h3>
-                    <p>Chúng tôi xây dựng không gian chia sẻ kinh nghiệm ép xung và tối ưu hóa hệ thống máy tính cho anh em công nghệ toàn quốc.</p>
+                    <p>Chúng tôi xây dựng không gian chia sẻ kinh nghiệm ép xung và tối ưu hóa hệ thống máy tính cho anh em công nghệ.</p>
                   </div>
                   <div className="bento-stats">
                     <div className="stat-item">
@@ -451,13 +454,10 @@ export default function AboutUs({ theme, setActiveView }) {
         <div className="timeline-section-container">
           <ScrollReveal direction="up">
             <h2 className="section-title text-center" style={{ textTransform: 'uppercase' }}>Hành trình phát triển</h2>
-            <p className="text-muted text-center" style={{ marginTop: '-0.5rem', marginBottom: '2.5rem', fontSize: '13px' }}>
-              Cuộn chuột hoặc nhấn giữ kéo chuột sang ngang để xem các mốc lịch sử phát triển
-            </p>
           </ScrollReveal>
-          
-          <div 
-            className="timeline-container" 
+
+          <div
+            className="timeline-container"
             ref={timelineRef}
             onMouseDown={handleMouseDown}
             onMouseLeave={handleMouseLeave}
@@ -491,7 +491,7 @@ export default function AboutUs({ theme, setActiveView }) {
           <ScrollReveal direction="up">
             <h2 className="section-title text-center" style={{ textTransform: 'uppercase', marginBottom: '3rem' }}>Đội ngũ sáng lập</h2>
           </ScrollReveal>
-          
+
           <div className="team-grid">
             {team.map((member, idx) => (
               <ScrollReveal key={idx} direction="up" delay={idx * 150}>
@@ -544,16 +544,16 @@ export default function AboutUs({ theme, setActiveView }) {
             <div className="partners-grid-layout">
               {partners.map((partner, idx) => (
                 <div key={idx} className="partner-logo-box">
-                  <img 
-                    src={partner.logo} 
-                    alt={partner.name} 
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
                     className="partner-logo-pic"
-                    style={{ 
-                      height: '36px', 
+                    style={{
+                      height: '36px',
                       objectFit: 'contain',
                       filter: theme === 'light' ? 'grayscale(0.7) contrast(1.1)' : 'grayscale(1) brightness(0.8)',
                       transition: 'all 0.3s ease'
-                    }} 
+                    }}
                   />
                   <span>{partner.name}</span>
                 </div>
@@ -566,7 +566,7 @@ export default function AboutUs({ theme, setActiveView }) {
       {/* Action CTA Block */}
       <div className="about-cta-wrapper section-padding">
         <ScrollReveal direction="up">
-          <div 
+          <div
             className="glass-panel-glow-orange text-center"
             style={{
               borderRadius: 'var(--rounded-lg)',
@@ -582,16 +582,16 @@ export default function AboutUs({ theme, setActiveView }) {
               Hãy cùng các chuyên gia hàng đầu thiết kế cỗ máy tối thượng ngay hôm nay.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '14px' }}>
-              <button 
-                onClick={() => setActiveView('deals')} 
+              <button
+                onClick={() => setActiveView('deals')}
                 className="btn btn-secondary"
                 style={{ padding: '12px 24px', fontSize: '13px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}
               >
                 <Flame size={15} />
                 Khám Phá Sản Phẩm
               </button>
-              <button 
-                onClick={() => setActiveView('pc-builder')} 
+              <button
+                onClick={() => setActiveView('pc-builder')}
                 className="btn btn-outline"
                 style={{ padding: '12px 24px', fontSize: '13px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}
               >
@@ -637,6 +637,11 @@ export default function AboutUs({ theme, setActiveView }) {
           margin-bottom: 12px;
         }
 
+        body.light-theme .about-eyebrow {
+          color: #ffffff6c !important;
+          text-shadow: 0 0 10px rgba(0, 139, 253, 0.44);
+        }
+
         .about-title {
           font-size: 3.5rem;
           font-weight: 900;
@@ -651,8 +656,15 @@ export default function AboutUs({ theme, setActiveView }) {
         .about-title em {
           font-family: 'Playfair Display', serif;
           font-style: italic;
-          font-weight: 400;
+          font-weight: 600;
+          font-size: 1.12em;
           color: var(--color-secondary);
+          text-shadow: 0 0 12px rgba(253, 139, 0, 0.55), 0 0 25px rgba(253, 139, 0, 0.3);
+        }
+
+        body.light-theme .about-title em {
+          color: #f58301ff !important;
+          text-shadow: 0 0 10px rgba(217, 119, 0, 0.58) !important;
         }
 
         .about-subtitle {
@@ -661,6 +673,10 @@ export default function AboutUs({ theme, setActiveView }) {
           line-height: 1.6;
           max-width: 600px;
           margin: 0;
+        }
+
+        body.light-theme .about-subtitle {
+          color: #2f2f2fff !important;
         }
 
         .scroll-indicator {
@@ -765,9 +781,9 @@ export default function AboutUs({ theme, setActiveView }) {
         }
 
         .bento-cell {
-          background: ${theme === 'light' 
-            ? 'linear-gradient(135deg, rgba(255,255,255,0.85), rgba(241,245,249,0.92))' 
-            : 'linear-gradient(135deg, rgba(15, 23, 42, 0.65), rgba(8, 12, 28, 0.72))'};
+          background: ${theme === 'light'
+          ? 'linear-gradient(135deg, rgba(255,255,255,0.85), rgba(241,245,249,0.92))'
+          : 'linear-gradient(135deg, rgba(15, 23, 42, 0.65), rgba(8, 12, 28, 0.72))'};
           border: 1px solid var(--color-outline-variant);
           border-radius: var(--rounded-lg);
           padding: 2.5rem;

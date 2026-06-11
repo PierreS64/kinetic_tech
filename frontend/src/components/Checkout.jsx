@@ -1121,7 +1121,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
               ) : (
                 <>
                   <Truck size={16} />
-                  <span>XÁC NHẬN ĐẶT HÀNG</span>
+                  <b>XÁC NHẬN ĐẶT HÀNG</b>
                 </>
               )}
             </button>

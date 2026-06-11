@@ -32,7 +32,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
   const handleOpenModal = (catId) => {
     setActiveModalCat(catId);
     setModalSearchQuery('');
-    
+
     // Reset filters to defaults
     setFilterPriceMin(0);
     setFilterPriceMax(80000000);
@@ -298,42 +298,42 @@ export default function PCBuilder({ onAddPartsToCart }) {
 
   // Filter items in modal search & detailed filters
   const activeCatDetails = activeModalCat ? categories.find(c => c.id === activeModalCat) : null;
-  const filteredModalParts = activeCatDetails 
+  const filteredModalParts = activeCatDetails
     ? activeCatDetails.db.filter(part => {
-        // 1. Text Search
-        const matchesSearch = part.name.toLowerCase().includes(modalSearchQuery.toLowerCase()) || 
-                              part.specs.toLowerCase().includes(modalSearchQuery.toLowerCase());
-        
-        // 2. Price Range Filter [min, max]
-        const price = part.price || 0;
-        const matchesPrice = price >= filterPriceMin && price <= filterPriceMax;
+      // 1. Text Search
+      const matchesSearch = part.name.toLowerCase().includes(modalSearchQuery.toLowerCase()) ||
+        part.specs.toLowerCase().includes(modalSearchQuery.toLowerCase());
 
-        // 3. Brand Filter
-        let matchesBrand = true;
-        if (filterSelectedBrand !== 'all') {
-          matchesBrand = part.brand?.toLowerCase() === filterSelectedBrand.toLowerCase();
-        }
+      // 2. Price Range Filter [min, max]
+      const price = part.price || 0;
+      const matchesPrice = price >= filterPriceMin && price <= filterPriceMax;
 
-        // 4. Color Filter
-        let matchesColor = true;
-        if (filterSelectedColor !== 'all') {
-          matchesColor = part.color?.toLowerCase() === filterSelectedColor.toLowerCase();
-        }
+      // 3. Brand Filter
+      let matchesBrand = true;
+      if (filterSelectedBrand !== 'all') {
+        matchesBrand = part.brand?.toLowerCase() === filterSelectedBrand.toLowerCase();
+      }
 
-        // 5. Socket Filter (Tương thích)
-        let matchesSocket = true;
-        if (filterSocket !== 'all' && part.socket) {
-          matchesSocket = part.socket.toLowerCase() === filterSocket.toLowerCase();
-        }
+      // 4. Color Filter
+      let matchesColor = true;
+      if (filterSelectedColor !== 'all') {
+        matchesColor = part.color?.toLowerCase() === filterSelectedColor.toLowerCase();
+      }
 
-        // 6. RAM Type Filter (Tương thích)
-        let matchesRam = true;
-        if (filterRamType !== 'all' && part.ramType) {
-          matchesRam = part.ramType.toLowerCase() === filterRamType.toLowerCase();
-        }
+      // 5. Socket Filter (Tương thích)
+      let matchesSocket = true;
+      if (filterSocket !== 'all' && part.socket) {
+        matchesSocket = part.socket.toLowerCase() === filterSocket.toLowerCase();
+      }
 
-        return matchesSearch && matchesPrice && matchesBrand && matchesColor && matchesSocket && matchesRam;
-      })
+      // 6. RAM Type Filter (Tương thích)
+      let matchesRam = true;
+      if (filterRamType !== 'all' && part.ramType) {
+        matchesRam = part.ramType.toLowerCase() === filterRamType.toLowerCase();
+      }
+
+      return matchesSearch && matchesPrice && matchesBrand && matchesColor && matchesSocket && matchesRam;
+    })
     : [];
 
   return (
@@ -346,7 +346,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
             <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)' }}>Lựa chọn các linh kiện tương thích để tạo nên bộ PC hoàn chỉnh.</p>
           </div>
           {!isConfigEmpty && (
-            <button 
+            <button
               onClick={handleReset}
               className="btn btn-outline"
               style={{ padding: '8px 14px', fontSize: '12px' }}
@@ -364,9 +364,9 @@ export default function PCBuilder({ onAddPartsToCart }) {
             const selected = selectedParts[cat.id];
 
             return (
-              <div 
-                key={cat.id} 
-                className="glass-panel" 
+              <div
+                key={cat.id}
+                className="glass-panel"
                 style={{
                   borderRadius: 'var(--rounded-md)',
                   padding: '16px',
@@ -390,8 +390,8 @@ export default function PCBuilder({ onAddPartsToCart }) {
                     </div>
                     {/* Item Image Preview if selected */}
                     {selected && (
-                      <img 
-                        src={selected.image} 
+                      <img
+                        src={selected.image}
                         alt={selected.name}
                         style={{
                           width: '48px',
@@ -425,7 +425,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
 
                     <div style={{ display: 'flex', gap: '8px' }}>
                       {selected && (
-                        <button 
+                        <button
                           onClick={() => handleClearCategory(cat.id)}
                           className="btn btn-ghost"
                           style={{ color: 'var(--color-error)', fontSize: '12px', padding: '6px 12px' }}
@@ -515,7 +515,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
               </div>
             ) : (
               compatibilities.map((rule, idx) => (
-                <div 
+                <div
                   key={idx}
                   style={{
                     display: 'flex',
@@ -548,12 +548,14 @@ export default function PCBuilder({ onAddPartsToCart }) {
               width: '100%',
               padding: '14px',
               fontSize: '14px',
-              opacity: isConfigEmpty ? 0.5 : 1,
-              cursor: isConfigEmpty ? 'default' : 'pointer'
+              opacity: isConfigEmpty ? 1 : 1,
+              cursor: isConfigEmpty ? 'default' : 'pointer',
+              background: 'linear-gradient(135deg, #d95300, #b33c00)',
+              boxShadow: '0 4px 14px 0 rgba(217, 83, 0, 0.3)'
             }}
           >
             <ShoppingCart size={16} />
-            <span>Thêm Cấu Hình Vào Giỏ Hàng</span>
+            <b>Thêm Cấu Hình Vào Giỏ Hàng</b>
           </button>
         </div>
       </div>
@@ -575,7 +577,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
               <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'white' }}>
                 CHỌN LINH KIỆN: {activeCatDetails?.name}
               </h3>
-              <button 
+              <button
                 onClick={() => setActiveModalCat(null)}
                 className="btn btn-ghost"
                 style={{ padding: '6px', borderRadius: '50%' }}
@@ -586,7 +588,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
 
             {/* Modal Two-Column Content Layout (Left Filter Sidebar, Right Product List) */}
             <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', flex: 1, overflow: 'hidden' }} className="builder-modal-grid">
-              
+
               {/* Left Column: Detailed Filter Sidebar */}
               <aside style={{
                 background: 'rgba(5, 13, 24, 0.4)',
@@ -605,7 +607,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '11px', color: 'var(--color-outline)', fontWeight: '600' }}>Khoảng Giá (VND)</label>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <input 
+                    <input
                       type="number"
                       placeholder="Min VND"
                       value={filterPriceMin}
@@ -613,7 +615,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                       className="form-input"
                       style={{ padding: '6px 8px', fontSize: '11px', textAlign: 'center' }}
                     />
-                    <input 
+                    <input
                       type="number"
                       placeholder="Max VND"
                       value={filterPriceMax}
@@ -627,7 +629,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                 {/* Brand Selection */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '11px', color: 'var(--color-outline)', fontWeight: '600' }}>Thương Hiệu</label>
-                  <select 
+                  <select
                     value={filterSelectedBrand}
                     onChange={(e) => setFilterSelectedBrand(e.target.value)}
                     className="form-input"
@@ -644,7 +646,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '11px', color: 'var(--color-outline)', fontWeight: '600' }}>Màu sắc (Color)</label>
                   <div style={{ display: 'flex', gap: '6px' }}>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setFilterSelectedColor('all')}
                       className="btn"
@@ -652,7 +654,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                     >
                       Tất cả
                     </button>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setFilterSelectedColor('Đen')}
                       className="btn"
@@ -660,7 +662,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                     >
                       Đen
                     </button>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setFilterSelectedColor('Trắng')}
                       className="btn"
@@ -684,7 +686,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                 )}
 
                 {/* Reset Filters button */}
-                <button 
+                <button
                   type="button"
                   onClick={() => {
                     setFilterPriceMin(0);
@@ -709,7 +711,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                   background: 'rgba(5, 13, 24, 0.2)',
                   position: 'relative'
                 }}>
-                  <input 
+                  <input
                     type="text"
                     placeholder="Gõ tìm nhanh linh kiện..."
                     value={modalSearchQuery}
@@ -746,7 +748,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                       const compatibilityError = checkPartCompatibilityError(activeModalCat, part);
 
                       return (
-                        <div 
+                        <div
                           key={part.id}
                           style={{
                             display: 'flex',
@@ -761,8 +763,8 @@ export default function PCBuilder({ onAddPartsToCart }) {
                           }}
                         >
                           {/* Image Preview */}
-                          <img 
-                            src={part.image} 
+                          <img
+                            src={part.image}
                             alt={part.name}
                             style={{
                               width: '56px',
@@ -787,11 +789,11 @@ export default function PCBuilder({ onAddPartsToCart }) {
                                 </span>
                               )}
                             </div>
-                            
+
                             <p style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>
                               <strong>Thông số:</strong> {part.specs}
                             </p>
-                            
+
                             {/* Technical Specs Tags */}
                             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px' }}>
                               {part.socket && (
@@ -897,6 +899,177 @@ export default function PCBuilder({ onAddPartsToCart }) {
           .builder-modal-grid {
             grid-template-columns: 1fr !important;
           }
+        }
+
+        /* Selection Modal Light Mode CSS Overrides */
+        body.light-theme .builder-modal {
+          background: #ffffff !important;
+          border: 1px solid #cbd5e1 !important;
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15) !important;
+          color: #475569 !important;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        body.light-theme .builder-modal > div:first-child {
+          background: #f8fafc !important;
+          border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-theme .builder-modal > div:first-child h3 {
+          color: #0f172a !important;
+        }
+
+        body.light-theme .builder-modal > div:first-child button svg {
+          stroke: #ef4444 !important;
+          color: #ef4444 !important;
+        }
+
+        body.light-theme .builder-modal > div:first-child button:hover {
+          background: rgba(239, 68, 68, 0.08) !important;
+        }
+
+        body.light-theme .builder-modal aside {
+          background: #f8fafc !important;
+          border-right: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-theme .builder-modal aside .filter-title,
+        body.light-theme .builder-modal aside span {
+          color: #007BFF !important;
+          font-weight: 800 !important;
+        }
+
+        body.light-theme .builder-modal aside label {
+          color: #475569 !important;
+          font-weight: 600 !important;
+        }
+
+        body.light-theme .builder-modal aside select,
+        body.light-theme .builder-modal aside input {
+          background: #ffffff !important;
+          border: 1px solid #cbd5e1 !important;
+          color: #0f172a !important;
+        }
+
+        body.light-theme .builder-modal aside select:focus,
+        body.light-theme .builder-modal aside input:focus {
+          border-color: #007BFF !important;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1) !important;
+        }
+
+        body.light-theme .builder-modal aside .btn {
+          border: 1px solid #cbd5e1 !important;
+          color: #475569 !important;
+          background: #ffffff !important;
+        }
+
+        body.light-theme .builder-modal aside .btn[style*="var(--color-primary)"] {
+          background: #007BFF !important;
+          color: #ffffff !important;
+          border-color: #007BFF !important;
+          font-weight: 700 !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:first-child {
+          background: #ffffff !important;
+          border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:first-child input {
+          background: #f1f5f9 !important;
+          border: 1px solid #cbd5e1 !important;
+          color: #0f172a !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:first-child input:focus {
+          background: #ffffff !important;
+          border-color: #007BFF !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:first-child svg {
+          color: #94a3b8 !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:nth-child(2) {
+          background: #ffffff !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:nth-child(2) > div {
+          background: #ffffff !important;
+          border: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:nth-child(2) > div[style*="rgba(0, 123, 255, 0.06)"] {
+          background: rgba(0, 123, 255, 0.03) !important;
+          border-color: #007BFF !important;
+        }
+
+        body.light-theme .builder-modal-grid img {
+          background: #f8fafc !important;
+          border: 1px solid #cbd5e1 !important;
+        }
+
+        body.light-theme .builder-modal-grid h4 {
+          color: #0f172a !important;
+        }
+
+        body.light-theme .builder-modal-grid p {
+          color: #64748b !important;
+        }
+
+        body.light-theme .builder-modal-grid .spec-chip {
+          background: #f1f5f9 !important;
+          color: #475569 !important;
+          border: 1px solid #cbd5e1 !important;
+        }
+
+        body.light-theme .builder-modal-grid .spec-chip-primary {
+          background: rgba(0, 123, 255, 0.08) !important;
+          color: #0053b3 !important;
+          border: 1px solid rgba(0, 123, 255, 0.15) !important;
+        }
+
+        body.light-theme .builder-modal-grid span[style*="#81c784"] {
+          color: #16a34a !important;
+          background: #f0fdf4 !important;
+          border: 1px solid rgba(22, 163, 74, 0.2) !important;
+        }
+
+        body.light-theme .builder-modal-grid span[style*="var(--color-primary-dim)"] {
+          background: rgba(0, 123, 255, 0.08) !important;
+          color: #0053b3 !important;
+          border: 1px solid rgba(0, 123, 255, 0.15) !important;
+        }
+
+        body.light-theme .builder-modal-grid div[style*="rgba(147, 0, 10"] {
+          color: #ef4444 !important;
+          background: rgba(239, 68, 68, 0.05) !important;
+          border: 1px solid rgba(239, 68, 68, 0.15) !important;
+        }
+
+        body.light-theme .builder-modal-grid span[style*="var(--color-secondary-dim)"] {
+          color: #fd8b00 !important;
+        }
+
+        body.light-theme .builder-modal-grid button.btn-outline {
+          border: 1px solid #cbd5e1 !important;
+          color: #007BFF !important;
+          background: #ffffff !important;
+        }
+
+        body.light-theme .builder-modal-grid button.btn-outline[style*="#ffdad6"] {
+          border-color: #ef4444 !important;
+          color: #ef4444 !important;
+          background: rgba(239, 68, 68, 0.05) !important;
+        }
+
+        body.light-theme .builder-modal-grid button.btn-primary {
+          background: #007BFF !important;
+          color: #ffffff !important;
+          border-color: #007BFF !important;
         }
       `}</style>
     </div>

@@ -101,7 +101,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', margin: 0, width: '100%' }} className="animate-fade-in-up">
       {/* Full-width Dynamic Slide Banner */}
-      <div 
+      <div
         style={{
           position: 'relative',
           height: '460px',
@@ -165,7 +165,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
             }}>
               {slide.subtitle}
             </p>
-            <button 
+            <button
               onClick={() => onCtaClick(currentSlide)}
               className="btn btn-primary"
               style={{ alignSelf: 'flex-start', padding: '12px 28px', fontSize: '15px' }}
@@ -176,7 +176,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
         </div>
 
         {/* Carousel controls */}
-        <button 
+        <button
           onClick={handlePrev}
           className="btn btn-ghost"
           style={{
@@ -195,7 +195,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
         >
           <ArrowLeft size={20} color={controlIconColor} />
         </button>
-        <button 
+        <button
           onClick={handleNext}
           className="btn btn-ghost"
           style={{
@@ -226,7 +226,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
           zIndex: 3
         }}>
           {bannerSlides.map((_, idx) => (
-            <div 
+            <div
               key={idx}
               onClick={() => setCurrentSlide(idx)}
               style={{
@@ -242,8 +242,8 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
 
       {/* Countdown Flash Sale Banner wrapped in full-width container */}
       <div className="container">
-        <div 
-          className="glass-panel deals-grid" 
+        <div
+          className="glass-panel deals-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: '1.2fr 2.5fr',
@@ -272,14 +272,14 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
               <div>
                 <h2 style={{ fontSize: '18px', fontWeight: '800', fontFamily: 'Montserrat', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
                   DEALS CHỚP NHOÁNG
-                  <span style={{
+                  <b style={{
                     background: 'red',
                     color: 'white',
                     fontSize: '11px',
                     padding: '2px 6px',
                     borderRadius: 'var(--rounded-sm)',
                     animation: 'pulse 1.5s infinite'
-                  }}>HOT</span>
+                  }}>HOT</b>
                 </h2>
                 <span style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)' }}>Khuyến mãi cực hạn, mua ngay kẻo lỡ!</span>
               </div>
@@ -303,7 +303,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
             {(() => {
               const saleScrollRef = React.createRef();
               const saleProducts = products.filter(p => p.oldPrice && p.oldPrice > p.price);
-              
+
               if (saleProducts.length === 0) return null;
 
               const formatVND = (value) => {
@@ -313,7 +313,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
               return (
                 <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                   {/* Slide Left button */}
-                  <button 
+                  <button
                     type="button"
                     onClick={() => {
                       if (saleScrollRef.current) {
@@ -340,7 +340,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                   </button>
 
                   {/* Slider Scroll container */}
-                  <div 
+                  <div
                     ref={saleScrollRef}
                     style={{
                       display: 'flex',
@@ -357,13 +357,13 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                     {saleProducts.map((prod) => {
                       const discount = Math.round(((prod.oldPrice - prod.price) / prod.oldPrice) * 100);
                       return (
-                        <div 
+                        <div
                           key={prod.id}
                           onClick={() => onViewDetails && onViewDetails(prod)}
                           style={{
                             flex: '0 0 160px',
-                            background: 'rgba(255, 255, 255, 0.02)',
-                            border: '1px solid rgba(255, 255, 255, 0.06)',
+                            background: isLight ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
+                            border: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255, 255, 255, 0.06)',
                             borderRadius: 'var(--rounded)',
                             padding: '10px',
                             display: 'flex',
@@ -371,33 +371,34 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                             gap: '6px',
                             cursor: 'pointer',
                             transition: 'all 0.2s',
-                            position: 'relative'
+                            position: 'relative',
+                            boxShadow: isLight ? '0 2px 8px rgba(0, 0, 0, 0.04)' : 'none'
                           }}
                           className="list-hover-effect"
                         >
                           {/* Sale Badge */}
-                          <span 
-                            className="status-badge status-badge-sale" 
-                            style={{ 
-                              position: 'absolute', 
-                              top: '6px', 
-                              left: '6px', 
-                              fontSize: '9px', 
-                              padding: '1px 4px', 
+                          <span
+                            className="status-badge status-badge-sale"
+                            style={{
+                              position: 'absolute',
+                              top: '6px',
+                              left: '6px',
+                              fontSize: '9px',
+                              padding: '1px 4px',
                               zIndex: 2,
                               textTransform: 'none'
                             }}
                           >
                             -{discount}%
                           </span>
-                          
+
                           {/* Product Image */}
                           <div style={{ height: '75px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '4px', background: 'var(--color-surface-container-lowest)' }}>
                             <img src={prod.image} alt={prod.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
                           </div>
 
                           {/* Product Name */}
-                          <h5 style={{ fontSize: '11px', fontWeight: '600', color: 'white', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '32px', lineHeight: '1.3' }}>
+                          <h5 style={{ fontSize: '11px', fontWeight: '600', color: isLight ? 'var(--color-on-surface)' : 'white', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '32px', lineHeight: '1.3' }}>
                             {prod.name}
                           </h5>
 
@@ -416,7 +417,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                   </div>
 
                   {/* Slide Right button */}
-                  <button 
+                  <button
                     type="button"
                     onClick={() => {
                       if (saleScrollRef.current) {
