@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   User, 
   ShoppingBag, 
@@ -113,14 +114,12 @@ export default function AccountPortal({
     completedOrders.forEach(order => {
       order.items.forEach(item => {
         // Parse purchase date to calculate expiration date (+12 months)
-        // Order date can be "2026-06-02 18:30" or other format. Let's extract date.
         const orderDateStr = order.date.split(' ')[0]; // "2026-06-02"
         let orderDate = new Date();
         if (orderDateStr.includes('-')) {
           orderDate = new Date(orderDateStr);
         } else if (orderDateStr.includes('/')) {
           const parts = orderDateStr.split('/');
-          // DD/MM/YYYY
           orderDate = new Date(parts[2], parts[1] - 1, parts[0]);
         }
         
@@ -131,13 +130,10 @@ export default function AccountPortal({
         const purchaseDateFormatted = orderDate.toLocaleDateString('vi-VN');
         const expDateFormatted = expDate.toLocaleDateString('vi-VN');
         
-        // Status Check: Compare with current local date (June 4, 2026)
-        // Hardcode a check for June 2026 context, or let JS evaluate
         const today = new Date();
         const isUnderWarranty = expDate > today;
 
         // Find specs or IMEI
-        // Generate a pseudo-random IMEI/Serial
         const serialSeed = (item.id + order.id).replace(/[^a-zA-Z0-9]/g, '');
         const serial = `SN-${serialSeed.toUpperCase().slice(0, 8)}-${order.id.slice(-4)}`;
 
@@ -271,7 +267,6 @@ export default function AccountPortal({
       return;
     }
 
-    // Simulate password change
     setPasswordSuccess(true);
     setPasswordForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
     
@@ -760,8 +755,6 @@ export default function AccountPortal({
 
                           <button 
                             onClick={() => {
-                              // Switch view to details or buy now
-                              // Simulating purchase by redirecting to deals
                               setActiveView(prod.category);
                             }}
                             className="btn btn-primary" 
@@ -847,12 +840,26 @@ export default function AccountPortal({
                 )}
 
                 {/* Sub-Modal / Expanding Window for Order details & Request Support */}
-                {selectedOrder && (
-                  <div className="modal-overlay" style={{ zIndex: 101 }} onClick={() => setSelectedOrder(null)}>
+                {selectedOrder && createPortal(
+                  <div 
+                    className="modal-overlay" 
+                    style={{ 
+                      zIndex: 101,
+                      position: 'fixed',
+                      top: 0, left: 0,
+                      width: '100vw', height: '100vh',
+                      background: 'rgba(0, 0, 0, 0.6)',
+                      backdropFilter: 'blur(10px)',
+                      display: 'flex',            
+                      alignItems: 'center',       
+                      justifyContent: 'center'
+                    }} 
+                    onClick={() => setSelectedOrder(null)}
+                  >
                     <div 
                       className="glass-panel animate-fade-in-up" 
                       onClick={(e) => e.stopPropagation()} 
-                      style={{ width: '100%', maxWidth: '650px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden' }}
+                      style={{ width: '90%', maxWidth: '650px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden' }}
                     >
                       {/* Modal Header */}
                       <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)' }}>
@@ -861,7 +868,7 @@ export default function AccountPortal({
                           <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Ngày đặt: {selectedOrder.date}</span>
                         </div>
                         <button onClick={() => setSelectedOrder(null)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
-                          <X size={18} color="white" />
+                          <X size={18} color="#ff8000" />
                         </button>
                       </div>
 
@@ -882,7 +889,7 @@ export default function AccountPortal({
                             <span style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--color-outline)', fontWeight: '800', display: 'block', marginBottom: '4px' }}>Thanh toán</span>
                             <span style={{ fontSize: '12px', color: 'white', lineHeight: '1.5' }}>
                               Phương thức: {selectedOrder.paymentMethod}<br />
-                              Trạng thái: <strong style={{ color: 'white' }}>{selectedOrder.status === 'completed' ? 'Đã thanh toán' : 'Chờ xác thực'}</strong>
+                              Trạng thái: <strong>{selectedOrder.status === 'completed' ? 'Đã thanh toán' : 'Chờ xác thực'}</strong>
                             </span>
                           </div>
                         </div>
@@ -1038,7 +1045,7 @@ export default function AccountPortal({
                               marginTop: '10px'
                             }}
                           >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', itemsAlign: 'center', marginBottom: '12px' }}>
                               <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-error)' }}>
                                 YÊU CẦU HỖ TRỢ KỸ THUẬT: {supportProduct.name}
                               </h5>
@@ -1094,7 +1101,8 @@ export default function AccountPortal({
                         
                       </div>
                     </div>
-                  </div>
+                  </div>,
+                  document.body
                 )}
               </div>
             )}
@@ -1185,7 +1193,7 @@ export default function AccountPortal({
               </div>
             )}
 
-            {/* SUB-VIEW 4: TRADE-IN HISTORY */}
+            {/* MAIN PORTAL TABS CONTINUED FOR TRADE-IN, PROFILE, POLICY, FEEDBACK */}
             {activeTab === 'tradein' && (
               <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
@@ -1260,11 +1268,8 @@ export default function AccountPortal({
               </div>
             )}
 
-            {/* SUB-VIEW 5: PROFILE INFO */}
             {activeTab === 'profile' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                
-                {/* Profile Edit */}
                 <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                     Chỉnh Sửa Thông Tin Cá Nhân
@@ -1321,7 +1326,6 @@ export default function AccountPortal({
                   </form>
                 </div>
 
-                {/* Change Password */}
                 <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Lock size={18} color="var(--color-primary-dim)" />
@@ -1387,7 +1391,6 @@ export default function AccountPortal({
               </div>
             )}
 
-            {/* SUB-VIEW 6: WARRANTY POLICY (STATIC HTML TEXT) */}
             {activeTab === 'policy' && (
               <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
@@ -1433,7 +1436,6 @@ export default function AccountPortal({
               </div>
             )}
 
-            {/* SUB-VIEW 7: FEEDBACK (GÓP Ý PHẢN HỒI) */}
             {activeTab === 'feedback' && (
               <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>

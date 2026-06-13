@@ -54,7 +54,8 @@ const INITIAL_TICKETS = [
   }
 ];
 
-export default function SupportTicket() {
+export default function SupportTicket({ theme }) {
+  const isLight = theme === 'light';
   const [tickets, setTickets] = useState(INITIAL_TICKETS);
   const [activeTicketId, setActiveTicketId] = useState(null); // ID of expanded ticket
   const [isCreating, setIsCreating] = useState(false); // is creating a new ticket
@@ -169,14 +170,14 @@ export default function SupportTicket() {
   const getStatusBadge = (status) => {
     if (status === 'pending') {
       return (
-        <span className="status-badge" style={{ background: 'rgba(253, 139, 0, 0.15)', color: '#ffdcc3', border: '1px solid rgba(253, 139, 0, 0.3)', textTransform: 'none' }}>
+        <span className="status-badge" style={{ background: 'rgb(253, 139, 0)', color: '#ffffff', border: '1px solid rgba(253, 139, 0, 0.3)', textTransform: 'none' }}>
           Đang chờ xử lý
         </span>
       );
     }
     if (status === 'replied') {
       return (
-        <span className="status-badge" style={{ background: 'rgba(76, 175, 80, 0.15)', color: '#81c784', border: '1px solid rgba(76, 175, 80, 0.3)', textTransform: 'none' }}>
+        <span className="status-badge" style={{ background: 'rgb(76, 175, 79)', color: '#ffffff', border: '1px solid rgba(76, 175, 80, 0.3)', textTransform: 'none' }}>
           Đã trả lời
         </span>
       );
@@ -220,16 +221,16 @@ export default function SupportTicket() {
       {isCreating ? (
         /* Create Ticket Form */
         <div className="glass-panel animate-fade-in-up" style={{ padding: '30px', borderRadius: 'var(--rounded-lg)', maxWidth: '700px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '14px', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255,255,255,0.08)', paddingBottom: '14px', marginBottom: '20px' }}>
             <button onClick={() => setIsCreating(false)} className="btn btn-ghost" style={{ padding: '6px', borderRadius: '50%' }}>
-              <ArrowLeft size={18} color="white" />
+              <ArrowLeft size={18} color={isLight ? 'var(--color-on-surface)' : 'white'} />
             </button>
             <h3 style={{ fontSize: '18px', fontWeight: '800' }}>TẠO YÊU CẦU TRỢ GIÚP MỚI</h3>
           </div>
 
           <form onSubmit={handleCreateTicket} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Tiêu đề tóm tắt lỗi / yêu cầu *</label>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: isLight ? 'var(--color-on-surface)' : 'white' }}>Tiêu đề tóm tắt lỗi / yêu cầu *</label>
               <input 
                 type="text"
                 placeholder="Ví dụ: Lỗi sập nguồn khi cắm VGA mới mua, cần tư vấn lắp ráp tản AIO..."
@@ -243,7 +244,7 @@ export default function SupportTicket() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Danh mục hỗ trợ *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: isLight ? 'var(--color-on-surface)' : 'white' }}>Danh mục hỗ trợ *</label>
                 <select
                   value={newTicket.category}
                   onChange={(e) => setNewTicket(prev => ({ ...prev, category: e.target.value }))}
@@ -258,7 +259,7 @@ export default function SupportTicket() {
                 </select>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Mức độ khẩn cấp *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: isLight ? 'var(--color-on-surface)' : 'white' }}>Mức độ khẩn cấp *</label>
                 <select
                   value={newTicket.urgency}
                   onChange={(e) => setNewTicket(prev => ({ ...prev, urgency: e.target.value }))}
@@ -273,7 +274,7 @@ export default function SupportTicket() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Nội dung mô tả chi tiết vấn đề bạn đang gặp phải *</label>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: isLight ? 'var(--color-on-surface)' : 'white' }}>Nội dung mô tả chi tiết vấn đề bạn đang gặp phải *</label>
               <textarea 
                 placeholder="Vui lòng cung cấp mã đơn hàng (nếu có), cấu hình máy hiện tại và mô tả rõ các bước dẫn tới lỗi..."
                 rows="6"
@@ -300,7 +301,7 @@ export default function SupportTicket() {
             <button 
               onClick={() => setActiveTicketId(null)}
               className="btn btn-ghost"
-              style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-start', padding: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: '16px', borderRadius: '0' }}
+              style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'flex-start', padding: '8px', borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255,255,255,0.06)', marginBottom: '16px', borderRadius: '0' }}
             >
               <ArrowLeft size={16} /> Quay lại danh sách
             </button>
@@ -308,7 +309,7 @@ export default function SupportTicket() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '13px' }}>
               <div>
                 <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Mã Ticket:</span>
-                <span style={{ color: 'white', fontWeight: 'bold' }}>#{activeTicket.id}</span>
+                <span style={{ color: isLight ? 'var(--color-on-surface)' : 'white', fontWeight: 'bold' }}>#{activeTicket.id}</span>
               </div>
               <div>
                 <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Trạng thái:</span>
@@ -316,7 +317,7 @@ export default function SupportTicket() {
               </div>
               <div>
                 <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Danh mục:</span>
-                <span style={{ color: 'white', fontWeight: '600' }}>{activeTicket.category}</span>
+                <span style={{ color: isLight ? 'var(--color-on-surface)' : 'white', fontWeight: '600' }}>{activeTicket.category}</span>
               </div>
               <div>
                 <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Độ khẩn cấp:</span>
@@ -324,9 +325,9 @@ export default function SupportTicket() {
               </div>
               <div>
                 <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Ngày tạo:</span>
-                <span style={{ color: 'white' }}>{activeTicket.date}</span>
+                <span style={{ color: isLight ? 'var(--color-on-surface)' : 'white' }}>{activeTicket.date}</span>
               </div>
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', fontSize: '11px', color: 'var(--color-outline)', lineHeight: '1.4' }}>
+              <div style={{ borderTop: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', fontSize: '11px', color: 'var(--color-outline)', lineHeight: '1.4' }}>
                 <Info size={12} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom' }} />
                 Thời gian làm việc hỗ trợ kỹ thuật từ 8h00 đến 21h30 hàng ngày.
               </div>
@@ -337,8 +338,8 @@ export default function SupportTicket() {
           <div className="glass-panel" style={{ borderRadius: 'var(--rounded-md)', display: 'flex', flexDirection: 'column', height: '620px', overflow: 'hidden' }}>
             
             {/* Header info */}
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(0,0,0,0.15)' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'white' }}>{activeTicket.subject}</h3>
+            <div style={{ padding: '16px 20px', borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255,255,255,0.08)', background: isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.15)' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: '700', color: isLight ? 'var(--color-on-surface)' : 'white' }}>{activeTicket.subject}</h3>
             </div>
 
             {/* Messages box list */}
@@ -377,9 +378,9 @@ export default function SupportTicket() {
                         borderRadius: 'var(--rounded-md)',
                         fontSize: '13px',
                         lineHeight: '1.5',
-                        background: isUser ? 'var(--color-primary-container)' : 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${isUser ? 'rgba(0,123,255,0.2)' : 'rgba(255,255,255,0.06)'}`,
-                        color: isUser ? 'var(--color-on-primary-container)' : 'white',
+                        background: isUser ? 'var(--color-primary-container)' : (isLight ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255,255,255,0.04)'),
+                        border: `1px solid ${isUser ? 'rgba(0,123,255,0.2)' : (isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)')}`,
+                        color: isUser ? 'var(--color-on-primary-container)' : (isLight ? 'var(--color-on-surface)' : 'white'),
                         whiteSpace: 'pre-wrap'
                       }}>
                         {msg.text}
@@ -397,8 +398,8 @@ export default function SupportTicket() {
                     <div style={{
                       padding: '12px 20px',
                       borderRadius: 'var(--rounded-md)',
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.04)',
+                      background: isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)',
+                      border: isLight ? '1px solid rgba(0,0,0,0.04)' : '1px solid rgba(255,255,255,0.04)',
                       display: 'flex',
                       gap: '4px',
                       alignItems: 'center',
@@ -418,7 +419,7 @@ export default function SupportTicket() {
               onSubmit={handleSendReply}
               style={{
                 padding: '16px',
-                borderTop: '1px solid rgba(255,255,255,0.08)',
+                borderTop: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255,255,255,0.08)',
                 background: 'var(--color-surface-container-lowest)',
                 display: 'flex',
                 gap: '12px'
@@ -451,7 +452,7 @@ export default function SupportTicket() {
             <div style={{
               textAlign: 'center',
               padding: '60px 20px',
-              border: '1px dashed rgba(255,255,255,0.08)',
+              border: isLight ? '1px dashed rgba(0, 0, 0, 0.15)' : '1px dashed rgba(255,255,255,0.08)',
               borderRadius: 'var(--rounded-md)',
               color: 'var(--color-outline)'
             }}>
@@ -475,12 +476,12 @@ export default function SupportTicket() {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    border: '1px solid rgba(255,255,255,0.05)',
+                    border: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255,255,255,0.05)',
                     transition: 'all 0.2s ease',
                     position: 'relative'
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-primary)'}
-                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255,255,255,0.05)'}
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', overflow: 'hidden' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -497,7 +498,7 @@ export default function SupportTicket() {
                     <h4 style={{
                       fontSize: '14px',
                       fontWeight: '700',
-                      color: 'white',
+                      color: isLight ? 'var(--color-on-surface)' : 'white',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis'
@@ -528,7 +529,7 @@ export default function SupportTicket() {
                 { q: 'Khi máy tính bị lỗi tôi có phải tự mang ra cửa hàng không?', a: 'Với các bộ máy PC ráp nguyên chiếc tại Kinetic Tech, bên mình hỗ trợ bảo hành tận nhà miễn phí trong 12 tháng đầu khu vực nội thành.' }
               ].map((faq, i) => (
                 <div key={i} className="glass-panel" style={{ padding: '16px', borderRadius: 'var(--rounded)' }}>
-                  <h4 style={{ fontSize: '13px', fontWeight: '700', color: 'white', display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
+                  <h4 style={{ fontSize: '13px', fontWeight: '700', color: isLight ? 'var(--color-on-surface)' : 'white', display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
                     <HelpCircle size={15} color="var(--color-primary-dim)" style={{ flexShrink: 0, marginTop: '2px' }} />
                     {faq.q}
                   </h4>

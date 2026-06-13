@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Trash2, Plus, Minus, CreditCard, ShoppingBag, CheckCircle, Sun, Moon } from 'lucide-react';
+import { X, Trash2, Plus, Minus, CreditCard, ShoppingBag, CheckCircle } from 'lucide-react';
 
 export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem, onClearCart, onCheckout, theme, toggleTheme }) {
   // Format currency to VND
@@ -38,27 +38,6 @@ export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onR
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {/* Dark/Light mode toggle switch */}
-            <button
-              onClick={toggleTheme}
-              className="btn btn-ghost"
-              style={{
-                padding: '6px',
-                borderRadius: '50%',
-                background: theme === 'light' ? 'rgba(0, 0, 0, 0.04)' : 'rgba(255, 255, 255, 0.04)',
-                border: theme === 'light' ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255, 255, 255, 0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '36px',
-                height: '36px',
-                cursor: 'pointer'
-              }}
-              title={theme === 'light' ? 'Chuyển sang Chế độ tối' : 'Chuyển sang Chế độ sáng'}
-            >
-              {theme === 'light' ? <Moon size={16} color="#fd8b00" /> : <Sun size={16} color="#ffb300" />}
-            </button>
-            
             <button 
               onClick={onClose}
               className="btn btn-ghost"

@@ -17,12 +17,12 @@ import AdminDashboard from './components/AdminDashboard';
 import AboutUs from './components/AboutUs';
 import AccountPortal from './components/AccountPortal';
 
-function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBuyNow, likedProductIds, onToggleLike, onViewDetails }) {
+function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBuyNow, likedProductIds, onToggleLike, onViewDetails, theme }) {
   const rowRef = useRef(null);
 
   return (
-    <div style={{ marginBottom: '40px', position: 'relative' }} className="reveal-on-scroll">
-      <h3 style={{ fontSize: '16px', fontWeight: '800', fontFamily: 'Montserrat', color: 'white', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
+    <div style={{ marginBottom: '40px', position: 'relative' }} className="reveal-on-scroll ">
+      <h3 style={{ fontSize: '16px', fontWeight: '800', fontFamily: 'Montserrat', color: theme === 'light' ? '#0f172a' : '#ffffff', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
         <span style={{ width: '4px', height: '16px', background: 'var(--color-primary)', borderRadius: '2px', display: 'inline-block' }} />
         {categoryName.toUpperCase()} NỔI BẬT & BÁN CHẠY
       </h3>
@@ -36,13 +36,11 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
               rowRef.current.scrollBy({ left: -320, behavior: 'smooth' });
             }
           }}
-          className="btn btn-ghost"
+          className="btn btn-ghost category-scroll-btn"
           style={{
             position: 'absolute',
             left: '-16px',
             zIndex: 10,
-            background: 'rgba(21, 24, 25, 0.9)',
-            border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '50%',
             width: '36px',
             height: '36px',
@@ -52,7 +50,7 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
             padding: 0
           }}
         >
-          <ArrowLeft size={18} color="white" />
+          <ArrowLeft size={18} />
         </button>
 
         {/* Horizontal scroll list */}
@@ -71,7 +69,7 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
           className="no-scrollbar"
         >
           {categoryProducts.map((product) => (
-            <div key={product.id} style={{ flex: '0 0 290px' }}>
+            <div key={product.id} style={{ flex: '0 0 290px' }} >
               <ProductCard 
                 product={product} 
                 onAddToCart={onAddToCart}
@@ -92,13 +90,11 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
               rowRef.current.scrollBy({ left: 320, behavior: 'smooth' });
             }
           }}
-          className="btn btn-ghost"
+          className="btn btn-ghost category-scroll-btn"
           style={{
             position: 'absolute',
             right: '-16px',
             zIndex: 10,
-            background: 'rgba(21, 24, 25, 0.9)',
-            border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '50%',
             width: '36px',
             height: '36px',
@@ -108,13 +104,87 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
             padding: 0
           }}
         >
-          <ArrowRight size={18} color="white" />
+          <ArrowRight size={18} />
         </button>
       </div>
     </div>
   );
 }
 
+function FlashSaleRow({ categoryName, categoryProducts, onAddToCart, onBuyNow, likedProductIds, onToggleLike, onViewDetails }) {
+  const rowRef = useRef(null);
+
+  return (
+    <div className="reveal-on-scroll flash-sale-block">
+      {/* Tiêu đề Flash Sale + Đồng hồ đếm ngược nằm cùng một hàng */}
+      <div className="flash-sale-header">
+        <h3 className="flash-sale-title">
+          <span className="flash-sale-dot" />
+          {categoryName.toUpperCase()} CHỚP NHOÁNG
+        </h3>
+        
+        {/* Bộ đồng hồ đếm ngược khít vào giữa các nền vuông nhỏ */}
+        <div className="countdown-container">
+          <div className="countdown-box">02</div>
+          <span className="countdown-divider">:</span>
+          <div className="countdown-box">45</div>
+          <span className="countdown-divider">:</span>
+          <div className="countdown-box">18</div>
+        </div>
+      </div>
+
+      {/* Danh sách sản phẩm cuộn ngang */}
+      <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+        <button 
+          type="button"
+          onClick={() => rowRef.current?.scrollBy({ left: -320, behavior: 'smooth' })}
+          className="btn btn-ghost flash-sale-nav-btn"
+          style={{ left: '-16px' }}
+        >
+          <ArrowLeft size={18} />
+        </button>
+
+        {/* Thêm padding bottom và top ở đây để khi đổ bóng (shadow) không bao giờ bị cắt khuất */}
+        <div 
+          ref={rowRef}
+          style={{
+            display: 'flex',
+            gap: '20px',
+            overflowX: 'auto',
+            scrollBehavior: 'smooth',
+            padding: '20px 10px 24px 10px',
+            width: '100%',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}
+          className="no-scrollbar"
+        >
+          {categoryProducts.map((product) => (
+            <div key={product.id} style={{ flex: '0 0 290px' }}>
+              <ProductCard 
+                product={product} 
+                onAddToCart={onAddToCart}
+                onBuyNow={onBuyNow}
+                isLiked={likedProductIds.includes(product.id)}
+                onToggleLike={onToggleLike}
+                onViewDetails={onViewDetails}
+              />
+            </div>
+          ))}
+        </div>
+
+        <button 
+          type="button"
+          onClick={() => rowRef.current?.scrollBy({ left: 320, behavior: 'smooth' })}
+          className="btn btn-ghost flash-sale-nav-btn"
+          style={{ right: '-16px' }}
+        >
+          <ArrowRight size={18} />
+        </button>
+      </div>
+    </div>
+  );
+}
 export default function App() {
   const [activeView, setActiveView] = useState('deals');
   const [cartOpen, setCartOpen] = useState(false);
@@ -564,6 +634,7 @@ export default function App() {
                         likedProductIds={likedProductIds}
                         onToggleLike={handleToggleLike}
                         onViewDetails={setSelectedProduct}
+                        theme={theme}
                       />
                     );
                   })}
@@ -573,7 +644,7 @@ export default function App() {
 
             {/* Brand benefits section */}
             <div 
-              className="reveal-on-scroll"
+              className="reveal-on-scroll brand-benefits-section"
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
@@ -581,28 +652,26 @@ export default function App() {
                 marginTop: '60px',
                 padding: '30px 20px',
                 borderRadius: 'var(--rounded-lg)',
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(255, 255, 255, 0.05)'
               }}
             >
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <Shield size={24} color="var(--color-primary-dim)" />
                 <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'white' }}>100% Chính Hãng</h4>
+                  <h4 style={{ fontSize: '14px', fontWeight: '700' }}>100% Chính Hãng</h4>
                   <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>Sản phẩm nhập khẩu chính ngạch, hóa đơn đỏ đầy đủ.</p>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <Truck size={24} color="var(--color-secondary-dim)" />
                 <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'white' }}>Giao Hàng Siêu Tốc</h4>
+                  <h4 style={{ fontSize: '14px', fontWeight: '700' }}>Giao Hàng Siêu Tốc</h4>
                   <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>Hỗ trợ giao nhanh hoả tốc 2h khu vực nội đô.</p>
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <RotateCcw size={24} color="var(--color-primary-dim)" />
                 <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'white' }}>Đổi Trả Dễ Dàng</h4>
+                  <h4 style={{ fontSize: '14px', fontWeight: '700' }}>Đổi Trả Dễ Dàng</h4>
                   <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>Đổi trả 1-đổi-1 trong vòng 15 ngày nếu lỗi nhà sản xuất.</p>
                 </div>
               </div>
@@ -899,7 +968,7 @@ export default function App() {
         {/* VIEW 9: Support Ticket View */}
         {activeView === 'support-ticket' && (
           <div className="container" style={{ paddingTop: '40px' }}>
-            <SupportTicket />
+            <SupportTicket theme={theme} />
           </div>
         )}
 
@@ -1053,7 +1122,9 @@ export default function App() {
           width: '56px',
           height: '56px',
           borderRadius: '50%',
-          background: 'rgba(30, 41, 59, 0.75)',
+          background: theme === 'light' 
+            ? 'rgba(255, 255, 255, 0.85)' 
+            : 'rgba(30, 41, 59, 0.75)',
           backdropFilter: 'blur(12px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 123, 255, 0.25)',
@@ -1103,8 +1174,9 @@ export default function App() {
           width: '56px',
           height: '56px',
           borderRadius: '50%',
-          background: aiOpen ? 'var(--color-primary)' : 'rgba(30, 41, 59, 0.75)',
-          backdropFilter: 'blur(12px)',
+          background: aiOpen 
+           ? 'var(--color-primary)' 
+           : (theme === 'light' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(30, 41, 59, 0.75)'),  backdropFilter: 'blur(12px)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 123, 255, 0.25)',
           display: 'flex',
@@ -1492,13 +1564,20 @@ export default function App() {
           border-color: var(--color-primary) !important;
           background: rgba(30, 41, 59, 0.9) !important;
         }
+        body.light-theme .floating-cart-btn-assistive:hover {
+          background: rgba(255, 255, 255, 0.95) !important;
+        }
         .floating-cart-btn-assistive:active {
           transform: scale(0.9);
         }
         .floating-ai-btn-assistive:hover {
           transform: scale(1.1) rotate(-6deg);
           border-color: var(--color-primary) !important;
+          /* Mặc định ở Dark mode hover sẽ ra nền tối */
           background: rgba(30, 41, 59, 0.9) !important;
+        }
+        body.light-theme .floating-ai-btn-assistive:hover {
+          background: rgba(255, 255, 255, 0.95) !important;
         }
         .floating-ai-btn-assistive:active {
           transform: scale(0.9);

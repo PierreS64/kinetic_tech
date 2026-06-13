@@ -435,10 +435,10 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                 }}
               >
                 {loading ? (
-                  <span>Đang xử lý...</span>
+                  <b>Đang xử lý...</b>
                 ) : (
                   <>
-                    <span>{activeTab === 'login' ? 'ĐĂNG NHẬP NGAY' : 'TẠO TÀI KHOẢN'}</span>
+                    <b>{activeTab === 'login' ? 'ĐĂNG NHẬP NGAY' : 'TẠO TÀI KHOẢN'}</b>
                     <ArrowRight size={16} />
                   </>
                 )}

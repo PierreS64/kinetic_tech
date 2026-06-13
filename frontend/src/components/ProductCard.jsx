@@ -38,9 +38,9 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
           top: '12px',
           right: '12px',
           zIndex: 5,
-          background: 'rgba(21, 24, 25, 0.75)',
+          background: 'rgba(255, 255, 255, 0.75)',
           backdropFilter: 'blur(10px)',
-          border: isLiked ? '1px solid rgba(255, 76, 76, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+          border: isLiked ? '1px solid rgba(255, 90, 58, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
           borderRadius: '50%',
           width: '32px',
           height: '32px',
@@ -49,13 +49,12 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
           justifyContent: 'center',
           cursor: 'pointer',
           transition: 'all 0.2s ease',
-          color: isLiked ? '#ffb4ab' : 'white',
           outline: 'none'
         }}
         className="favorite-btn"
         title={isLiked ? "Bỏ yêu thích" : "Yêu thích"}
       >
-        <Heart size={15} fill={isLiked ? '#ffb4ab' : 'none'} color={isLiked ? '#ffb4ab' : 'white'} />
+        <Heart size={15} fill={isLiked ? '#ff5a3a' : 'none'} color={isLiked ? '#ff5a3a' : '#64748b'} />
       </button>
 
       {/* Image Container */}
@@ -197,11 +196,11 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
             padding: '8px 10px',
             fontSize: '12px',
             opacity: inStock ? 1 : 0.5,
-            cursor: inStock ? 'pointer' : 'default'
+            cursor: inStock ? 'pointer' : 'default',
           }}
         >
-          <CreditCard size={14} />
-          <span>Mua Ngay</span>
+          <CreditCard size={14} color="white" />
+          <b style={{ color: '#ffffff', fontWeight: '600' }}>Mua Ngay</b>
         </button>
       </div>
     </div>

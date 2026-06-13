@@ -232,18 +232,20 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
   transition: var(--transition-spring);
   position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .product-card:hover {
   transform: translateY(-6px);
   border-color: var(--color-primary);
-  box-shadow: 0 12px 30px rgba(0, 123, 255, 0.15);
+  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 123, 255, 0.2);
 }
 
 .product-card-image-container {
   position: relative;
   width: 100%;
-  padding-bottom: 90%;
+  aspect-ratio: 4/3;
+  height: 200px;
   overflow: hidden;
   border-radius: var(--rounded);
   background: var(--color-surface-container-lowest);
@@ -256,8 +258,8 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: 12px;
+  object-fit: cover;
+  padding: 0px;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -356,6 +358,15 @@ h1, h2, h3, h4, h5, h6 {
 .rgb-glow-card {
   position: relative;
   z-index: 1;
+}
+
+body.light-theme .flash-sale-block {
+  /* Nền màu cam siêu nhạt ở lightmode giúp làm nổi bật thẻ sản phẩm */
+  background: #fff9f5 !important; 
+  padding: 24px 20px 10px 20px !important;
+  border-radius: var(--rounded-lg);
+  border: 1px solid #ffe3d1 !important;
+  margin-bottom: 40px;
 }
 
 .rgb-glow-card::after {
@@ -490,6 +501,7 @@ h1, h2, h3, h4, h5, h6 {
   --color-active-nav-text: #ffffff;
 }
 
+
 body.light-theme {
   --color-active-nav-text: var(--color-primary);
 
@@ -524,6 +536,7 @@ body.light-theme {
     radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.95) 0px, transparent 100%) !important;
 }
 
+
 /* Base text contrast overrides in light theme */
 body.light-theme h1,
 body.light-theme h2,
@@ -535,7 +548,7 @@ body.light-theme strong,
 body.light-theme th,
 body.light-theme .btn-outline,
 body.light-theme label {
-  color: #0f172a !important;
+  color: #0f172a;
 }
 
 body.light-theme p,
@@ -723,3 +736,146 @@ body.light-theme .brand-logo-subtext {
   scrollbar-width: none !important;  /* Firefox */
 }
 
+.countdown-container {
+  display: flex;
+  gap: 8px;             
+  align-items: center;
+  justify-content: center; 
+}
+
+.countdown-box {
+  width: 45px;           
+  height: 45px;         
+  background-color: var(--color-surface-container-high);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--rounded); 
+  display: flex;
+  align-items: center;    
+  justify-content: center;   
+  
+  font-family: 'Montserrat', sans-serif; 
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Dấu hai chấm (:) phân cách giữa các ô */
+.countdown-separator {
+  font-weight: bold;
+  font-size: 18px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+  transform: translateY(1px);
+}
+
+/* ======== Brand Benefits Section (dark default) ======== */
+.brand-benefits-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ======== Category Scroll Buttons (dark default) ======== */
+.category-scroll-btn {
+  background: rgba(21, 24, 25, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   Light Mode – Homepage Section Fixes
+   ========================================================================== */
+
+/* Brand benefits section – visible background in light mode */
+body.light-theme .brand-benefits-section {
+  background: rgba(0, 123, 255, 0.03) !important;
+  border: 1px solid rgba(0, 123, 255, 0.1) !important;
+}
+
+/* Category scroll arrow buttons */
+body.light-theme .category-scroll-btn {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme .category-scroll-btn:hover {
+  background: #ffffff !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.12) !important;
+}
+
+/* SVG icon color inside scroll buttons */
+body.light-theme .category-scroll-btn svg {
+  color: #334155 !important;
+  stroke: #334155 !important;
+}
+
+body.light-theme .category-scroll-btn:hover svg {
+  color: var(--color-primary) !important;
+  stroke: var(--color-primary) !important;
+}
+
+/* Countdown boxes & separator – dark text in light mode */
+body.light-theme .countdown-box {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .countdown-separator,
+body.light-theme .countdown-divider {
+  color: #334155 !important;
+}
+
+/* Flash sale nav buttons – dark mode default */
+.flash-sale-nav-btn {
+  background: rgba(21, 24, 25, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  position: absolute !important;
+  z-index: 10 !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+/* Flash sale nav buttons – light mode */
+body.light-theme .flash-sale-nav-btn {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme .flash-sale-nav-btn svg {
+  color: #334155 !important;
+  stroke: #334155 !important;
+}
+
+body.light-theme .flash-sale-nav-btn:hover {
+  background: #ffffff !important;
+  color: var(--color-primary) !important;
+}
+
+body.light-theme .flash-sale-nav-btn:hover svg {
+  color: var(--color-primary) !important;
+  stroke: var(--color-primary) !important;
+}
+
+/* Flash sale title dot and text */
+body.light-theme .flash-sale-title {
+  color: #0f172a !important;
+}
+
+body.light-theme .flash-sale-dot {
+  background: var(--color-secondary) !important;
+}

@@ -1,7 +1,9 @@
 # Thư mục phụ thuộc (Dependencies) - Cực kỳ nặng, không được push lên Git
-node_modules/
-/dist/
-/build/
+frontend/dist/
+/frontend/dist/
+
+# Chặn node_modules
+**/node_modules/
 
 # Các file chứa thông tin bảo mật, key cấu hình (Cực kỳ quan trọng cho PayOS, Cloudinary, Gemini API)
 .env
