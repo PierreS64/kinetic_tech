@@ -230,6 +230,8 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  flex-shrink: 0;
   transition: var(--transition-spring);
   position: relative;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
@@ -878,4 +880,27 @@ body.light-theme .flash-sale-title {
 
 body.light-theme .flash-sale-dot {
   background: var(--color-secondary) !important;
+}
+
+/* Categories Dropdown Custom styling */
+.dropdown-menu-opaque {
+  background: rgba(21, 24, 25, 0.95) !important;
+}
+
+body.light-theme .dropdown-menu-opaque {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.dropdown-category-item {
+  transition: var(--transition-smooth);
+}
+
+.dropdown-category-item:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--color-primary) !important;
+}
+
+body.light-theme .dropdown-category-item:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: var(--color-primary) !important;
 }

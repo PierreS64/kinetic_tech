@@ -12,7 +12,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
   const discount = oldPrice ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
 
   return (
-    <div className="product-card">
+    <div className="product-card" onClick={() => onViewDetails && onViewDetails(product)} style={{ width: '100%', minWidth: '0', boxSizing: 'border-box', height: '100%', cursor: 'pointer' }}>
       {/* Stock Status Badge */}
       <div style={{
         position: 'absolute',
@@ -21,9 +21,9 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
         zIndex: 5
       }}>
         {inStock ? (
-          <span className="status-badge status-badge-stock">Còn hàng</span>
+          <span className="status-badge status-badge-stock" style={{ background: '#4caf50', color: '#ffffff', border: 'none', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold' }}>Còn hàng</span>
         ) : (
-          <span className="status-badge" style={{ background: '#373a3b', color: '#c1c6d7' }}>Hết hàng</span>
+          <span className="status-badge" style={{ background: '#757575', color: '#ffffff', border: 'none', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold' }}>Hết hàng</span>
         )}
       </div>
 
@@ -105,34 +105,35 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
-                size={12} 
+                size={14} 
                 fill={i < Math.floor(rating) ? '#ffb77d' : 'none'} 
                 strokeWidth={1.5}
               />
             ))}
           </div>
-          <span style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>
-            ({reviews})
+          <span style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', lineHeight: '1.5' }}>
+            ({reviews} đánh giá)
           </span>
         </div>
 
         {/* Technical Specs List */}
         <div style={{
           background: 'rgba(255, 255, 255, 0.02)',
-          padding: '8px',
+          padding: '10px',
           borderRadius: 'var(--rounded-sm)',
-          fontSize: '11px',
+          fontSize: '13px',
           color: 'var(--color-on-surface-variant)',
           display: 'flex',
           flexDirection: 'column',
-          gap: '4px',
+          gap: '6px',
+          lineHeight: '1.5',
           marginTop: '4px',
           border: '1px solid rgba(255, 255, 255, 0.04)'
         }}>
           {Object.entries(specs).map(([key, val]) => (
             <div key={key} style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ fontWeight: '600', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>{key}:</span>
-              <span style={{ textAlign: 'right', color: '#ffffff', maxWidth: '75%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{val}</span>
+              <span style={{ fontWeight: '600', textTransform: 'uppercase', color: 'var(--color-outline)' }}>{key}:</span>
+              <span style={{ textAlign: 'right', color: 'var(--color-on-surface)', maxWidth: '75%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{val}</span>
             </div>
           ))}
         </div>
@@ -168,39 +169,50 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
 
       {/* Action Buttons */}
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        display: 'flex',
         gap: '8px',
-        marginTop: '12px'
+        marginTop: '12px',
+        width: '100%'
       }}>
         <button
-          onClick={() => onAddToCart(product)}
-          className="btn btn-outline"
-          disabled={!inStock}
-          style={{
-            padding: '8px 10px',
-            fontSize: '12px',
-            opacity: inStock ? 1 : 0.5,
-            cursor: inStock ? 'pointer' : 'default'
-          }}
-        >
-          <ShoppingCart size={14} />
-          <span>Thêm Giỏ</span>
-        </button>
-
-        <button
-          onClick={() => onBuyNow(product)}
+          onClick={(e) => { e.stopPropagation(); onBuyNow(product); }}
           className="btn btn-secondary"
           disabled={!inStock}
           style={{
+            flex: 1,
             padding: '8px 10px',
             fontSize: '12px',
             opacity: inStock ? 1 : 0.5,
             cursor: inStock ? 'pointer' : 'default',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px'
           }}
         >
           <CreditCard size={14} color="white" />
           <b style={{ color: '#ffffff', fontWeight: '600' }}>Mua Ngay</b>
+        </button>
+
+        <button
+          onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
+          className="btn btn-outline"
+          disabled={!inStock}
+          style={{
+            padding: '8px 12px',
+            fontSize: '12px',
+            opacity: inStock ? 1 : 0.5,
+            cursor: inStock ? 'pointer' : 'default',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '2px',
+            minWidth: '44px'
+          }}
+          title="Thêm vào giỏ hàng"
+        >
+          <ShoppingCart size={14} />
+          <span style={{ fontSize: '12px', fontWeight: 'bold' }}>+</span>
         </button>
       </div>
     </div>

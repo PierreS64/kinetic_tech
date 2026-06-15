@@ -19,6 +19,26 @@ import AccountPortal from './components/AccountPortal';
 
 function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBuyNow, likedProductIds, onToggleLike, onViewDetails, theme }) {
   const rowRef = useRef(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+
+  const handleScroll = () => {
+    if (rowRef.current) {
+      setShowLeftArrow(rowRef.current.scrollLeft > 5);
+    }
+  };
+
+  useEffect(() => {
+    const el = rowRef.current;
+    if (el) {
+      el.addEventListener('scroll', handleScroll);
+      handleScroll();
+    }
+    return () => {
+      if (el) {
+        el.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
   return (
     <div style={{ marginBottom: '40px', position: 'relative' }} className="reveal-on-scroll ">
@@ -29,29 +49,31 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
 
       <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
         {/* Scroll Left Button */}
-        <button 
-          type="button"
-          onClick={() => {
-            if (rowRef.current) {
-              rowRef.current.scrollBy({ left: -320, behavior: 'smooth' });
-            }
-          }}
-          className="btn btn-ghost category-scroll-btn"
-          style={{
-            position: 'absolute',
-            left: '-16px',
-            zIndex: 10,
-            borderRadius: '50%',
-            width: '36px',
-            height: '36px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 0
-          }}
-        >
-          <ArrowLeft size={18} />
-        </button>
+        {showLeftArrow && (
+          <button 
+            type="button"
+            onClick={() => {
+              if (rowRef.current) {
+                rowRef.current.scrollBy({ left: -320, behavior: 'smooth' });
+              }
+            }}
+            className="btn btn-ghost category-scroll-btn"
+            style={{
+              position: 'absolute',
+              left: '-16px',
+              zIndex: 10,
+              borderRadius: '50%',
+              width: '36px',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 0
+            }}
+          >
+            <ArrowLeft size={18} />
+          </button>
+        )}
 
         {/* Horizontal scroll list */}
         <div 
@@ -69,7 +91,7 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
           className="no-scrollbar"
         >
           {categoryProducts.map((product) => (
-            <div key={product.id} style={{ flex: '0 0 290px' }} >
+            <div key={product.id} style={{ flex: '0 0 calc(25% - 15px)', minWidth: 'calc(25% - 15px)', maxWidth: 'calc(25% - 15px)' }} >
               <ProductCard 
                 product={product} 
                 onAddToCart={onAddToCart}
@@ -110,86 +132,13 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
     </div>
   );
 }
-
-function FlashSaleRow({ categoryName, categoryProducts, onAddToCart, onBuyNow, likedProductIds, onToggleLike, onViewDetails }) {
-  const rowRef = useRef(null);
-
-  return (
-    <div className="reveal-on-scroll flash-sale-block">
-      {/* Tiêu đề Flash Sale + Đồng hồ đếm ngược nằm cùng một hàng */}
-      <div className="flash-sale-header">
-        <h3 className="flash-sale-title">
-          <span className="flash-sale-dot" />
-          {categoryName.toUpperCase()} CHỚP NHOÁNG
-        </h3>
-        
-        {/* Bộ đồng hồ đếm ngược khít vào giữa các nền vuông nhỏ */}
-        <div className="countdown-container">
-          <div className="countdown-box">02</div>
-          <span className="countdown-divider">:</span>
-          <div className="countdown-box">45</div>
-          <span className="countdown-divider">:</span>
-          <div className="countdown-box">18</div>
-        </div>
-      </div>
-
-      {/* Danh sách sản phẩm cuộn ngang */}
-      <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-        <button 
-          type="button"
-          onClick={() => rowRef.current?.scrollBy({ left: -320, behavior: 'smooth' })}
-          className="btn btn-ghost flash-sale-nav-btn"
-          style={{ left: '-16px' }}
-        >
-          <ArrowLeft size={18} />
-        </button>
-
-        {/* Thêm padding bottom và top ở đây để khi đổ bóng (shadow) không bao giờ bị cắt khuất */}
-        <div 
-          ref={rowRef}
-          style={{
-            display: 'flex',
-            gap: '20px',
-            overflowX: 'auto',
-            scrollBehavior: 'smooth',
-            padding: '20px 10px 24px 10px',
-            width: '100%',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none'
-          }}
-          className="no-scrollbar"
-        >
-          {categoryProducts.map((product) => (
-            <div key={product.id} style={{ flex: '0 0 290px' }}>
-              <ProductCard 
-                product={product} 
-                onAddToCart={onAddToCart}
-                onBuyNow={onBuyNow}
-                isLiked={likedProductIds.includes(product.id)}
-                onToggleLike={onToggleLike}
-                onViewDetails={onViewDetails}
-              />
-            </div>
-          ))}
-        </div>
-
-        <button 
-          type="button"
-          onClick={() => rowRef.current?.scrollBy({ left: 320, behavior: 'smooth' })}
-          className="btn btn-ghost flash-sale-nav-btn"
-          style={{ right: '-16px' }}
-        >
-          <ArrowRight size={18} />
-        </button>
-      </div>
-    </div>
-  );
-}
 export default function App() {
   const [activeView, setActiveView] = useState('deals');
   const [cartOpen, setCartOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const relatedScrollRef = useRef(null);
+  const [showRelatedLeftArrow, setShowRelatedLeftArrow] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [toast, setToast] = useState(null); // { message: '', visible: false }
@@ -373,6 +322,24 @@ export default function App() {
       return () => clearTimeout(timer);
     }
   }, [toast]);
+
+  // Related products scroll arrow visibility logic
+  const handleRelatedScroll = () => {
+    if (relatedScrollRef.current) {
+      setShowRelatedLeftArrow(relatedScrollRef.current.scrollLeft > 5);
+    }
+  };
+
+  useEffect(() => {
+    const el = relatedScrollRef.current;
+    if (el) {
+      el.addEventListener('scroll', handleRelatedScroll);
+      handleRelatedScroll();
+      return () => {
+        el.removeEventListener('scroll', handleRelatedScroll);
+      };
+    }
+  }, [selectedProduct]);
   
   // Theme state
   const [theme, setTheme] = useState(() => {
@@ -410,7 +377,6 @@ export default function App() {
     }
   });
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleLoginSuccess = (userData) => {
     setCurrentUser(userData);
@@ -429,12 +395,87 @@ export default function App() {
   const [maxPrice, setMaxPrice] = useState(80000000);
   const [onlyInStock, setOnlyInStock] = useState(false);
 
+  const [laptopFilters, setLaptopFilters] = useState({
+    usage: '',
+    cpu: '',
+    ram: '',
+    storage: '',
+    gpu: '',
+    screenSize: '',
+    screenHz: ''
+  });
+  const [phoneFilters, setPhoneFilters] = useState({
+    os: '',
+    rom: '',
+    ram: '',
+    screenSize: '',
+    features: [],
+    battery: ''
+  });
+  const [gearFilters, setGearFilters] = useState({
+    type: '',
+    connection: '',
+    led: '',
+    keyboardSwitch: '',
+    keyboardLayout: '',
+    mouseWeight: '',
+    mouseDpi: ''
+  });
+  const [componentFilters, setComponentFilters] = useState({
+    type: '',
+    socket: '',
+    chipset: '',
+    ramStandard: '',
+    ramBus: '',
+    vgaBrand: '',
+    vgaVram: '',
+    psuPower: '',
+    psuEfficiency: ''
+  });
+
   // Reset filters on tab switch
   useEffect(() => {
     setSelectedBrands([]);
     setMinPrice(0);
     setMaxPrice(80000000);
     setOnlyInStock(false);
+    setLaptopFilters({
+      usage: '',
+      cpu: '',
+      ram: '',
+      storage: '',
+      gpu: '',
+      screenSize: '',
+      screenHz: ''
+    });
+    setPhoneFilters({
+      os: '',
+      rom: '',
+      ram: '',
+      screenSize: '',
+      features: [],
+      battery: ''
+    });
+    setGearFilters({
+      type: '',
+      connection: '',
+      led: '',
+      keyboardSwitch: '',
+      keyboardLayout: '',
+      mouseWeight: '',
+      mouseDpi: ''
+    });
+    setComponentFilters({
+      type: '',
+      socket: '',
+      chipset: '',
+      ramStandard: '',
+      ramBus: '',
+      vgaBrand: '',
+      vgaVram: '',
+      psuPower: '',
+      psuEfficiency: ''
+    });
   }, [activeView]);
 
   // Keep the top of the page visible when switching views
@@ -548,7 +589,343 @@ export default function App() {
     // 5. Stock check
     const matchesStock = !onlyInStock || product.inStock;
     
-    return matchesCategory && matchesSearch && matchesBrand && matchesPrice && matchesStock;
+    // 6. Category-specific specs check
+    let matchesSpecs = true;
+    if (activeView === 'laptop') {
+      const f = laptopFilters;
+      
+      // Nhu cầu
+      if (f.usage) {
+        const nameLower = product.name.toLowerCase();
+        const tagsLower = product.tags.map(t => t.toLowerCase());
+        const hasGpu = product.specs.gpu && !product.specs.gpu.toLowerCase().includes('onboard') && !product.specs.gpu.toLowerCase().includes('integrated') && !product.specs.gpu.toLowerCase().includes('arc') && !product.specs.gpu.toLowerCase().includes('intel');
+        if (f.usage === 'gaming') {
+          matchesSpecs = matchesSpecs && (tagsLower.includes('gaming') || nameLower.includes('gaming') || nameLower.includes('rog') || nameLower.includes('predator') || nameLower.includes('helios') || nameLower.includes('legion') || nameLower.includes('victus') || nameLower.includes('msi'));
+        } else if (f.usage === 'office') {
+          matchesSpecs = matchesSpecs && (tagsLower.includes('workplace') || tagsLower.includes('ultrabook') || nameLower.includes('air') || nameLower.includes('xps') || nameLower.includes('zenbook') || (!hasGpu && product.price < 25000000));
+        } else if (f.usage === 'graphics') {
+          matchesSpecs = matchesSpecs && (tagsLower.includes('đồ họa') || tagsLower.includes('kỹ thuật') || nameLower.includes('pro') || nameLower.includes('creator') || hasGpu || nameLower.includes('macbook pro'));
+        } else if (f.usage === 'thin') {
+          matchesSpecs = matchesSpecs && (tagsLower.includes('ultrabook') || nameLower.includes('macbook') || nameLower.includes('xps') || nameLower.includes('zenbook') || nameLower.includes('thin') || nameLower.includes('slim'));
+        }
+      }
+      
+      // CPU
+      if (f.cpu) {
+        const cpuLower = (product.specs.cpu || '').toLowerCase();
+        if (f.cpu === 'intel-i3') matchesSpecs = matchesSpecs && cpuLower.includes('i3');
+        else if (f.cpu === 'intel-i5') matchesSpecs = matchesSpecs && cpuLower.includes('i5');
+        else if (f.cpu === 'intel-i7') matchesSpecs = matchesSpecs && (cpuLower.includes('i7') || cpuLower.includes('ultra 7'));
+        else if (f.cpu === 'intel-i9') matchesSpecs = matchesSpecs && (cpuLower.includes('i9') || cpuLower.includes('ultra 9'));
+        else if (f.cpu === 'amd-r3') matchesSpecs = matchesSpecs && cpuLower.includes('ryzen 3');
+        else if (f.cpu === 'amd-r5') matchesSpecs = matchesSpecs && cpuLower.includes('ryzen 5');
+        else if (f.cpu === 'amd-r7') matchesSpecs = matchesSpecs && cpuLower.includes('ryzen 7');
+        else if (f.cpu === 'amd-r9') matchesSpecs = matchesSpecs && cpuLower.includes('ryzen 9');
+        else if (f.cpu === 'apple-m') matchesSpecs = matchesSpecs && (cpuLower.includes('apple m') || cpuLower.includes('m1') || cpuLower.includes('m2') || cpuLower.includes('m3') || cpuLower.includes('m4'));
+      }
+      
+      // RAM
+      if (f.ram) {
+        const ramLower = (product.specs.ram || '').toLowerCase();
+        const nameLower = product.name.toLowerCase();
+        if (f.ram === '4gb') matchesSpecs = matchesSpecs && (ramLower.includes('4gb') || nameLower.includes('4gb'));
+        else if (f.ram === '8gb') matchesSpecs = matchesSpecs && (ramLower.includes('8gb') || nameLower.includes('8gb'));
+        else if (f.ram === '16gb') matchesSpecs = matchesSpecs && (ramLower.includes('16gb') || nameLower.includes('16gb'));
+        else if (f.ram === '32gb') matchesSpecs = matchesSpecs && (ramLower.includes('32gb') || ramLower.includes('64gb') || nameLower.includes('32gb') || nameLower.includes('64gb'));
+      }
+      
+      // Storage
+      if (f.storage) {
+        const storageLower = (product.specs.storage || '').toLowerCase();
+        const nameLower = product.name.toLowerCase();
+        if (f.storage === '256gb') matchesSpecs = matchesSpecs && (storageLower.includes('256gb') || nameLower.includes('256gb'));
+        else if (f.storage === '512gb') matchesSpecs = matchesSpecs && (storageLower.includes('512gb') || storageLower.includes('512gb') || nameLower.includes('512gb'));
+        else if (f.storage === '1tb') matchesSpecs = matchesSpecs && (storageLower.includes('1tb') || storageLower.includes('2tb') || nameLower.includes('1tb') || nameLower.includes('2tb'));
+      }
+      
+      // GPU/VGA
+      if (f.gpu) {
+        const gpuLower = (product.specs.gpu || '').toLowerCase();
+        if (f.gpu === 'onboard') matchesSpecs = matchesSpecs && (gpuLower.includes('onboard') || gpuLower.includes('integrated') || gpuLower.includes('intel arc') || gpuLower.includes('intel iris') || (gpuLower.includes('gpu') && gpuLower.includes('core')) || gpuLower.includes('graphics'));
+        else if (f.gpu === 'nvidia') matchesSpecs = matchesSpecs && (gpuLower.includes('nvidia') || gpuLower.includes('rtx') || gpuLower.includes('gtx'));
+        else if (f.gpu === 'amd') matchesSpecs = matchesSpecs && (gpuLower.includes('radeon') || gpuLower.includes('rx'));
+      }
+      
+      // Screen size
+      if (f.screenSize) {
+        const nameLower = product.name.toLowerCase();
+        const screenLower = (product.specs.screen || '').toLowerCase();
+        if (f.screenSize === '13') matchesSpecs = matchesSpecs && (nameLower.includes('13') || screenLower.includes('13'));
+        else if (f.screenSize === '14') matchesSpecs = matchesSpecs && (nameLower.includes('14') || screenLower.includes('14'));
+        else if (f.screenSize === '15') matchesSpecs = matchesSpecs && (nameLower.includes('15') || screenLower.includes('15'));
+        else if (f.screenSize === '16') matchesSpecs = matchesSpecs && (nameLower.includes('16') || nameLower.includes('17') || nameLower.includes('18') || screenLower.includes('16') || screenLower.includes('17'));
+      }
+      
+      // Screen Hz
+      if (f.screenHz) {
+        const tagsLower = product.tags.map(t => t.toLowerCase());
+        const nameLower = product.name.toLowerCase();
+        const screenLower = (product.specs.screen || '').toLowerCase();
+        const fullText = nameLower + ' ' + screenLower + ' ' + tagsLower.join(' ');
+        if (f.screenHz === '60') matchesSpecs = matchesSpecs && (fullText.includes('60hz') || !fullText.includes('hz'));
+        else if (f.screenHz === '90') matchesSpecs = matchesSpecs && fullText.includes('90hz');
+        else if (f.screenHz === '120') matchesSpecs = matchesSpecs && fullText.includes('120hz');
+        else if (f.screenHz === '144') matchesSpecs = matchesSpecs && fullText.includes('144hz');
+        else if (f.screenHz === '165') matchesSpecs = matchesSpecs && (fullText.includes('165hz') || fullText.includes('240hz') || fullText.includes('360hz'));
+      }
+    } else if (activeView === 'điện thoại') {
+      const f = phoneFilters;
+      
+      // OS
+      if (f.os) {
+        const nameLower = product.name.toLowerCase();
+        const isApple = nameLower.includes('iphone') || nameLower.includes('apple');
+        if (f.os === 'ios') matchesSpecs = matchesSpecs && isApple;
+        else if (f.os === 'android') matchesSpecs = matchesSpecs && !isApple;
+      }
+      
+      // Storage ROM
+      if (f.rom) {
+        const nameLower = product.name.toLowerCase();
+        const screenLower = (product.specs.screen || '').toLowerCase();
+        const fullText = nameLower + ' ' + screenLower;
+        matchesSpecs = matchesSpecs && fullText.includes(f.rom.toLowerCase());
+      }
+      
+      // RAM
+      if (f.ram) {
+        const nameLower = product.name.toLowerCase();
+        let estRam = 8;
+        if (nameLower.includes('15 pro max')) estRam = 8;
+        else if (nameLower.includes('s24 ultra')) estRam = 12;
+        else if (nameLower.includes('z fold5')) estRam = 12;
+        else if (nameLower.includes('14 ultra')) estRam = 16;
+        else if (nameLower.includes('pixel 8 pro')) estRam = 12;
+        else if (nameLower.includes('rog phone 8 pro')) estRam = 16;
+        else if (nameLower.includes('iphone 15')) estRam = 6;
+        
+        if (f.ram === '4gb') matchesSpecs = matchesSpecs && estRam === 4;
+        else if (f.ram === '6gb') matchesSpecs = matchesSpecs && estRam === 6;
+        else if (f.ram === '8gb') matchesSpecs = matchesSpecs && estRam === 8;
+        else if (f.ram === '12gb') matchesSpecs = matchesSpecs && estRam >= 12;
+      }
+      
+      // Screen Size
+      if (f.screenSize) {
+        const screenStr = (product.specs.screen || '').toLowerCase();
+        const match = screenStr.match(/(\d+\.?\d*)\s*inch/);
+        const size = match ? parseFloat(match[1]) : 6.0;
+        const isFold = product.name.toLowerCase().includes('fold') || product.name.toLowerCase().includes('gập') || product.tags.some(t => t.toLowerCase().includes('fold'));
+        
+        if (f.screenSize === 'small') matchesSpecs = matchesSpecs && size < 6.0 && !isFold;
+        else if (f.screenSize === 'large') matchesSpecs = matchesSpecs && size >= 6.0 && !isFold;
+        else if (f.screenSize === 'fold') matchesSpecs = matchesSpecs && isFold;
+      }
+      
+      // Special features
+      if (f.features && f.features.length > 0) {
+        const nameLower = product.name.toLowerCase();
+        const tagsLower = product.tags.map(t => t.toLowerCase());
+        const specsStr = JSON.stringify(product.specs).toLowerCase();
+        const fullText = nameLower + ' ' + tagsLower.join(' ') + ' ' + specsStr;
+        
+        f.features.forEach(feat => {
+          if (feat === '5g') matchesSpecs = matchesSpecs && fullText.includes('5g');
+          if (feat === 'fast') matchesSpecs = matchesSpecs && (fullText.includes('fast') || fullText.includes('sạc nhanh') || fullText.includes('90w') || fullText.includes('charge'));
+          if (feat === 'waterproof') matchesSpecs = matchesSpecs && (fullText.includes('kháng nước') || fullText.includes('waterproof') || fullText.includes('ip68') || nameLower.includes('iphone') || nameLower.includes('s24 ultra') || nameLower.includes('pixel'));
+          if (feat === 'ois') matchesSpecs = matchesSpecs && (fullText.includes('ois') || fullText.includes('chống rung') || nameLower.includes('iphone 15 pro') || nameLower.includes('s24 ultra') || nameLower.includes('pixel 8 pro'));
+        });
+      }
+      
+      // Battery
+      if (f.battery) {
+        const batteryStr = (product.specs.battery || '').toLowerCase();
+        const match = batteryStr.match(/(\d+)\s*mah/);
+        const capacity = match ? parseInt(match[1]) : 4500;
+        if (f.battery === 'under4000') matchesSpecs = matchesSpecs && capacity < 4000;
+        else if (f.battery === '4000to5000') matchesSpecs = matchesSpecs && capacity >= 4000 && capacity <= 5000;
+        else if (f.battery === 'over5000') matchesSpecs = matchesSpecs && capacity > 5000;
+      }
+    } else if (activeView === 'gaming gear') {
+      const f = gearFilters;
+      
+      // Product Type
+      if (f.type) {
+        const nameLower = product.name.toLowerCase();
+        const tagsLower = product.tags.map(t => t.toLowerCase());
+        const fullText = nameLower + ' ' + tagsLower.join(' ');
+        if (f.type === 'keyboard') matchesSpecs = matchesSpecs && (fullText.includes('phím') || fullText.includes('keyboard') || fullText.includes('azoth'));
+        else if (f.type === 'mouse') matchesSpecs = matchesSpecs && (fullText.includes('chuột') || fullText.includes('mouse') || fullText.includes('superlight') || fullText.includes('cobra'));
+        else if (f.type === 'headset') matchesSpecs = matchesSpecs && (fullText.includes('tai nghe') || fullText.includes('headset') || fullText.includes('headphone') || fullText.includes('delta') || fullText.includes('blackshark'));
+        else if (f.type === 'mousepad') matchesSpecs = matchesSpecs && (fullText.includes('lót') || fullText.includes('pad') || fullText.includes('bàn di'));
+        else if (f.type === 'gamepad') matchesSpecs = matchesSpecs && (fullText.includes('tay cầm') || fullText.includes('gamepad') || fullText.includes('controller') || fullText.includes('xbox'));
+      }
+      
+      // Connection
+      if (f.connection) {
+        const connectivity = (product.specs.connectivity || '').toLowerCase();
+        const nameLower = product.name.toLowerCase();
+        const fullText = connectivity + ' ' + nameLower;
+        if (f.connection === 'wired') matchesSpecs = matchesSpecs && (fullText.includes('wired') || fullText.includes('có dây') || fullText.includes('type-c') || fullText.includes('usb') && !fullText.includes('wireless'));
+        else if (f.connection === 'wireless') matchesSpecs = matchesSpecs && (fullText.includes('wireless') || fullText.includes('không dây') || fullText.includes('bluetooth') || fullText.includes('bt') || fullText.includes('2.4ghz'));
+        else if (f.connection === '2.4g') matchesSpecs = matchesSpecs && (fullText.includes('2.4') || fullText.includes('receiver') || fullText.includes('dongle'));
+      }
+      
+      // LED
+      if (f.led) {
+        const specsStr = JSON.stringify(product.specs).toLowerCase();
+        const nameLower = product.name.toLowerCase();
+        const tagsLower = product.tags.map(t => t.toLowerCase());
+        const fullText = specsStr + ' ' + nameLower + ' ' + tagsLower.join(' ');
+        
+        if (f.led === 'no') matchesSpecs = matchesSpecs && !fullText.includes('rgb') && !fullText.includes('led') && !fullText.includes('matrix') && !fullText.includes('prism');
+        else if (f.led === 'single') matchesSpecs = matchesSpecs && fullText.includes('led') && !fullText.includes('rgb');
+        else if (f.led === 'rgb') matchesSpecs = matchesSpecs && (fullText.includes('rgb') || fullText.includes('chroma') || fullText.includes('prism') || fullText.includes('matrix'));
+      }
+      
+      // Keyboard dynamic
+      if (f.type === 'keyboard') {
+        if (f.keyboardSwitch) {
+          const switchStr = (product.specs.switches || '').toLowerCase();
+          if (f.keyboardSwitch === 'blue') matchesSpecs = matchesSpecs && switchStr.includes('blue');
+          else if (f.keyboardSwitch === 'red') matchesSpecs = matchesSpecs && switchStr.includes('red');
+          else if (f.keyboardSwitch === 'brown') matchesSpecs = matchesSpecs && switchStr.includes('brown');
+          else if (f.keyboardSwitch === 'custom') matchesSpecs = matchesSpecs && (switchStr.includes('nx') || switchStr.includes('pre-lubed') || switchStr.includes('lubed') || switchStr.includes('custom') || switchStr.includes('hybrid'));
+        }
+        if (f.keyboardLayout) {
+          const layoutStr = (product.specs.layout || '').toLowerCase();
+          if (f.keyboardLayout === 'fullsize') matchesSpecs = matchesSpecs && (layoutStr.includes('full') || layoutStr.includes('104') || layoutStr.includes('108'));
+          else if (f.keyboardLayout === 'tkl') matchesSpecs = matchesSpecs && (layoutStr.includes('tkl') || layoutStr.includes('87'));
+          else if (f.keyboardLayout === '75') matchesSpecs = matchesSpecs && layoutStr.includes('75%');
+          else if (f.keyboardLayout === '60') matchesSpecs = matchesSpecs && (layoutStr.includes('60%') || layoutStr.includes('65%'));
+        }
+      }
+      
+      // Mouse dynamic
+      if (f.type === 'mouse') {
+        if (f.mouseWeight) {
+          const weightStr = (product.specs.weight || '').toLowerCase();
+          const match = weightStr.match(/(\d+)\s*gram/);
+          const weightVal = match ? parseInt(match[1]) : 80;
+          if (f.mouseWeight === 'light') matchesSpecs = matchesSpecs && weightVal < 70;
+          else if (f.mouseWeight === 'standard') matchesSpecs = matchesSpecs && weightVal >= 70;
+        }
+        if (f.mouseDpi) {
+          const sensorStr = (product.specs.sensor || '').toLowerCase();
+          let dpiVal = 16000;
+          if (sensorStr.includes('32.000') || sensorStr.includes('32k')) dpiVal = 32000;
+          else if (sensorStr.includes('30k') || sensorStr.includes('30.000')) dpiVal = 30000;
+          else if (sensorStr.includes('20.000') || sensorStr.includes('20k')) dpiVal = 20000;
+          else if (sensorStr.includes('10.000') || sensorStr.includes('10k')) dpiVal = 10000;
+          
+          if (f.mouseDpi === 'under10k') matchesSpecs = matchesSpecs && dpiVal < 10000;
+          else if (f.mouseDpi === '10k20k') matchesSpecs = matchesSpecs && dpiVal >= 10000 && dpiVal <= 20000;
+          else if (f.mouseDpi === 'over20k') matchesSpecs = matchesSpecs && dpiVal > 20000;
+        }
+      }
+    } else if (activeView === 'linh kiện') {
+      const f = componentFilters;
+      
+      // Component Type
+      if (f.type) {
+        const nameLower = product.name.toLowerCase();
+        const tagsLower = product.tags.map(t => t.toLowerCase());
+        const fullText = nameLower + ' ' + tagsLower.join(' ');
+        
+        if (f.type === 'cpu') matchesSpecs = matchesSpecs && (fullText.includes('cpu') || fullText.includes('processor') || nameLower.includes('ryzen') || nameLower.includes('core i'));
+        else if (f.type === 'motherboard') matchesSpecs = matchesSpecs && (fullText.includes('mainboard') || fullText.includes('bo mạch chủ') || fullText.includes('motherboard') || nameLower.includes('maximus') || nameLower.includes('z790') || nameLower.includes('b650'));
+        else if (f.type === 'ram') matchesSpecs = matchesSpecs && (fullText.includes('ram') || fullText.includes('memory') || nameLower.includes('ddr'));
+        else if (f.type === 'vga') matchesSpecs = matchesSpecs && (fullText.includes('vga') || fullText.includes('card màn hình') || fullText.includes('card đồ họa') || nameLower.includes('rtx') || nameLower.includes('radeon'));
+        else if (f.type === 'ssd') matchesSpecs = matchesSpecs && (fullText.includes('ssd') || fullText.includes('hdd') || fullText.includes('ổ cứng') || nameLower.includes('nvme') || nameLower.includes('m.2'));
+        else if (f.type === 'psu') matchesSpecs = matchesSpecs && (fullText.includes('psu') || fullText.includes('nguồn') || fullText.includes('power supply') || nameLower.includes('shift') || nameLower.includes('rm1000x'));
+        else if (f.type === 'cooler') matchesSpecs = matchesSpecs && (fullText.includes('tản nhiệt') || fullText.includes('cooler') || nameLower.includes('ryujin') || nameLower.includes('aio'));
+        else if (f.type === 'case') matchesSpecs = matchesSpecs && (fullText.includes('case') || fullText.includes('vỏ') || nameLower.includes('lian li') || nameLower.includes('vision'));
+      }
+      
+      // Dynamic filters CPU & Mainboard
+      if (f.type === 'cpu' || f.type === 'motherboard') {
+        if (f.socket) {
+          const socketStr = (product.specs.socket || '').toLowerCase();
+          const nameLower = product.name.toLowerCase();
+          const fullText = socketStr + ' ' + nameLower;
+          if (f.socket === 'lga1700') matchesSpecs = matchesSpecs && fullText.includes('lga1700');
+          else if (f.socket === 'lga1200') matchesSpecs = matchesSpecs && fullText.includes('lga1200');
+          else if (f.socket === 'am4') matchesSpecs = matchesSpecs && fullText.includes('am4');
+          else if (f.socket === 'am5') matchesSpecs = matchesSpecs && fullText.includes('am5');
+        }
+        if (f.chipset) {
+          const nameLower = product.name.toLowerCase();
+          if (f.chipset === 'h-series') matchesSpecs = matchesSpecs && (nameLower.includes('h610') || nameLower.includes('h510') || nameLower.includes('h-series'));
+          else if (f.chipset === 'b-series') matchesSpecs = matchesSpecs && (nameLower.includes('b760') || nameLower.includes('b650') || nameLower.includes('b550') || nameLower.includes('b-series'));
+          else if (f.chipset === 'z-series') matchesSpecs = matchesSpecs && (nameLower.includes('z790') || nameLower.includes('z690') || nameLower.includes('z-series'));
+          else if (f.chipset === 'x-series') matchesSpecs = matchesSpecs && (nameLower.includes('x670') || nameLower.includes('x570') || nameLower.includes('x-series'));
+        }
+      }
+      
+      // Dynamic filters RAM
+      if (f.type === 'ram') {
+        if (f.ramStandard) {
+          const typeStr = (product.specs.type || '').toLowerCase();
+          const nameLower = product.name.toLowerCase();
+          const fullText = typeStr + ' ' + nameLower;
+          if (f.ramStandard === 'ddr4') matchesSpecs = matchesSpecs && fullText.includes('ddr4');
+          else if (f.ramStandard === 'ddr5') matchesSpecs = matchesSpecs && fullText.includes('ddr5');
+        }
+        if (f.ramBus) {
+          const speedStr = (product.specs.speed || '').toLowerCase();
+          const nameLower = product.name.toLowerCase();
+          const fullText = speedStr + ' ' + nameLower;
+          matchesSpecs = matchesSpecs && fullText.includes(f.ramBus);
+        }
+      }
+      
+      // Dynamic filters VGA
+      if (f.type === 'vga') {
+        if (f.vgaBrand) {
+          const nameLower = product.name.toLowerCase();
+          const tagsLower = product.tags.map(t => t.toLowerCase());
+          const fullText = nameLower + ' ' + tagsLower.join(' ');
+          if (f.vgaBrand === 'nvidia') matchesSpecs = matchesSpecs && (fullText.includes('nvidia') || fullText.includes('rtx') || fullText.includes('gtx'));
+          else if (f.vgaBrand === 'amd') matchesSpecs = matchesSpecs && (fullText.includes('amd') || fullText.includes('radeon') || fullText.includes('rx'));
+        }
+        if (f.vgaVram) {
+          const vramStr = (product.specs.vram || '').toLowerCase();
+          const nameLower = product.name.toLowerCase();
+          const fullText = vramStr + ' ' + nameLower;
+          if (f.vgaVram === '4gb') matchesSpecs = matchesSpecs && fullText.includes('4gb');
+          else if (f.vgaVram === '8gb') matchesSpecs = matchesSpecs && fullText.includes('8gb');
+          else if (f.vgaVram === '12gb') matchesSpecs = matchesSpecs && fullText.includes('12gb');
+          else if (f.vgaVram === '16gb') matchesSpecs = matchesSpecs && (fullText.includes('16gb') || fullText.includes('24gb'));
+        }
+      }
+      
+      // Dynamic filters PSU
+      if (f.type === 'psu') {
+        if (f.psuPower) {
+          const powerStr = (product.specs.power || '').toLowerCase();
+          const nameLower = product.name.toLowerCase();
+          const fullText = powerStr + ' ' + nameLower;
+          const match = fullText.match(/(\d+)\s*w/);
+          const watts = match ? parseInt(match[1]) : 750;
+          
+          if (f.psuPower === 'under500') matchesSpecs = matchesSpecs && watts < 500;
+          else if (f.psuPower === '500to650') matchesSpecs = matchesSpecs && watts >= 500 && watts <= 650;
+          else if (f.psuPower === '700to850') matchesSpecs = matchesSpecs && watts >= 700 && watts <= 850;
+          else if (f.psuPower === 'over850') matchesSpecs = matchesSpecs && watts > 850;
+        }
+        if (f.psuEfficiency) {
+          const effStr = (product.specs.efficiency || '').toLowerCase();
+          const nameLower = product.name.toLowerCase();
+          const fullText = effStr + ' ' + nameLower;
+          if (f.psuEfficiency === 'white') matchesSpecs = matchesSpecs && fullText.includes('white');
+          else if (f.psuEfficiency === 'bronze') matchesSpecs = matchesSpecs && fullText.includes('bronze');
+          else if (f.psuEfficiency === 'gold') matchesSpecs = matchesSpecs && fullText.includes('gold');
+          else if (f.psuEfficiency === 'platinum') matchesSpecs = matchesSpecs && fullText.includes('platinum');
+        }
+      }
+    }
+    
+    return matchesCategory && matchesSearch && matchesBrand && matchesPrice && matchesStock && matchesSpecs;
   });
 
   const featuredDeals = storeProducts.filter(p => p.featured);
@@ -558,6 +935,7 @@ export default function App() {
     if (activeView === 'laptop') return ['ASUS', 'Apple', 'Lenovo'];
     if (activeView === 'điện thoại') return ['Apple', 'Samsung', 'Xiaomi'];
     if (activeView === 'gaming gear') return ['ASUS', 'Logitech', 'Razer'];
+    if (activeView === 'linh kiện') return ['Intel', 'AMD', 'ASUS', 'MSI', 'Gigabyte', 'Corsair', 'Samsung', 'Lian Li'];
     return ['ASUS', 'Apple', 'Samsung', 'Xiaomi', 'Lenovo', 'Logitech', 'Razer', 'AMD', 'Intel', 'MSI', 'Gigabyte', 'Corsair', 'Kingston'];
   };
 
@@ -702,13 +1080,13 @@ export default function App() {
                   position: 'sticky',
                   top: '92px'
                 }}>
-                  <h3 style={{ fontSize: '14px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '10px', marginBottom: '16px', color: 'white' }}>
+                  <h3 style={{ fontSize: '14px', fontWeight: '800', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', paddingBottom: '10px', marginBottom: '16px', color: 'var(--color-on-surface)' }}>
                     BỘ LỌC TÌM KIẾM
                   </h3>
                   
                   {/* Filter Stock */}
-                  <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', color: 'white' }}>
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', color: 'var(--color-on-surface)' }}>
                       <input 
                         type="checkbox" 
                         checked={onlyInStock}
@@ -719,122 +1097,900 @@ export default function App() {
                     </label>
                   </div>
 
-                  {/* Filter Price */}
-                  <div style={{ marginBottom: '25px' }}>
-                    <h4 style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '12px', letterSpacing: '0.5px' }}>
-                      Khoảng Giá (VND)
-                    </h4>
-                    
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
-                      <div>
-                        <span style={{ fontSize: '9px', color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Giá tối thiểu</span>
-                        <input 
-                          type="text" 
-                          value={new Intl.NumberFormat('vi-VN').format(minPrice)}
+                  {/* 1. LAPTOP FILTERS */}
+                  {activeView === 'laptop' && (
+                    <>
+                      {/* Price Preset */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Mức Giá
+                        </span>
+                        <select
+                          value={`${minPrice}-${maxPrice}`}
                           onChange={(e) => {
-                            const cleanVal = e.target.value.replace(/\D/g, '');
-                            const val = cleanVal ? parseInt(cleanVal) : 0;
-                            if (val > maxPrice) {
-                              showToast("Giá tối thiểu không thể lớn hơn giá tối đa!");
+                            const val = e.target.value;
+                            if (val === '0-80000000') {
+                              setMinPrice(0);
+                              setMaxPrice(80000000);
+                            } else {
+                              const parts = val.split('-');
+                              setMinPrice(parseInt(parts[0]));
+                              setMaxPrice(parseInt(parts[1]));
                             }
-                            setMinPrice(val);
                           }}
                           className="form-input"
-                          style={{ padding: '6px 8px', fontSize: '12px', fontWeight: '700', textAlign: 'center', background: 'var(--color-surface-container-lowest)', color: 'white', border: '1px solid var(--color-outline-variant)' }}
-                        />
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="0-80000000">Tất cả mức giá</option>
+                          <option value="0-10000000">Dưới 10 triệu</option>
+                          <option value="10000000-15000000">10 - 15 triệu</option>
+                          <option value="15000000-20000000">15 - 20 triệu</option>
+                          <option value="20000000-25000000">20 - 25 triệu</option>
+                          <option value="25000000-80000000">Trên 25 triệu</option>
+                        </select>
                       </div>
-                      <div>
-                        <span style={{ fontSize: '9px', color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Giá tối đa</span>
-                        <input 
-                          type="text" 
-                          value={new Intl.NumberFormat('vi-VN').format(maxPrice)}
+
+                      {/* Brand */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Thương Hiệu
+                        </span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {getCategoryBrands().map((brand) => {
+                            const isChecked = selectedBrands.includes(brand);
+                            return (
+                              <label key={brand} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                                <input 
+                                  type="checkbox" 
+                                  checked={isChecked}
+                                  onChange={() => {
+                                    if (isChecked) {
+                                      setSelectedBrands(prev => prev.filter(b => b !== brand));
+                                    } else {
+                                      setSelectedBrands(prev => [...prev, brand]);
+                                    }
+                                  }}
+                                  style={{ width: '16px', height: '16px', accentColor: 'var(--color-primary)' }}
+                                />
+                                <span style={{ color: isChecked ? 'var(--color-primary)' : 'var(--color-on-surface-variant)', userSelect: 'none' }}>
+                                  {brand}
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Usage */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Nhu Cầu Sử Dụng
+                        </span>
+                        <select
+                          value={laptopFilters.usage}
+                          onChange={(e) => setLaptopFilters(prev => ({ ...prev, usage: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả nhu cầu</option>
+                          <option value="office">Học tập - Văn phòng</option>
+                          <option value="gaming">Gaming</option>
+                          <option value="graphics">Đồ họa - Kỹ thuật</option>
+                          <option value="thin">Mỏng nhẹ - Cao cấp</option>
+                        </select>
+                      </div>
+
+                      {/* CPU */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          CPU
+                        </span>
+                        <select
+                          value={laptopFilters.cpu}
+                          onChange={(e) => setLaptopFilters(prev => ({ ...prev, cpu: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả CPU</option>
+                          <option value="intel-i3">Intel Core i3</option>
+                          <option value="intel-i5">Intel Core i5</option>
+                          <option value="intel-i7">Intel Core i7</option>
+                          <option value="intel-i9">Intel Core i9</option>
+                          <option value="amd-r3">AMD Ryzen 3</option>
+                          <option value="amd-r5">AMD Ryzen 5</option>
+                          <option value="amd-r7">AMD Ryzen 7</option>
+                          <option value="amd-r9">AMD Ryzen 9</option>
+                          <option value="apple-m">Apple M-series</option>
+                        </select>
+                      </div>
+
+                      {/* RAM */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Dung Lượng RAM
+                        </span>
+                        <select
+                          value={laptopFilters.ram}
+                          onChange={(e) => setLaptopFilters(prev => ({ ...prev, ram: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả RAM</option>
+                          <option value="4gb">4GB</option>
+                          <option value="8gb">8GB</option>
+                          <option value="16gb">16GB</option>
+                          <option value="32gb">32GB trở lên</option>
+                        </select>
+                      </div>
+
+                      {/* Storage */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Ổ Cứng (Lưu Trữ)
+                        </span>
+                        <select
+                          value={laptopFilters.storage}
+                          onChange={(e) => setLaptopFilters(prev => ({ ...prev, storage: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả ổ cứng</option>
+                          <option value="256gb">SSD 256GB</option>
+                          <option value="512gb">SSD 512GB</option>
+                          <option value="1tb">SSD 1TB trở lên</option>
+                        </select>
+                      </div>
+
+                      {/* GPU */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Card Đồ Họa (VGA)
+                        </span>
+                        <select
+                          value={laptopFilters.gpu}
+                          onChange={(e) => setLaptopFilters(prev => ({ ...prev, gpu: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả VGA</option>
+                          <option value="onboard">Card Onboard (Tích hợp)</option>
+                          <option value="nvidia">NVIDIA (GTX/RTX)</option>
+                          <option value="amd">AMD Radeon</option>
+                        </select>
+                      </div>
+
+                      {/* Screen Size */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Kích Thước Màn Hình
+                        </span>
+                        <select
+                          value={laptopFilters.screenSize}
+                          onChange={(e) => setLaptopFilters(prev => ({ ...prev, screenSize: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả kích thước</option>
+                          <option value="13">Khoảng 13 inch</option>
+                          <option value="14">Khoảng 14 inch</option>
+                          <option value="15">Khoảng 15.6 inch</option>
+                          <option value="16">16 inch trở lên</option>
+                        </select>
+                      </div>
+
+                      {/* Screen Hz */}
+                      <div style={{ marginBottom: '20px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Tần Số Quét Màn Hình
+                        </span>
+                        <select
+                          value={laptopFilters.screenHz}
+                          onChange={(e) => setLaptopFilters(prev => ({ ...prev, screenHz: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả tần số quét</option>
+                          <option value="60">60Hz</option>
+                          <option value="90">90Hz</option>
+                          <option value="120">120Hz</option>
+                          <option value="144">144Hz</option>
+                          <option value="165">165Hz trở lên</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
+
+                  {/* 2. PHONE FILTERS */}
+                  {activeView === 'điện thoại' && (
+                    <>
+                      {/* Price Preset */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Mức Giá
+                        </span>
+                        <select
+                          value={`${minPrice}-${maxPrice}`}
                           onChange={(e) => {
-                            const cleanVal = e.target.value.replace(/\D/g, '');
-                            const val = cleanVal ? parseInt(cleanVal) : 0;
-                            if (val < minPrice) {
-                              showToast("Giá tối đa không thể nhỏ hơn giá tối thiểu!");
+                            const val = e.target.value;
+                            if (val === '0-80000000') {
+                              setMinPrice(0);
+                              setMaxPrice(80000000);
+                            } else {
+                              const parts = val.split('-');
+                              setMinPrice(parseInt(parts[0]));
+                              setMaxPrice(parseInt(parts[1]));
                             }
-                            setMaxPrice(val);
                           }}
                           className="form-input"
-                          style={{ padding: '6px 8px', fontSize: '12px', fontWeight: '700', textAlign: 'center', background: 'var(--color-surface-container-lowest)', color: 'white', border: '1px solid var(--color-outline-variant)' }}
-                        />
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="0-80000000">Tất cả mức giá</option>
+                          <option value="0-2000000">Dưới 2 triệu</option>
+                          <option value="2000000-4000000">2 - 4 triệu</option>
+                          <option value="4000000-7000000">4 - 7 triệu</option>
+                          <option value="7000000-13000000">7 - 13 triệu</option>
+                          <option value="13000000-20000000">13 - 20 triệu</option>
+                          <option value="20000000-80000000">Trên 20 triệu</option>
+                        </select>
                       </div>
-                    </div>
 
-                    {minPrice > maxPrice && (
-                      <div style={{ fontSize: '10px', color: 'var(--color-error)', display: 'block', marginBottom: '8px', fontWeight: '600' }}>
-                        * Giá tối thiểu lớn hơn giá tối đa!
+                      {/* Brand */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Thương Hiệu
+                        </span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {getCategoryBrands().map((brand) => {
+                            const isChecked = selectedBrands.includes(brand);
+                            return (
+                              <label key={brand} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                                <input 
+                                  type="checkbox" 
+                                  checked={isChecked}
+                                  onChange={() => {
+                                    if (isChecked) {
+                                      setSelectedBrands(prev => prev.filter(b => b !== brand));
+                                    } else {
+                                      setSelectedBrands(prev => [...prev, brand]);
+                                    }
+                                  }}
+                                  style={{ width: '16px', height: '16px', accentColor: 'var(--color-primary)' }}
+                                />
+                                <span style={{ color: isChecked ? 'var(--color-primary)' : 'var(--color-on-surface-variant)', userSelect: 'none' }}>
+                                  {brand}
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
                       </div>
-                    )}
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="80000000" 
-                        step="1000000"
-                        value={maxPrice}
-                        onChange={(e) => {
-                          const val = Number(e.target.value);
-                          if (val < minPrice) {
-                            showToast("Giá tối đa không thể nhỏ hơn giá tối thiểu!");
-                          }
-                          setMaxPrice(val);
-                        }}
-                        style={{ width: '100%', accentColor: 'var(--color-primary)', cursor: 'pointer', height: '6px', borderRadius: '4px' }}
-                      />
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--color-outline)' }}>
-                        <span>0đ</span>
-                        <span>80 Triệu</span>
+                      {/* OS */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Hệ Điều Hành
+                        </span>
+                        <select
+                          value={phoneFilters.os}
+                          onChange={(e) => setPhoneFilters(prev => ({ ...prev, os: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả HĐH</option>
+                          <option value="ios">iOS</option>
+                          <option value="android">Android</option>
+                        </select>
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Filter Brand */}
-                  <div style={{ marginBottom: '20px' }}>
-                    <h4 style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '10px', letterSpacing: '0.5px' }}>
-                      Thương Hiệu
-                    </h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', maxHeight: '180px', overflowY: 'auto' }}>
-                      {getCategoryBrands().map((brand) => {
-                        const isChecked = selectedBrands.includes(brand);
-                        return (
-                          <label key={brand} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                            <input 
-                              type="checkbox" 
-                              checked={isChecked}
-                              onChange={() => {
-                                if (isChecked) {
-                                  setSelectedBrands(prev => prev.filter(b => b !== brand));
-                                } else {
-                                  setSelectedBrands(prev => [...prev, brand]);
-                                }
-                              }}
-                              style={{ width: '16px', height: '16px', accentColor: 'var(--color-primary)' }}
-                            />
-                            <span style={{ color: isChecked ? 'white' : 'var(--color-on-surface-variant)', userSelect: 'none' }}>
-                              {brand}
+                      {/* ROM */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Dung Lượng ROM
+                        </span>
+                        <select
+                          value={phoneFilters.rom}
+                          onChange={(e) => setPhoneFilters(prev => ({ ...prev, rom: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả bộ nhớ</option>
+                          <option value="64GB">64GB</option>
+                          <option value="128GB">128GB</option>
+                          <option value="256GB">256GB</option>
+                          <option value="512GB">512GB</option>
+                          <option value="1TB">1TB</option>
+                        </select>
+                      </div>
+
+                      {/* RAM */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Dung Lượng RAM
+                        </span>
+                        <select
+                          value={phoneFilters.ram}
+                          onChange={(e) => setPhoneFilters(prev => ({ ...prev, ram: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả RAM</option>
+                          <option value="4gb">4GB</option>
+                          <option value="6gb">6GB</option>
+                          <option value="8gb">8GB</option>
+                          <option value="12gb">12GB trở lên</option>
+                        </select>
+                      </div>
+
+                      {/* Screen Size */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Đặc Điểm Màn Hình
+                        </span>
+                        <select
+                          value={phoneFilters.screenSize}
+                          onChange={(e) => setPhoneFilters(prev => ({ ...prev, screenSize: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả màn hình</option>
+                          <option value="small">Dưới 6 inch (Nhỏ gọn)</option>
+                          <option value="large">Trên 6 inch</option>
+                          <option value="fold">Màn hình gập</option>
+                        </select>
+                      </div>
+
+                      {/* Features */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Tính Năng Đặc Biệt
+                        </span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {[
+                            { id: '5g', label: 'Hỗ trợ mạng 5G' },
+                            { id: 'fast', label: 'Sạc siêu nhanh' },
+                            { id: 'waterproof', label: 'Kháng nước/bụi' },
+                            { id: 'ois', label: 'Chống rung OIS' }
+                          ].map(feat => {
+                            const isChecked = phoneFilters.features.includes(feat.id);
+                            return (
+                              <label key={feat.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => {
+                                    if (isChecked) {
+                                      setPhoneFilters(prev => ({ ...prev, features: prev.features.filter(f => f !== feat.id) }));
+                                    } else {
+                                      setPhoneFilters(prev => ({ ...prev, features: [...prev.features, feat.id] }));
+                                    }
+                                  }}
+                                  style={{ width: '16px', height: '16px', accentColor: 'var(--color-primary)' }}
+                                />
+                                <span style={{ color: isChecked ? 'var(--color-primary)' : 'var(--color-on-surface-variant)', userSelect: 'none' }}>
+                                  {feat.label}
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Battery */}
+                      <div style={{ marginBottom: '20px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Dung Lượng Pin
+                        </span>
+                        <select
+                          value={phoneFilters.battery}
+                          onChange={(e) => setPhoneFilters(prev => ({ ...prev, battery: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả dung lượng</option>
+                          <option value="under4000">Dưới 4000 mAh</option>
+                          <option value="4000to5000">4000 - 5000 mAh</option>
+                          <option value="over5000">Trên 5000 mAh</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
+
+                  {/* 3. GAMING GEAR FILTERS */}
+                  {activeView === 'gaming gear' && (
+                    <>
+                      {/* Price Preset */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Mức Giá
+                        </span>
+                        <select
+                          value={`${minPrice}-${maxPrice}`}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === '0-80000000') {
+                              setMinPrice(0);
+                              setMaxPrice(80000000);
+                            } else {
+                              const parts = val.split('-');
+                              setMinPrice(parseInt(parts[0]));
+                              setMaxPrice(parseInt(parts[1]));
+                            }
+                          }}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="0-80000000">Tất cả mức giá</option>
+                          <option value="0-1000000">Dưới 1 triệu</option>
+                          <option value="1000000-3000000">1 - 3 triệu</option>
+                          <option value="3000000-5000000">3 - 5 triệu</option>
+                          <option value="5000000-80000000">Trên 5 triệu</option>
+                        </select>
+                      </div>
+
+                      {/* Brand */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Thương Hiệu
+                        </span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {getCategoryBrands().map((brand) => {
+                            const isChecked = selectedBrands.includes(brand);
+                            return (
+                              <label key={brand} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                                <input 
+                                  type="checkbox" 
+                                  checked={isChecked}
+                                  onChange={() => {
+                                    if (isChecked) {
+                                      setSelectedBrands(prev => prev.filter(b => b !== brand));
+                                    } else {
+                                      setSelectedBrands(prev => [...prev, brand]);
+                                    }
+                                  }}
+                                  style={{ width: '16px', height: '16px', accentColor: 'var(--color-primary)' }}
+                                />
+                                <span style={{ color: isChecked ? 'var(--color-primary)' : 'var(--color-on-surface-variant)', userSelect: 'none' }}>
+                                  {brand}
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Product Type */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Loại Sản Phẩm
+                        </span>
+                        <select
+                          value={gearFilters.type}
+                          onChange={(e) => setGearFilters(prev => ({ ...prev, type: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả Gaming Gear</option>
+                          <option value="keyboard">Bàn phím cơ</option>
+                          <option value="mouse">Chuột gaming</option>
+                          <option value="headset">Tai nghe</option>
+                          <option value="mousepad">Lót chuột (Mousepad)</option>
+                          <option value="gamepad">Tay cầm (Gamepad)</option>
+                        </select>
+                      </div>
+
+                      {/* Connection */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Kết Nối
+                        </span>
+                        <select
+                          value={gearFilters.connection}
+                          onChange={(e) => setGearFilters(prev => ({ ...prev, connection: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả kết nối</option>
+                          <option value="wired">Có dây (Type-C/USB)</option>
+                          <option value="wireless">Không dây (Bluetooth)</option>
+                          <option value="2.4g">Wireless 2.4GHz</option>
+                        </select>
+                      </div>
+
+                      {/* LED */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Hệ Thống LED
+                        </span>
+                        <select
+                          value={gearFilters.led}
+                          onChange={(e) => setGearFilters(prev => ({ ...prev, led: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả hệ thống LED</option>
+                          <option value="no">Không LED</option>
+                          <option value="single">LED đơn sắc</option>
+                          <option value="rgb">LED RGB</option>
+                        </select>
+                      </div>
+
+                      {/* Dynamic Keyboard Filters */}
+                      {gearFilters.type === 'keyboard' && (
+                        <>
+                          <div style={{ marginBottom: '14px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Loại Switch
                             </span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
+                            <select
+                              value={gearFilters.keyboardSwitch}
+                              onChange={(e) => setGearFilters(prev => ({ ...prev, keyboardSwitch: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả Switch</option>
+                              <option value="blue">Blue (Clicky)</option>
+                              <option value="red">Red (Linear)</option>
+                              <option value="brown">Brown (Tactile)</option>
+                              <option value="custom">Custom Switch</option>
+                            </select>
+                          </div>
+                          <div style={{ marginBottom: '20px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Kích Thước (Layout)
+                            </span>
+                            <select
+                              value={gearFilters.keyboardLayout}
+                              onChange={(e) => setGearFilters(prev => ({ ...prev, keyboardLayout: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả Layout</option>
+                              <option value="fullsize">Fullsize (104/108 phím)</option>
+                              <option value="tkl">TKL (87 phím)</option>
+                              <option value="75">75%</option>
+                              <option value="60">60-65%</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Dynamic Mouse Filters */}
+                      {gearFilters.type === 'mouse' && (
+                        <>
+                          <div style={{ marginBottom: '14px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Trọng Lượng
+                            </span>
+                            <select
+                              value={gearFilters.mouseWeight}
+                              onChange={(e) => setGearFilters(prev => ({ ...prev, mouseWeight: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả trọng lượng</option>
+                              <option value="light">Siêu nhẹ (Dưới 70g)</option>
+                              <option value="standard">Tiêu chuẩn</option>
+                            </select>
+                          </div>
+                          <div style={{ marginBottom: '20px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              DPI Tối Đa
+                            </span>
+                            <select
+                              value={gearFilters.mouseDpi}
+                              onChange={(e) => setGearFilters(prev => ({ ...prev, mouseDpi: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả mức DPI</option>
+                              <option value="under10k">Dưới 10.000</option>
+                              <option value="10k20k">10.000 - 20.000</option>
+                              <option value="over20k">Trên 20.000</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  {/* 4. PC COMPONENT FILTERS */}
+                  {activeView === 'linh kiện' && (
+                    <>
+                      {/* Price Preset */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Mức Giá
+                        </span>
+                        <select
+                          value={`${minPrice}-${maxPrice}`}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val === '0-80000000') {
+                              setMinPrice(0);
+                              setMaxPrice(80000000);
+                            } else {
+                              const parts = val.split('-');
+                              setMinPrice(parseInt(parts[0]));
+                              setMaxPrice(parseInt(parts[1]));
+                            }
+                          }}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="0-80000000">Tất cả mức giá</option>
+                          <option value="0-3000000">Dưới 3 triệu</option>
+                          <option value="3000000-8000000">3 - 8 triệu</option>
+                          <option value="8000000-15000000">8 - 15 triệu</option>
+                          <option value="15000000-80000000">Trên 15 triệu</option>
+                        </select>
+                      </div>
+
+                      {/* Brand */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Thương Hiệu
+                        </span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {getCategoryBrands().map((brand) => {
+                            const isChecked = selectedBrands.includes(brand);
+                            return (
+                              <label key={brand} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
+                                <input 
+                                  type="checkbox" 
+                                  checked={isChecked}
+                                  onChange={() => {
+                                    if (isChecked) {
+                                      setSelectedBrands(prev => prev.filter(b => b !== brand));
+                                    } else {
+                                      setSelectedBrands(prev => [...prev, brand]);
+                                    }
+                                  }}
+                                  style={{ width: '16px', height: '16px', accentColor: 'var(--color-primary)' }}
+                                />
+                                <span style={{ color: isChecked ? 'var(--color-primary)' : 'var(--color-on-surface-variant)', userSelect: 'none' }}>
+                                  {brand}
+                                </span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Component Type */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                          Loại Linh Kiện
+                        </span>
+                        <select
+                          value={componentFilters.type}
+                          onChange={(e) => setComponentFilters(prev => ({ ...prev, type: e.target.value }))}
+                          className="form-input"
+                          style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                        >
+                          <option value="">Tất cả linh kiện</option>
+                          <option value="cpu">CPU</option>
+                          <option value="motherboard">Mainboard (Bo mạch chủ)</option>
+                          <option value="ram">RAM</option>
+                          <option value="vga">VGA (Card màn hình)</option>
+                          <option value="ssd">Ổ cứng (SSD/HDD)</option>
+                          <option value="psu">Nguồn (PSU)</option>
+                          <option value="cooler">Tản nhiệt</option>
+                          <option value="case">Vỏ case</option>
+                        </select>
+                      </div>
+
+                      {/* Dynamic CPU & Mainboard Filters */}
+                      {(componentFilters.type === 'cpu' || componentFilters.type === 'motherboard') && (
+                        <>
+                          <div style={{ marginBottom: '14px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Socket
+                            </span>
+                            <select
+                              value={componentFilters.socket}
+                              onChange={(e) => setComponentFilters(prev => ({ ...prev, socket: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả Socket</option>
+                              <option value="lga1700">LGA 1700</option>
+                              <option value="lga1200">LGA 1200</option>
+                              <option value="am4">AM4</option>
+                              <option value="am5">AM5</option>
+                            </select>
+                          </div>
+                          {componentFilters.type === 'motherboard' && (
+                            <div style={{ marginBottom: '20px' }}>
+                              <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                                Chipset
+                              </span>
+                              <select
+                                value={componentFilters.chipset}
+                                onChange={(e) => setComponentFilters(prev => ({ ...prev, chipset: e.target.value }))}
+                                className="form-input"
+                                style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                              >
+                                <option value="">Tất cả Chipset</option>
+                                <option value="h-series">H-series</option>
+                                <option value="b-series">B-series</option>
+                                <option value="z-series">Z-series</option>
+                                <option value="x-series">X-series</option>
+                              </select>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {/* Dynamic RAM Filters */}
+                      {componentFilters.type === 'ram' && (
+                        <>
+                          <div style={{ marginBottom: '14px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Chuẩn RAM
+                            </span>
+                            <select
+                              value={componentFilters.ramStandard}
+                              onChange={(e) => setComponentFilters(prev => ({ ...prev, ramStandard: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả chuẩn RAM</option>
+                              <option value="ddr4">DDR4</option>
+                              <option value="ddr5">DDR5</option>
+                            </select>
+                          </div>
+                          <div style={{ marginBottom: '20px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Tốc Độ Bus
+                            </span>
+                            <select
+                              value={componentFilters.ramBus}
+                              onChange={(e) => setComponentFilters(prev => ({ ...prev, ramBus: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả tốc độ Bus</option>
+                              <option value="3200">3200MHz</option>
+                              <option value="4800">4800MHz</option>
+                              <option value="5600">5600MHz</option>
+                              <option value="6000">6000MHz</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Dynamic VGA Filters */}
+                      {componentFilters.type === 'vga' && (
+                        <>
+                          <div style={{ marginBottom: '14px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Chip Đồ Họa
+                            </span>
+                            <select
+                              value={componentFilters.vgaBrand}
+                              onChange={(e) => setComponentFilters(prev => ({ ...prev, vgaBrand: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả Chip đồ họa</option>
+                              <option value="nvidia">NVIDIA</option>
+                              <option value="amd">AMD</option>
+                            </select>
+                          </div>
+                          <div style={{ marginBottom: '20px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Dung Lượng VRAM
+                            </span>
+                            <select
+                              value={componentFilters.vgaVram}
+                              onChange={(e) => setComponentFilters(prev => ({ ...prev, vgaVram: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả VRAM</option>
+                              <option value="4gb">4GB</option>
+                              <option value="8gb">8GB</option>
+                              <option value="12gb">12GB</option>
+                              <option value="16gb">16GB trở lên</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Dynamic PSU Filters */}
+                      {componentFilters.type === 'psu' && (
+                        <>
+                          <div style={{ marginBottom: '14px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Công Suất
+                            </span>
+                            <select
+                              value={componentFilters.psuPower}
+                              onChange={(e) => setComponentFilters(prev => ({ ...prev, psuPower: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả công suất</option>
+                              <option value="under500">Dưới 500W</option>
+                              <option value="500to650">500W - 650W</option>
+                              <option value="700to850">700W - 850W</option>
+                              <option value="over850">Trên 850W</option>
+                            </select>
+                          </div>
+                          <div style={{ marginBottom: '20px' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', textTransform: 'uppercase', fontWeight: 700, marginBottom: '6px', display: 'block', letterSpacing: '0.5px' }}>
+                              Chuẩn Hiệu Suất
+                            </span>
+                            <select
+                              value={componentFilters.psuEfficiency}
+                              onChange={(e) => setComponentFilters(prev => ({ ...prev, psuEfficiency: e.target.value }))}
+                              className="form-input"
+                              style={{ width: '100%', padding: '8px', fontSize: '13px', background: 'var(--color-surface-container-lowest)', color: 'var(--color-on-surface)', border: '1px solid var(--color-outline-variant)', borderRadius: '4px' }}
+                            >
+                              <option value="">Tất cả chuẩn hiệu suất</option>
+                              <option value="white">80 Plus White</option>
+                              <option value="bronze">80 Plus Bronze</option>
+                              <option value="gold">80 Plus Gold</option>
+                              <option value="platinum">80 Plus Platinum</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )}
 
                   {/* Reset Filters button */}
-                  <button 
-                    onClick={() => {
-                      setSelectedBrands([]);
-                      setMinPrice(0);
-                      setMaxPrice(80000000);
-                      setOnlyInStock(false);
-                    }}
-                    className="btn btn-outline"
-                    style={{ width: '100%', padding: '8px', fontSize: '12px' }}
-                  >
-                    Xóa bộ lọc
-                  </button>
+                  <div style={{ marginTop: '16px' }}>
+                    <button 
+                      onClick={() => {
+                        setSelectedBrands([]);
+                        setMinPrice(0);
+                        setMaxPrice(80000000);
+                        setOnlyInStock(false);
+                        setLaptopFilters({
+                          usage: '',
+                          cpu: '',
+                          ram: '',
+                          storage: '',
+                          gpu: '',
+                          screenSize: '',
+                          screenHz: ''
+                        });
+                        setPhoneFilters({
+                          os: '',
+                          rom: '',
+                          ram: '',
+                          screenSize: '',
+                          features: [],
+                          battery: ''
+                        });
+                        setGearFilters({
+                          type: '',
+                          connection: '',
+                          led: '',
+                          keyboardSwitch: '',
+                          keyboardLayout: '',
+                          mouseWeight: '',
+                          mouseDpi: ''
+                        });
+                        setComponentFilters({
+                          type: '',
+                          socket: '',
+                          chipset: '',
+                          ramStandard: '',
+                          ramBus: '',
+                          vgaBrand: '',
+                          vgaVram: '',
+                          psuPower: '',
+                          psuEfficiency: ''
+                        });
+                      }}
+                      className="btn btn-outline"
+                      style={{ width: '100%', padding: '8px', fontSize: '12px' }}
+                    >
+                      Xóa bộ lọc
+                    </button>
+                  </div>
                 </aside>
 
                 {/* Product Grid Area */}
@@ -852,13 +2008,7 @@ export default function App() {
                       <p>Không tìm thấy sản phẩm nào phù hợp với bộ lọc hiện tại.</p>
                     </div>
                   ) : (
-                    <div 
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                        gap: '24px'
-                      }}
-                    >
+                    <div className="product-grid">
                       {filteredProducts.map((product) => (
                         <ProductCard 
                           key={product.id} 
@@ -1261,18 +2411,18 @@ export default function App() {
                 display: 'flex',
                 flexDirection: 'column',
                 boxShadow: '0 24px 64px rgba(0, 0, 0, 0.8)',
-                border: '1px solid rgba(255, 255, 255, 0.1)'
+                border: theme === 'light' ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255, 255, 255, 0.1)'
               }}
             >
               {/* Modal Header */}
-              <div style={{ padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)' }}>
+              <div style={{ padding: '16px 24px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
                 <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Chi tiết sản phẩm</h3>
                 <button 
                   onClick={() => setSelectedProduct(null)} 
                   className="btn btn-ghost" 
                   style={{ padding: '6px', borderRadius: '50%', minWidth: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
-                  <X size={20} color="white" />
+                  <X size={20} color={theme === 'light' ? '#334155' : 'white'} />
                 </button>
               </div>
 
@@ -1281,7 +2431,7 @@ export default function App() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) 1.2fr', gap: '28px' }} className="catalog-layout">
                   {/* Left: Product Image */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div style={{ background: 'var(--color-surface-container-lowest)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 'var(--rounded-md)', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '280px' }}>
+                    <div style={{ background: theme === 'light' ? '#f1f5f9' : 'var(--color-surface-container-lowest)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)', borderRadius: 'var(--rounded-md)', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '280px' }}>
                       <img 
                         src={selectedProduct.image} 
                         alt={selectedProduct.name} 
@@ -1293,15 +2443,15 @@ export default function App() {
                     </div>
                     
                     {/* Specs block */}
-                    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: 'var(--rounded-md)', border: '1px solid rgba(255,255,255,0.04)' }}>
+                    <div style={{ background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)', padding: '14px', borderRadius: 'var(--rounded-md)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }}>
                       <h4 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '0.5px' }}>
                         Thông Số Kỹ Thuật
                       </h4>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         {Object.entries(selectedProduct.specs).map(([key, val]) => (
                           <div key={key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-                            <span style={{ fontWeight: '600', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>{key}:</span>
-                            <span style={{ color: 'white', textAlign: 'right', fontWeight: '500' }}>{val}</span>
+                            <span style={{ fontWeight: '600', textTransform: 'uppercase', color: theme === 'light' ? '#94a3b8' : 'rgba(255,255,255,0.4)' }}>{key}:</span>
+                            <span style={{ color: theme === 'light' ? '#0f172a' : 'white', textAlign: 'right', fontWeight: '500' }}>{val}</span>
                           </div>
                         ))}
                       </div>
@@ -1314,20 +2464,20 @@ export default function App() {
                       <span className={`status-badge ${selectedProduct.inStock ? 'status-badge-stock' : ''}`} style={{ background: selectedProduct.inStock ? '' : '#373a3b', color: selectedProduct.inStock ? '' : '#c1c6d7', marginBottom: '8px' }}>
                         {selectedProduct.inStock ? 'Còn hàng' : 'Hết hàng'}
                       </span>
-                      <h2 style={{ fontSize: '20px', fontWeight: '800', lineHeight: '1.4', color: 'white', marginBottom: '6px' }}>
+                      <h2 style={{ fontSize: '20px', fontWeight: '800', lineHeight: '1.4', color: theme === 'light' ? '#0f172a' : 'white', marginBottom: '6px' }}>
                         {selectedProduct.name}
                       </h2>
                       
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--color-on-surface-variant)' }}>
                         <span style={{ color: '#ffb77d', fontWeight: 'bold' }}>★ {selectedProduct.rating}</span>
-                        <span>({selectedProduct.reviews} đánh giá)</span>
-                        <span>|</span>
-                        <span>Mã SP: {selectedProduct.id.toUpperCase()}</span>
+                        <span style={{ color: theme === 'light' ? '#475569' : 'var(--color-on-surface-variant)' }}>({selectedProduct.reviews} đánh giá)</span>
+                        <span style={{ color: theme === 'light' ? '#94a3b8' : 'inherit' }}>|</span>
+                        <span style={{ color: theme === 'light' ? '#475569' : 'inherit' }}>Mã SP: {selectedProduct.id.toUpperCase()}</span>
                       </div>
                     </div>
 
                     {/* Price Block */}
-                    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px 18px', borderRadius: 'var(--rounded-md)', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+                    <div style={{ background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)', padding: '14px 18px', borderRadius: 'var(--rounded-md)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'baseline', gap: '12px' }}>
                       <span style={{ fontSize: '24px', fontWeight: '800', color: 'var(--color-secondary-dim)' }}>
                         {formatVND(selectedProduct.price)}
                       </span>
@@ -1373,7 +2523,7 @@ export default function App() {
                             title="Click để sao chép"
                           >
                             <span style={{ color: 'var(--color-secondary-dim)', fontWeight: 'bold' }}>{p.code}</span>
-                            <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: '10px' }}>({p.desc})</span>
+                            <span style={{ color: theme === 'light' ? '#64748b' : 'rgba(255,255,255,0.5)', fontSize: '10px' }}>({p.desc})</span>
                           </div>
                         ))}
                       </div>
@@ -1413,37 +2563,39 @@ export default function App() {
 
                 {/* Related Products horizontal scroll carousel */}
                 {related.length > 0 && (
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '20px', position: 'relative' }}>
-                    <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'white', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.5px' }}>
+                  <div style={{ borderTop: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)', paddingTop: '20px', position: 'relative' }}>
+                    <h4 style={{ fontSize: '13px', fontWeight: '800', color: theme === 'light' ? '#0f172a' : 'white', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.5px' }}>
                       Sản phẩm nổi bật cùng loại
                     </h4>
                     
                     <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                       {/* Slide Left button */}
-                      <button 
-                        onClick={() => {
-                          if (relatedScrollRef.current) {
-                            relatedScrollRef.current.scrollBy({ left: -220, behavior: 'smooth' });
-                          }
-                        }}
-                        className="btn btn-ghost"
-                        style={{
-                          position: 'absolute',
-                          left: '-16px',
-                          zIndex: 10,
-                          background: 'rgba(21, 24, 25, 0.9)',
-                          border: '1px solid rgba(255,255,255,0.1)',
-                          borderRadius: '50%',
-                          width: '32px',
-                          height: '32px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          padding: 0
-                        }}
-                      >
-                        <ArrowLeft size={16} color="white" />
-                      </button>
+                      {showRelatedLeftArrow && (
+                        <button 
+                          onClick={() => {
+                            if (relatedScrollRef.current) {
+                              relatedScrollRef.current.scrollBy({ left: -220, behavior: 'smooth' });
+                            }
+                          }}
+                          className="btn btn-ghost"
+                          style={{
+                            position: 'absolute',
+                            left: '-16px',
+                            zIndex: 10,
+                            background: 'rgba(21, 24, 25, 0.9)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '50%',
+                            width: '32px',
+                            height: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 0
+                          }}
+                        >
+                          <ArrowLeft size={16} color="white" />
+                        </button>
+                      )}
 
                       {/* Slider Scroll container */}
                       <div 
@@ -1465,9 +2617,11 @@ export default function App() {
                             key={prod.id}
                             onClick={() => setSelectedProduct(prod)}
                             style={{
-                              flex: '0 0 200px',
+                              flex: '0 0 calc(25% - 12px)',
+                              minWidth: 'calc(25% - 12px)',
+                              maxWidth: 'calc(25% - 12px)',
                               background: 'var(--color-surface-container-low)',
-                              border: '1px solid rgba(255,255,255,0.06)',
+                              border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)',
                               borderRadius: 'var(--rounded)',
                               padding: '12px',
                               display: 'flex',
@@ -1481,7 +2635,7 @@ export default function App() {
                             <div style={{ height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'var(--color-surface-container-lowest)', borderRadius: '4px' }}>
                               <img src={prod.image} alt={prod.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
                             </div>
-                            <h5 style={{ fontSize: '11px', fontWeight: '600', color: 'white', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '32px', lineHeight: '1.4' }}>
+                            <h5 style={{ fontSize: '11px', fontWeight: '600', color: theme === 'light' ? '#0f172a' : 'white', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '32px', lineHeight: '1.4' }}>
                               {prod.name}
                             </h5>
                             <strong style={{ fontSize: '12px', color: 'var(--color-secondary-dim)' }}>
@@ -1528,6 +2682,32 @@ export default function App() {
 
       {/* Embedded CSS rules for media queries responsive layout inside JS */}
       <style>{`
+        .product-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 24px;
+          width: 100%;
+        }
+        @media (max-width: 1200px) {
+          .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 899px) {
+          .product-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+        @media (max-width: 768px) {
+          .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 480px) {
+          .product-grid {
+            grid-template-columns: 1fr;
+          }
+        }
         @media (max-width: 899px) {
           .catalog-layout {
             grid-template-columns: 1fr !important;

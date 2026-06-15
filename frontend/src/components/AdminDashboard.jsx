@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import { 
-  TrendingUp, 
-  ShoppingBag, 
-  Package, 
-  MessageSquare, 
-  Shield, 
-  Search, 
-  Plus, 
-  Trash2, 
-  CheckCircle2, 
-  XCircle, 
-  AlertCircle, 
-  ArrowRight, 
-  DollarSign, 
-  Wrench, 
-  RefreshCw, 
-  FileText, 
+import {
+  TrendingUp,
+  ShoppingBag,
+  Package,
+  MessageSquare,
+  Shield,
+  Search,
+  Plus,
+  Trash2,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  ArrowRight,
+  DollarSign,
+  Wrench,
+  RefreshCw,
+  FileText,
   ChevronRight,
   Filter,
   Check,
   X,
-  Edit2
+  Edit2,
+  Tag
 } from 'lucide-react';
 
 // Pre-configured mock data for Admin Dashboard
@@ -179,9 +180,9 @@ const MOCK_TICKETS = [
   }
 ];
 
-export default function AdminDashboard({ 
-  storeProducts, 
-  setStoreProducts, 
+export default function AdminDashboard({
+  storeProducts,
+  setStoreProducts,
   theme,
   orders = [],
   setOrders,
@@ -194,16 +195,127 @@ export default function AdminDashboard({
   feedbacks = [],
   setFeedbacks
 }) {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'orders', 'products', 'tickets', 'warranties', 'tradein', 'feedbacks'
-  
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'orders', 'products', 'tickets', 'warranties', 'tradein', 'feedbacks', 'promotions'
+
   // Modal & Selection States
   const [selectedOrder, setSelectedOrder] = useState(null);
+
+  // Promotions States
+  const [promotions, setPromotions] = useState([
+    {
+      id: 'PROM-001',
+      name: 'Mừng hè rực rỡ 2026',
+      discountPercent: 10,
+      startDate: '2026-06-01',
+      endDate: '2026-06-30',
+      salesCount: 15,
+      revenue: 45000000,
+      productIds: ['lap-01', 'phone-01']
+    },
+    {
+      id: 'PROM-002',
+      name: 'Bão Deal Hi-End PC',
+      discountPercent: 15,
+      startDate: '2026-06-10',
+      endDate: '2026-06-20',
+      salesCount: 5,
+      revenue: 120000000,
+      productIds: ['comp-02', 'gear-01']
+    }
+  ]);
+
+  const [isAddingPromo, setIsAddingPromo] = useState(false);
+  const [newPromo, setNewPromo] = useState({
+    name: '',
+    discountPercent: 10,
+    startDate: '2026-06-15',
+    endDate: '2026-06-30'
+  });
+
+  const [selectedPromoForEdit, setSelectedPromoForEdit] = useState(null);
+  const [productToAddToPromo, setProductToAddToPromo] = useState('');
+
+  const handleAddPromo = (e) => {
+    e.preventDefault();
+    if (!newPromo.name) return;
+    const promoToAdd = {
+      id: 'PROM-' + Date.now().toString().slice(-3),
+      name: newPromo.name,
+      discountPercent: Number(newPromo.discountPercent) || 0,
+      startDate: newPromo.startDate,
+      endDate: newPromo.endDate,
+      salesCount: 0,
+      revenue: 0,
+      productIds: []
+    };
+    setPromotions(prev => [...prev, promoToAdd]);
+    setIsAddingPromo(false);
+    setNewPromo({
+      name: '',
+      discountPercent: 10,
+      startDate: '2026-06-15',
+      endDate: '2026-06-30'
+    });
+  };
+
+  const handleDeletePromo = (id) => {
+    setPromotions(prev => prev.filter(p => p.id !== id));
+    if (selectedPromoForEdit && selectedPromoForEdit.id === id) {
+      setSelectedPromoForEdit(null);
+    }
+  };
+
+  const handleAddProductToPromo = (promoId, prodId) => {
+    if (!prodId) return;
+    setPromotions(prev => prev.map(promo => {
+      if (promo.id === promoId) {
+        if (promo.productIds.includes(prodId)) return promo;
+        return {
+          ...promo,
+          productIds: [...promo.productIds, prodId]
+        };
+      }
+      return promo;
+    }));
+    if (selectedPromoForEdit && selectedPromoForEdit.id === promoId) {
+      setSelectedPromoForEdit(prev => {
+        if (prev.productIds.includes(prodId)) return prev;
+        return {
+          ...prev,
+          productIds: [...prev.productIds, prodId]
+        };
+      });
+    }
+  };
+
+  const handleRemoveProductFromPromo = (promoId, prodId) => {
+    setPromotions(prev => prev.map(promo => {
+      if (promo.id === promoId) {
+        return {
+          ...promo,
+          productIds: promo.productIds.filter(id => id !== prodId)
+        };
+      }
+      return promo;
+    }));
+    if (selectedPromoForEdit && selectedPromoForEdit.id === promoId) {
+      setSelectedPromoForEdit(prev => ({
+        ...prev,
+        productIds: prev.productIds.filter(id => id !== prodId)
+      }));
+    }
+  };
+
+  const handlePromoProductPriceChange = (prodId, rawValue) => {
+    const numeric = parseInt(rawValue.replace(/\D/g, '')) || 0;
+    setStoreProducts(prev => prev.map(p => p.id === prodId ? { ...p, price: numeric } : p));
+  };
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [ticketReplyText, setTicketReplyText] = useState('');
   const [selectedWarranty, setSelectedWarranty] = useState(null);
   const [selectedTradeIn, setSelectedTradeIn] = useState(null);
   const [offeredTradeInValuation, setOfferedTradeInValuation] = useState('');
-  
+
   // Product Form states
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [newProduct, setNewProduct] = useState({
@@ -361,15 +473,15 @@ export default function AdminDashboard({
   };
 
   // Filter calculations
-  const filteredOrders = orders.filter(o => 
+  const filteredOrders = orders.filter(o =>
     o.id.toLowerCase().includes(orderSearch.toLowerCase()) ||
     o.customerName.toLowerCase().includes(orderSearch.toLowerCase()) ||
     o.phone.includes(orderSearch)
   );
 
   const filteredInventoryProducts = storeProducts.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase()) || 
-                          p.id.toLowerCase().includes(productSearch.toLowerCase());
+    const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
+      p.id.toLowerCase().includes(productSearch.toLowerCase());
     const matchesCategory = selectedCategoryFilter === 'all' || p.category === selectedCategoryFilter;
     return matchesSearch && matchesCategory;
   });
@@ -383,7 +495,7 @@ export default function AdminDashboard({
   return (
     <div style={{ padding: '30px 0', minHeight: '80vh' }}>
       <div className="container">
-        
+
         {/* Dashboard Title & Stats Overview */}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '20px', marginBottom: '30px' }}>
           <div>
@@ -395,8 +507,8 @@ export default function AdminDashboard({
               Bảng điều khiển quản lý sản phẩm, đơn hàng và hỗ trợ khách hàng Kinetic Tech.
             </p>
           </div>
-          <button 
-            onClick={() => setActiveTab('overview')} 
+          <button
+            onClick={() => setActiveTab('overview')}
             className="btn btn-outline"
             style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '8px' }}
           >
@@ -406,11 +518,11 @@ export default function AdminDashboard({
         </div>
 
         {/* Stats Strip */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-          gap: '20px', 
-          marginBottom: '30px' 
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '20px',
+          marginBottom: '30px'
         }}>
           {/* Card 1: Revenue */}
           <div className="glass-panel-glow-blue" style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -459,14 +571,14 @@ export default function AdminDashboard({
 
         {/* Dashboard Tabs & Work Area */}
         <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '30px', alignItems: 'start' }} className="admin-grid">
-          
+
           {/* Left Sidebar Navigation */}
           <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <div style={{ fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--color-outline)', padding: '8px 12px' }}>
               Menu quản lý
             </div>
 
-            <button 
+            <button
               onClick={() => { setActiveTab('overview'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
               className="btn"
               style={{
@@ -481,7 +593,7 @@ export default function AdminDashboard({
               Tổng quan chung
             </button>
 
-            <button 
+            <button
               onClick={() => { setActiveTab('orders'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
               className="btn"
               style={{
@@ -496,7 +608,7 @@ export default function AdminDashboard({
               Đơn hàng ({orders.length})
             </button>
 
-            <button 
+            <button
               onClick={() => { setActiveTab('products'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
               className="btn"
               style={{
@@ -516,7 +628,7 @@ export default function AdminDashboard({
               CSKH & Hậu mãi
             </div>
 
-            <button 
+            <button
               onClick={() => { setActiveTab('tickets'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
               className="btn"
               style={{
@@ -531,7 +643,7 @@ export default function AdminDashboard({
               Hỗ trợ kỹ thuật ({tickets.length})
             </button>
 
-            <button 
+            <button
               onClick={() => { setActiveTab('warranties'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
               className="btn"
               style={{
@@ -546,7 +658,7 @@ export default function AdminDashboard({
               Bảo hành ({warranties.length})
             </button>
 
-            <button 
+            <button
               onClick={() => { setActiveTab('tradein'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
               className="btn"
               style={{
@@ -561,7 +673,7 @@ export default function AdminDashboard({
               Thu cũ đổi mới ({tradeins.length})
             </button>
 
-            <button 
+            <button
               onClick={() => { setActiveTab('feedbacks'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
               className="btn"
               style={{
@@ -575,11 +687,26 @@ export default function AdminDashboard({
               <MessageSquare size={16} />
               Ý kiến & Góp ý ({feedbacks.length})
             </button>
+
+            <button
+              onClick={() => { setActiveTab('promotions'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); setSelectedPromoForEdit(null); }}
+              className="btn"
+              style={{
+                justifyContent: 'flex-start',
+                padding: '10px 14px',
+                fontSize: '13px',
+                background: activeTab === 'promotions' ? 'var(--color-primary)' : 'transparent',
+                color: activeTab === 'promotions' ? 'white' : 'var(--color-on-surface)'
+              }}
+            >
+              <Tag size={16} />
+              Khuyến mãi ({promotions.length})
+            </button>
           </div>
 
           {/* Right Work Area */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-            
+
             {/* TAB 1: OVERVIEW COMPONENT */}
             {activeTab === 'overview' && (
               <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
@@ -588,7 +715,7 @@ export default function AdminDashboard({
                 </h3>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }} className="overview-subgrid">
-                  
+
                   {/* Left Column: Recent Orders */}
                   <div>
                     <h4 style={{ fontSize: '14px', fontWeight: '700', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -597,8 +724,8 @@ export default function AdminDashboard({
                     </h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       {orders.slice(0, 3).map(order => (
-                        <div 
-                          key={order.id} 
+                        <div
+                          key={order.id}
                           style={{
                             background: 'rgba(255, 255, 255, 0.02)',
                             border: '1px solid rgba(255, 255, 255, 0.05)',
@@ -615,7 +742,7 @@ export default function AdminDashboard({
                           </div>
                           <div style={{ textAlign: 'right' }}>
                             <span style={{ fontWeight: '800', fontSize: '13px', display: 'block', color: 'var(--color-secondary-dim)' }}>{formatVND(order.total)}</span>
-                            <span className="status-badge" style={{ 
+                            <span className="status-badge" style={{
                               fontSize: '9px',
                               background: order.status === 'completed' ? 'rgba(76,175,80,0.15)' : order.status === 'pending' ? 'rgba(253,139,0,0.15)' : 'rgba(0,123,255,0.15)',
                               color: order.status === 'completed' ? '#81c784' : order.status === 'pending' ? '#ffb77d' : '#adc7ff',
@@ -637,8 +764,8 @@ export default function AdminDashboard({
                     </h4>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       {tickets.map(ticket => (
-                        <div 
-                          key={ticket.id} 
+                        <div
+                          key={ticket.id}
                           style={{
                             background: 'rgba(255, 255, 255, 0.02)',
                             border: '1px solid rgba(255, 255, 255, 0.05)',
@@ -651,7 +778,7 @@ export default function AdminDashboard({
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontWeight: '700', fontSize: '12px', color: 'white' }}>#{ticket.id} - {ticket.customerName}</span>
-                            <span className="status-badge" style={{ 
+                            <span className="status-badge" style={{
                               fontSize: '9px',
                               background: ticket.status === 'pending' ? 'rgba(255,76,76,0.15)' : 'rgba(76,175,80,0.15)',
                               color: ticket.status === 'pending' ? '#ffb4ab' : '#81c784',
@@ -700,11 +827,11 @@ export default function AdminDashboard({
               <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Quản Lý Đơn Hàng</h3>
-                  
+
                   {/* Search box */}
                   <div style={{ position: 'relative', width: '260px' }}>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="Tìm ID, Tên Khách Hàng, SĐT..."
                       value={orderSearch}
                       onChange={(e) => setOrderSearch(e.target.value)}
@@ -748,14 +875,14 @@ export default function AdminDashboard({
                             <td>
                               <span className="status-badge" style={{
                                 fontSize: '10px',
-                                background: 
-                                  order.status === 'completed' ? 'rgba(76,175,80,0.15)' : 
-                                  order.status === 'cancelled' ? 'rgba(255,76,76,0.15)' :
-                                  order.status === 'processing' ? 'rgba(0,123,255,0.15)' : 'rgba(253,139,0,0.15)',
-                                color: 
-                                  order.status === 'completed' ? '#81c784' : 
-                                  order.status === 'cancelled' ? '#ffb4ab' :
-                                  order.status === 'processing' ? '#adc7ff' : '#ffb77d',
+                                background:
+                                  order.status === 'completed' ? 'rgba(76,175,80,0.15)' :
+                                    order.status === 'cancelled' ? 'rgba(255,76,76,0.15)' :
+                                      order.status === 'processing' ? 'rgba(0,123,255,0.15)' : 'rgba(253,139,0,0.15)',
+                                color:
+                                  order.status === 'completed' ? '#81c784' :
+                                    order.status === 'cancelled' ? '#ffb4ab' :
+                                      order.status === 'processing' ? '#adc7ff' : '#ffb77d',
                               }}>
                                 {order.status === 'completed' && 'Đã giao'}
                                 {order.status === 'cancelled' && 'Đã hủy'}
@@ -864,15 +991,15 @@ export default function AdminDashboard({
             {/* TAB 3: PRODUCT INVENTORY */}
             {activeTab === 'products' && (
               <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
-                
+
                 {/* Header Controls */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Quản Lý Kho Sản Phẩm</h3>
 
                   <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     {/* Category Filter */}
-                    <select 
-                      value={selectedCategoryFilter} 
+                    <select
+                      value={selectedCategoryFilter}
                       onChange={(e) => setSelectedCategoryFilter(e.target.value)}
                       className="form-input"
                       style={{ width: '150px', fontSize: '12px', padding: '8px' }}
@@ -886,8 +1013,8 @@ export default function AdminDashboard({
 
                     {/* Search box */}
                     <div style={{ position: 'relative', width: '220px' }}>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         placeholder="Tìm theo tên sản phẩm..."
                         value={productSearch}
                         onChange={(e) => setProductSearch(e.target.value)}
@@ -898,9 +1025,9 @@ export default function AdminDashboard({
                     </div>
 
                     {/* Add button */}
-                    <button 
+                    <button
                       onClick={() => setIsAddingProduct(true)}
-                      className="btn btn-secondary" 
+                      className="btn btn-secondary"
                       style={{ padding: '8px 14px', fontSize: '12px' }}
                     >
                       <Plus size={14} />
@@ -923,8 +1050,8 @@ export default function AdminDashboard({
                       <form onSubmit={handleAddProduct} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '75vh', overflowY: 'auto' }}>
                         <div>
                           <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Tên Sản Phẩm *</label>
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             required
                             placeholder="Ví dụ: Laptop Asus ROG Strix..."
                             value={newProduct.name}
@@ -936,7 +1063,7 @@ export default function AdminDashboard({
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                           <div>
                             <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Danh Mục *</label>
-                            <select 
+                            <select
                               value={newProduct.category}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, category: e.target.value }))}
                               className="form-input"
@@ -949,7 +1076,7 @@ export default function AdminDashboard({
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Tình Trạng Kho</label>
-                            <select 
+                            <select
                               value={newProduct.inStock ? 'true' : 'false'}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, inStock: e.target.value === 'true' }))}
                               className="form-input"
@@ -963,8 +1090,8 @@ export default function AdminDashboard({
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                           <div>
                             <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Giá Bán (VND) *</label>
-                            <input 
-                              type="number" 
+                            <input
+                              type="number"
                               required
                               placeholder="Ví dụ: 15900000"
                               value={newProduct.price}
@@ -974,8 +1101,8 @@ export default function AdminDashboard({
                           </div>
                           <div>
                             <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Giá Cũ (Gốc)</label>
-                            <input 
-                              type="number" 
+                            <input
+                              type="number"
                               placeholder="Ví dụ: 17900000"
                               value={newProduct.oldPrice}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, oldPrice: e.target.value }))}
@@ -987,29 +1114,29 @@ export default function AdminDashboard({
                         <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '10px' }}>
                           <span style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', marginBottom: '8px' }}>Thông số cấu hình kỹ thuật (Không bắt buộc)</span>
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               placeholder="CPU (ví dụ: Intel i7)"
                               value={newProduct.cpu}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, cpu: e.target.value }))}
                               className="form-input"
                             />
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               placeholder="RAM (ví dụ: 16GB)"
                               value={newProduct.ram}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, ram: e.target.value }))}
                               className="form-input"
                             />
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               placeholder="Ổ Cứng (ví dụ: 512GB SSD)"
                               value={newProduct.storage}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, storage: e.target.value }))}
                               className="form-input"
                             />
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               placeholder="VGA / GPU (ví dụ: RTX 4060)"
                               value={newProduct.gpu}
                               onChange={(e) => setNewProduct(prev => ({ ...prev, gpu: e.target.value }))}
@@ -1020,8 +1147,8 @@ export default function AdminDashboard({
 
                         <div>
                           <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Mã Tags (cách nhau bằng dấu phẩy)</label>
-                          <input 
-                            type="text" 
+                          <input
+                            type="text"
                             placeholder="Ví dụ: Gaming, RTX4060, Intel"
                             value={newProduct.tags}
                             onChange={(e) => setNewProduct(prev => ({ ...prev, tags: e.target.value }))}
@@ -1068,7 +1195,7 @@ export default function AdminDashboard({
                             </td>
                             <td style={{ textTransform: 'capitalize' }}>{prod.category}</td>
                             <td style={{ fontWeight: '800', color: 'var(--color-secondary-dim)', fontSize: '13px' }}>
-                              <input 
+                              <input
                                 type="text"
                                 value={prod.price}
                                 onChange={(e) => handleManualPriceChange(prod.id, e.target.value)}
@@ -1085,7 +1212,7 @@ export default function AdminDashboard({
                               />
                             </td>
                             <td>
-                              <button 
+                              <button
                                 onClick={() => toggleStock(prod.id)}
                                 className="status-badge"
                                 style={{
@@ -1106,9 +1233,9 @@ export default function AdminDashboard({
                               </div>
                             </td>
                             <td style={{ textAlign: 'center' }}>
-                              <button 
+                              <button
                                 onClick={() => setStoreProducts(prev => prev.filter(p => p.id !== prod.id))}
-                                className="btn btn-ghost" 
+                                className="btn btn-ghost"
                                 style={{ padding: '6px', color: 'var(--color-error)' }}
                                 title="Xóa sản phẩm"
                               >
@@ -1131,11 +1258,11 @@ export default function AdminDashboard({
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px' }}>Hỗ Trợ Kỹ Thuật (Hệ thống Ticket)</h3>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }} className="tickets-subgrid">
-                  
+
                   {/* Left Column: List */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '500px', overflowY: 'auto', paddingRight: '4px' }}>
                     {tickets.map(ticket => (
-                      <div 
+                      <div
                         key={ticket.id}
                         onClick={() => setSelectedTicket(ticket)}
                         style={{
@@ -1190,8 +1317,8 @@ export default function AdminDashboard({
                           {selectedTicket.messages.map((msg, index) => {
                             const isAgent = msg.sender === 'agent';
                             return (
-                              <div 
-                                key={index} 
+                              <div
+                                key={index}
                                 style={{
                                   alignSelf: isAgent ? 'flex-end' : 'flex-start',
                                   maxWidth: '85%',
@@ -1214,8 +1341,8 @@ export default function AdminDashboard({
                         {/* Reply Form */}
                         {selectedTicket.status !== 'closed' ? (
                           <form onSubmit={handleReplyTicket} style={{ display: 'flex', gap: '8px' }}>
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               placeholder="Nhập nội dung phản hồi cho khách..."
                               value={ticketReplyText}
                               onChange={(e) => setTicketReplyText(e.target.value)}
@@ -1283,12 +1410,12 @@ export default function AdminDashboard({
                           <td>
                             <span className="status-badge" style={{
                               fontSize: '9px',
-                              background: 
-                                claim.status === 'returned' ? 'rgba(76,175,80,0.15)' : 
-                                claim.status === 'checking' ? 'rgba(253,139,0,0.15)' : 'rgba(0,123,255,0.15)',
-                              color: 
-                                claim.status === 'returned' ? '#81c784' : 
-                                claim.status === 'checking' ? '#ffb77d' : '#adc7ff'
+                              background:
+                                claim.status === 'returned' ? 'rgba(76,175,80,0.15)' :
+                                  claim.status === 'checking' ? 'rgba(253,139,0,0.15)' : 'rgba(0,123,255,0.15)',
+                              color:
+                                claim.status === 'returned' ? '#81c784' :
+                                  claim.status === 'checking' ? '#ffb77d' : '#adc7ff'
                             }}>
                               {claim.status === 'checking' && 'Đang kiểm tra'}
                               {claim.status === 'repairing' && 'Đang sửa chữa'}
@@ -1362,12 +1489,12 @@ export default function AdminDashboard({
                           <td>
                             <span className="status-badge" style={{
                               fontSize: '9px',
-                              background: 
-                                req.status === 'valued' ? 'rgba(0,123,255,0.15)' : 
-                                req.status === 'completed' ? 'rgba(76,175,80,0.15)' : 'rgba(253,139,0,0.15)',
-                              color: 
-                                req.status === 'valued' ? '#adc7ff' : 
-                                req.status === 'completed' ? '#81c784' : '#ffb77d'
+                              background:
+                                req.status === 'valued' ? 'rgba(0,123,255,0.15)' :
+                                  req.status === 'completed' ? 'rgba(76,175,80,0.15)' : 'rgba(253,139,0,0.15)',
+                              color:
+                                req.status === 'valued' ? '#adc7ff' :
+                                  req.status === 'completed' ? '#81c784' : '#ffb77d'
                             }}>
                               {req.status === 'pending' && 'Chờ thẩm định'}
                               {req.status === 'valued' && 'Đã báo giá'}
@@ -1382,9 +1509,9 @@ export default function AdminDashboard({
                                 </button>
                               )}
                               {req.status === 'valued' && (
-                                <button 
+                                <button
                                   onClick={() => setTradeins(prev => prev.map(t => t.id === req.id ? { ...t, status: 'completed' } : t))}
-                                  className="btn" 
+                                  className="btn"
                                   style={{ padding: '4px 6px', fontSize: '9px', background: '#388e3c', color: 'white' }}
                                 >
                                   Hoàn tất đổi
@@ -1433,10 +1560,10 @@ export default function AdminDashboard({
                         {selectedTradeIn.attachedImage && (
                           <div style={{ marginTop: '4px' }}>
                             <span style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Hình ảnh thực tế đính kèm:</span>
-                            <img 
-                              src={selectedTradeIn.attachedImage} 
-                              alt="Ảnh thực tế linh kiện cũ" 
-                              style={{ width: '100%', maxHeight: '180px', objectFit: 'contain', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)', background: '#050d18' }} 
+                            <img
+                              src={selectedTradeIn.attachedImage}
+                              alt="Ảnh thực tế linh kiện cũ"
+                              style={{ width: '100%', maxHeight: '180px', objectFit: 'contain', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)', background: '#050d18' }}
                             />
                           </div>
                         )}
@@ -1445,7 +1572,7 @@ export default function AdminDashboard({
 
                         <div>
                           <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Mức giá thu mua đề nghị (VND) *</label>
-                          <input 
+                          <input
                             type="number"
                             required
                             placeholder="Ví dụ: 8500000"
@@ -1472,7 +1599,7 @@ export default function AdminDashboard({
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                   Ý Kiến & Góp Ý Từ Khách Hàng
                 </h3>
-                
+
                 <div style={{ overflowX: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px' }} className="zebra-table">
                     <thead>
@@ -1519,17 +1646,17 @@ export default function AdminDashboard({
                             <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                               <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
                                 {fb.status === 'pending' && (
-                                  <button 
+                                  <button
                                     onClick={() => setFeedbacks(prev => prev.map(f => f.id === fb.id ? { ...f, status: 'processed' } : f))}
-                                    className="btn btn-primary" 
+                                    className="btn btn-primary"
                                     style={{ padding: '4px 8px', fontSize: '10px' }}
                                   >
                                     Duyệt
                                   </button>
                                 )}
-                                <button 
+                                <button
                                   onClick={() => setFeedbacks(prev => prev.filter(f => f.id !== fb.id))}
-                                  className="btn" 
+                                  className="btn"
                                   style={{ padding: '4px 8px', fontSize: '10px', background: '#d32f2f', color: 'white' }}
                                   title="Xóa"
                                 >
@@ -1542,6 +1669,270 @@ export default function AdminDashboard({
                       )}
                     </tbody>
                   </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'promotions' && (
+              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Chương Trình Khuyến Mãi</h3>
+
+                  <button
+                    onClick={() => setIsAddingPromo(true)}
+                    className="btn btn-secondary"
+                    style={{ padding: '8px 14px', fontSize: '12px' }}
+                  >
+                    <Plus size={14} />
+                    Thêm chương trình
+                  </button>
+                </div>
+
+                {isAddingPromo && (
+                  <div className="modal-overlay" onClick={() => setIsAddingPromo(false)}>
+                    <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ width: '100%', maxWidth: '440px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden' }}>
+                      <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)' }}>
+                        <h4 style={{ fontSize: '14px', fontWeight: '800' }}>Tạo khuyến mãi mới</h4>
+                        <button onClick={() => setIsAddingPromo(false)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
+                          <X size={18} color="white" />
+                        </button>
+                      </div>
+
+                      <form onSubmit={handleAddPromo} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Tên chương trình *</label>
+                          <input
+                            type="text"
+                            required
+                            placeholder="Siêu Sale Hè 2026..."
+                            value={newPromo.name}
+                            onChange={(e) => setNewPromo(prev => ({ ...prev, name: e.target.value }))}
+                            className="form-input"
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>% Giảm giá mặc định *</label>
+                          <input
+                            type="number"
+                            required
+                            min="0"
+                            max="100"
+                            placeholder="Ví dụ: 10"
+                            value={newPromo.discountPercent}
+                            onChange={(e) => setNewPromo(prev => ({ ...prev, discountPercent: e.target.value }))}
+                            className="form-input"
+                          />
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Ngày bắt đầu</label>
+                            <input
+                              type="date"
+                              value={newPromo.startDate}
+                              onChange={(e) => setNewPromo(prev => ({ ...prev, startDate: e.target.value }))}
+                              className="form-input"
+                            />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--color-outline)', marginBottom: '4px' }}>Ngày kết thúc</label>
+                            <input
+                              type="date"
+                              value={newPromo.endDate}
+                              onChange={(e) => setNewPromo(prev => ({ ...prev, endDate: e.target.value }))}
+                              className="form-input"
+                            />
+                          </div>
+                        </div>
+
+                        <button type="submit" className="btn btn-secondary" style={{ width: '100%', padding: '10px', marginTop: '10px', fontWeight: '700' }}>
+                          TẠO KHUYẾN MÃI
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '24px' }} className="promotions-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <h4 style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--color-outline)' }}>Danh sách chương trình</h4>
+                    {promotions.length === 0 ? (
+                      <div style={{ padding: '20px', textAlign: 'center', color: 'var(--color-outline)', border: '1px dashed rgba(255,255,255,0.08)', borderRadius: '6px' }}>
+                        Chưa có chương trình khuyến mãi nào.
+                      </div>
+                    ) : (
+                      promotions.map(promo => (
+                        <div
+                          key={promo.id}
+                          onClick={() => setSelectedPromoForEdit(promo)}
+                          style={{
+                            background: selectedPromoForEdit && selectedPromoForEdit.id === promo.id ? 'rgba(0,123,255,0.06)' : 'rgba(255,255,255,0.01)',
+                            border: `1px solid ${selectedPromoForEdit && selectedPromoForEdit.id === promo.id ? 'var(--color-primary)' : 'rgba(255,255,255,0.05)'}`,
+                            borderRadius: 'var(--rounded)',
+                            padding: '14px',
+                            cursor: 'pointer',
+                            position: 'relative'
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                            <span style={{ fontSize: '10px', fontWeight: '800', color: 'var(--color-primary-dim)' }}>{promo.id}</span>
+                            <span className="status-badge" style={{ fontSize: '9px', background: 'rgba(253,139,0,0.15)', color: '#ffb77d' }}>
+                              Giảm {promo.discountPercent}%
+                            </span>
+                          </div>
+
+                          <h5 style={{ fontSize: '13px', fontWeight: '800', color: 'white', marginBottom: '4px' }}>{promo.name}</h5>
+                          <span style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block' }}>Hạn: {promo.startDate} đến {promo.endDate}</span>
+                          <span style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', display: 'block', marginTop: '4px' }}>
+                            Sản phẩm áp dụng: {promo.productIds.length} | Đã bán: {promo.salesCount}
+                          </span>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeletePromo(promo.id);
+                            }}
+                            className="btn btn-ghost"
+                            style={{ position: 'absolute', right: '10px', bottom: '10px', padding: '6px', color: 'var(--color-error)' }}
+                            title="Xóa chương trình"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  <div className="glass-panel" style={{ borderRadius: 'var(--rounded)', padding: '18px', background: 'rgba(5, 13, 24, 0.15)', minHeight: '400px' }}>
+                    {selectedPromoForEdit ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '14px' }}>
+                          <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'white' }}>{selectedPromoForEdit.name}</h4>
+                          <span style={{ fontSize: '12px', color: 'var(--color-outline)' }}>Áp dụng từ: {selectedPromoForEdit.startDate} đến {selectedPromoForEdit.endDate}</span>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginTop: '12px' }}>
+                            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '10px 14px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                              <span style={{ fontSize: '10px', color: 'var(--color-outline)', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>Số lượng đã bán</span>
+                              <strong style={{ fontSize: '16px', fontWeight: '800', color: 'white', marginTop: '2px', display: 'block' }}>{selectedPromoForEdit.salesCount} sản phẩm</strong>
+                            </div>
+                            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '10px 14px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                              <span style={{ fontSize: '10px', color: 'var(--color-outline)', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>Doanh số chương trình</span>
+                              <strong style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-secondary-dim)', marginTop: '2px', display: 'block' }}>{formatVND(selectedPromoForEdit.revenue)}</strong>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase', marginBottom: '8px' }}>Thêm sản phẩm vào chương trình</h5>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <select
+                              value={productToAddToPromo}
+                              onChange={(e) => setProductToAddToPromo(e.target.value)}
+                              className="form-input"
+                              style={{ fontSize: '12px', padding: '8px' }}
+                            >
+                              <option value="">-- Chọn sản phẩm để áp dụng --</option>
+                              {storeProducts
+                                .filter(p => !selectedPromoForEdit.productIds.includes(p.id))
+                                .map(p => (
+                                  <option key={p.id} value={p.id}>
+                                    [{p.id}] {p.name} - {formatVND(p.price)}
+                                  </option>
+                                ))}
+                            </select>
+                            <button
+                              onClick={() => {
+                                handleAddProductToPromo(selectedPromoForEdit.id, productToAddToPromo);
+                                setProductToAddToPromo('');
+                              }}
+                              disabled={!productToAddToPromo}
+                              className="btn btn-primary"
+                              style={{ padding: '8px 16px', fontSize: '12px' }}
+                            >
+                              Thêm sản phẩm
+                            </button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase', marginBottom: '8px' }}>Danh sách sản phẩm áp dụng</h5>
+                          {selectedPromoForEdit.productIds.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '20px', color: 'var(--color-outline)', fontSize: '12px', border: '1px dashed rgba(255,255,255,0.05)', borderRadius: '4px' }}>
+                              Chưa có sản phẩm nào thuộc chương trình này. Chọn sản phẩm ở trên để thêm.
+                            </div>
+                          ) : (
+                            <div style={{ overflowX: 'auto' }}>
+                              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px' }} className="zebra-table">
+                                <thead>
+                                  <tr style={{ background: 'var(--color-surface-container-high)' }}>
+                                    <th style={{ padding: '8px 12px', fontWeight: '700' }}>Sản phẩm</th>
+                                    <th style={{ padding: '8px 12px', fontWeight: '700' }}>Giá gốc (VND)</th>
+                                    <th style={{ padding: '8px 12px', fontWeight: '700' }}>Mức giảm</th>
+                                    <th style={{ padding: '8px 12px', fontWeight: '700' }}>Giá khuyến mãi</th>
+                                    <th style={{ padding: '8px 12px', fontWeight: '700', textAlign: 'center' }}>Thao Tác</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {storeProducts
+                                    .filter(p => selectedPromoForEdit.productIds.includes(p.id))
+                                    .map(p => {
+                                      const promoPrice = Math.round(p.price * (1 - selectedPromoForEdit.discountPercent / 100));
+                                      return (
+                                        <tr key={p.id}>
+                                          <td>
+                                            <strong style={{ color: 'white', display: 'block' }}>{p.name}</strong>
+                                            <span style={{ fontSize: '9px', color: 'var(--color-outline)' }}>ID: {p.id}</span>
+                                          </td>
+                                          <td>
+                                            <input
+                                              type="text"
+                                              value={p.price}
+                                              onChange={(e) => handlePromoProductPriceChange(p.id, e.target.value)}
+                                              style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                borderBottom: '1px dashed var(--color-outline)',
+                                                color: 'white',
+                                                fontWeight: '700',
+                                                width: '90px',
+                                                outline: 'none',
+                                                fontSize: '12px'
+                                              }}
+                                            />
+                                          </td>
+                                          <td>
+                                            <span style={{ color: '#ffb77d', fontWeight: '600' }}>-{selectedPromoForEdit.discountPercent}%</span>
+                                          </td>
+                                          <td style={{ fontWeight: '800', color: 'var(--color-secondary-dim)' }}>
+                                            {formatVND(promoPrice)}
+                                          </td>
+                                          <td style={{ textAlign: 'center' }}>
+                                            <button
+                                              onClick={() => handleRemoveProductFromPromo(selectedPromoForEdit.id, p.id)}
+                                              className="btn btn-ghost"
+                                              style={{ padding: '4px', color: 'var(--color-error)' }}
+                                              title="Xóa khỏi chương trình"
+                                            >
+                                              <Trash2 size={13} />
+                                            </button>
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--color-outline)', gap: '12px' }}>
+                        <Tag size={36} strokeWidth={1} />
+                        <p style={{ fontSize: '13px' }}>Chọn một chương trình từ danh sách để xem chi tiết hoặc quản lý sản phẩm.</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
