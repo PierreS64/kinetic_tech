@@ -32,16 +32,36 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
     // Simulate API request
     setTimeout(() => {
       setLoading(false);
-      const mockUser = {
-        username: formData.username,
-        fullName: formData.username === 'admin' ? 'Quản Trị Viên' : 'Khách Hàng KINETIC',
-        email: formData.username + '@kinetic.vn',
-        phone: '0987654321'
-      };
-      setSuccessMsg('Đăng nhập thành công! Chào mừng quay trở lại.');
-      setTimeout(() => {
-        onLoginSuccess(mockUser);
-      }, 1200);
+      const username = formData.username.trim().toLowerCase();
+      const password = formData.password;
+
+      if (username === 'admin' && password === 'admin123') {
+        const mockUser = {
+          username: 'admin',
+          fullName: 'Quản Trị Viên (Admin)',
+          email: 'admin@kinetic.vn',
+          phone: '0987654321',
+          role: 'admin'
+        };
+        setSuccessMsg('Đăng nhập thành công với quyền Admin! Chào mừng quay trở lại.');
+        setTimeout(() => {
+          onLoginSuccess(mockUser);
+        }, 1200);
+      } else if (username === 'guest' && password === 'guest123') {
+        const mockUser = {
+          username: 'guest',
+          fullName: 'Khách Hàng KINETIC',
+          email: 'guest@kinetic.vn',
+          phone: '0987654321',
+          role: 'guest'
+        };
+        setSuccessMsg('Đăng nhập thành công! Chào mừng quay trở lại.');
+        setTimeout(() => {
+          onLoginSuccess(mockUser);
+        }, 1200);
+      } else {
+        setError('Tên đăng nhập hoặc Mật khẩu không đúng. Thử admin/admin123 hoặc guest/guest123.');
+      }
     }, 1200);
   };
 

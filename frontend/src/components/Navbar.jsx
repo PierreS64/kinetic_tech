@@ -248,7 +248,7 @@ export default function Navbar({
                   }}
                 >
                   <div 
-                    className="glass-panel animate-fade-in-up" 
+                    className="glass-panel animate-fade-in-up dropdown-menu-opaque" 
                     style={{
                       borderRadius: 'var(--rounded-md)',
                       padding: '8px',
@@ -269,7 +269,7 @@ export default function Navbar({
                             handleNavClick(cat.id);
                             setDropdownOpen(false);
                           }}
-                          className="btn btn-ghost"
+                          className="btn btn-ghost dropdown-category-item"
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -825,7 +825,7 @@ export default function Navbar({
                       <li key={cat.id}>
                         <button
                           onClick={() => handleNavClick(cat.id)}
-                          className="btn btn-ghost"
+                          className="btn btn-ghost dropdown-category-item"
                           style={{
                             width: '100%',
                             display: 'flex',
