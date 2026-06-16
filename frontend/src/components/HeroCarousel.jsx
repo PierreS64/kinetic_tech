@@ -121,7 +121,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
       <div
         style={{
           position: 'relative',
-          height: '370px',
+          height: '280px',
           width: '100%',
           overflow: 'hidden',
           backgroundImage: `url(${slideImage})`,
@@ -277,10 +277,9 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '12px',
+            gap: '16px',
             width: '100%',
-            borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.06)' : '1px solid rgba(255, 255, 255, 0.05)',
-            paddingBottom: '16px'
+            paddingBottom: '24px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{
@@ -294,12 +293,12 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
               }}>
                 <Flame size={24} color="var(--color-secondary)" />
               </div>
-              <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, textTransform: 'uppercase' }}>
+              <h2 style={{ fontSize: '32px', fontWeight: '800', fontFamily: 'Montserrat', display: 'flex', alignItems: 'center', gap: '8px', margin: 0, textTransform: 'uppercase' }}>
                 DEALS CHỚP NHOÁNG
                 <b style={{
                   background: 'red',
                   color: 'white',
-                  fontSize: '12px',
+                  fontSize: '14px',
                   padding: '2px 8px',
                   borderRadius: 'var(--rounded-sm)',
                   animation: 'pulse 1.5s infinite'
@@ -422,15 +421,16 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
 
       <style>{`
         #flash-sale-box {
-          border-left: 4px solid var(--color-secondary) !important;
-          background: linear-gradient(135deg, rgba(253, 139, 0, 0.05) 0%, rgba(15, 23, 42, 0.4) 100%) !important;
-          box-shadow: 0 8px 32px 0 rgba(253, 139, 0, 0.1) !important;
+          border: none !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          padding: 0 !important;
         }
 
         body.light-theme #flash-sale-box {
-          border-left: 4px solid #fd8b00 !important;
-          background: linear-gradient(135deg, #fffdf8 0%, #fff0e0 100%) !important;
-          box-shadow: 0 10px 40px rgba(253, 139, 0, 0.2) !important;
+          border: none !important;
+          background: transparent !important;
+          box-shadow: none !important;
         }
 
         .countdown-box {
