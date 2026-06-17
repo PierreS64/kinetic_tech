@@ -15,9 +15,8 @@
  * @returns {Array} The filtered list of products.
  */
 export function getFilteredProducts(storeProducts, activeView, searchQuery, selectedBrands, minPrice, maxPrice, onlyInStock, laptopFilters, phoneFilters, gearFilters, componentFilters) {
-  return storeProducts.filter(product => {
   // Filter products based on search query and sidebar filters
-  const filteredProducts = storeProducts.filter(product => {
+  return storeProducts.filter(product => {
     // 1. Category check
     const matchesCategory = activeView === 'deals' ? true : product.category === activeView;
     
@@ -375,7 +374,5 @@ export function getFilteredProducts(storeProducts, activeView, searchQuery, sele
     }
     
     return matchesCategory && matchesSearch && matchesBrand && matchesPrice && matchesStock && matchesSpecs;
-  });
-
   });
 }
