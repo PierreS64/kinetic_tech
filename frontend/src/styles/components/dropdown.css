@@ -13,18 +13,112 @@
 
 body.light-theme .global-dropdown-menu {
   background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
 .global-dropdown-item {
-  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  width: 100%;
+  border-radius: var(--rounded);
+  color: var(--color-on-surface-variant);
+  background: transparent;
+  text-align: left;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
 }
 
+body.light-theme .global-dropdown-item {
+  color: var(--color-on-surface);
+}
+
+/* Hover State */
 .global-dropdown-item:hover {
   background: rgba(255, 255, 255, 0.1) !important;
   color: var(--color-primary) !important;
 }
 
 body.light-theme .global-dropdown-item:hover {
-  background: rgba(0, 0, 0, 0.05) !important;
+  background: rgba(0, 123, 255, 0.08) !important;
   color: var(--color-primary) !important;
+}
+
+/* Active State */
+.global-dropdown-item.active {
+  background: rgba(0, 123, 255, 0.15) !important;
+  color: white !important;
+}
+
+body.light-theme .global-dropdown-item.active {
+  background: rgba(0, 123, 255, 0.15) !important;
+  color: var(--color-primary) !important;
+}
+
+/* Special Variants */
+.global-dropdown-item.item-primary {
+  color: var(--color-primary-dim);
+}
+.global-dropdown-item.item-danger {
+  color: var(--color-error);
+}
+
+.global-dropdown-item.item-primary:hover {
+  color: var(--color-primary);
+}
+.global-dropdown-item.item-danger:hover {
+  background: rgba(255, 76, 76, 0.15);
+  color: var(--color-error);
+}
+body.light-theme .global-dropdown-item.item-danger:hover {
+  background: rgba(255, 76, 76, 0.1);
+}
+
+/* For multi-line items (Support menu) */
+.global-dropdown-item.multi-line {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+}
+
+.dropdown-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: inherit;
+}
+
+.dropdown-desc {
+  font-size: 10px;
+  color: var(--color-outline);
+  transition: color 0.2s;
+}
+
+/* When the item is active, make the description text slightly lighter/more readable if needed */
+.global-dropdown-item.active .dropdown-title {
+  color: inherit;
+}
+.global-dropdown-item.active .dropdown-desc {
+  color: rgba(255, 255, 255, 0.7);
+}
+body.light-theme .global-dropdown-item.active .dropdown-desc {
+  color: var(--color-outline);
+}
+
+/* Ensure title changes color on hover properly */
+.global-dropdown-item:hover .dropdown-title {
+  color: inherit;
+}
+body.light-theme .global-dropdown-item:hover .dropdown-title,
+body.light-theme .global-dropdown-item.active .dropdown-title {
+  color: var(--color-primary) !important;
+}
+
+.global-dropdown-item:hover .dropdown-desc {
+  color: var(--color-outline);
 }

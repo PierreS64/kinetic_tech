@@ -1,0 +1,187 @@
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes modalSlideUp {
+          from { transform: translateY(50px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        @media (max-width: 900px) {
+          .pc-builder-container {
+            grid-template-columns: 1fr !important;
+          }
+          .builder-modal-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
+        /* Selection Modal Light Mode CSS Overrides */
+        body.light-theme .builder-modal {
+          background: #ffffff !important;
+          border: 1px solid #cbd5e1 !important;
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15) !important;
+          color: #475569 !important;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        body.light-theme .builder-modal > div:first-child {
+          background: #f8fafc !important;
+          border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-theme .builder-modal > div:first-child h3 {
+          color: #0f172a !important;
+        }
+
+        body.light-theme .builder-modal > div:first-child button svg {
+          stroke: #ef4444 !important;
+          color: #ef4444 !important;
+        }
+
+        body.light-theme .builder-modal > div:first-child button:hover {
+          background: rgba(239, 68, 68, 0.08) !important;
+        }
+
+        body.light-theme .builder-modal aside {
+          background: #f8fafc !important;
+          border-right: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-theme .builder-modal aside .filter-title,
+        body.light-theme .builder-modal aside span {
+          color: #007BFF !important;
+          font-weight: 800 !important;
+        }
+
+        body.light-theme .builder-modal aside label {
+          color: #475569 !important;
+          font-weight: 600 !important;
+        }
+
+        body.light-theme .builder-modal aside select,
+        body.light-theme .builder-modal aside input {
+          background: #ffffff !important;
+          border: 1px solid #cbd5e1 !important;
+          color: #0f172a !important;
+        }
+
+        body.light-theme .builder-modal aside select:focus,
+        body.light-theme .builder-modal aside input:focus {
+          border-color: #007BFF !important;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1) !important;
+        }
+
+        body.light-theme .builder-modal aside .btn {
+          border: 1px solid #cbd5e1 !important;
+          color: #475569 !important;
+          background: #ffffff !important;
+        }
+
+        body.light-theme .builder-modal aside .btn[style*="var(--color-primary)"] {
+          background: #007BFF !important;
+          color: #ffffff !important;
+          border-color: #007BFF !important;
+          font-weight: 700 !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:first-child {
+          background: #ffffff !important;
+          border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:first-child input {
+          background: #f1f5f9 !important;
+          border: 1px solid #cbd5e1 !important;
+          color: #0f172a !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:first-child input:focus {
+          background: #ffffff !important;
+          border-color: #007BFF !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:first-child svg {
+          color: #94a3b8 !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:nth-child(2) {
+          background: #ffffff !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:nth-child(2) > div {
+          background: #ffffff !important;
+          border: 1px solid #e2e8f0 !important;
+        }
+
+        body.light-theme .builder-modal-grid > div > div:nth-child(2) > div[style*="rgba(0, 123, 255, 0.06)"] {
+          background: rgba(0, 123, 255, 0.03) !important;
+          border-color: #007BFF !important;
+        }
+
+        body.light-theme .builder-modal-grid img {
+          background: #f8fafc !important;
+          border: 1px solid #cbd5e1 !important;
+        }
+
+        body.light-theme .builder-modal-grid h4 {
+          color: #0f172a !important;
+        }
+
+        body.light-theme .builder-modal-grid p {
+          color: #64748b !important;
+        }
+
+        body.light-theme .builder-modal-grid .spec-chip {
+          background: #f1f5f9 !important;
+          color: #475569 !important;
+          border: 1px solid #cbd5e1 !important;
+        }
+
+        body.light-theme .builder-modal-grid .spec-chip-primary {
+          background: rgba(0, 123, 255, 0.08) !important;
+          color: #0053b3 !important;
+          border: 1px solid rgba(0, 123, 255, 0.15) !important;
+        }
+
+        body.light-theme .builder-modal-grid span[style*="#81c784"] {
+          color: #16a34a !important;
+          background: #f0fdf4 !important;
+          border: 1px solid rgba(22, 163, 74, 0.2) !important;
+        }
+
+        body.light-theme .builder-modal-grid span[style*="var(--color-primary-dim)"] {
+          background: rgba(0, 123, 255, 0.08) !important;
+          color: #0053b3 !important;
+          border: 1px solid rgba(0, 123, 255, 0.15) !important;
+        }
+
+        body.light-theme .builder-modal-grid div[style*="rgba(147, 0, 10"] {
+          color: #ef4444 !important;
+          background: rgba(239, 68, 68, 0.05) !important;
+          border: 1px solid rgba(239, 68, 68, 0.15) !important;
+        }
+
+        body.light-theme .builder-modal-grid span[style*="var(--color-secondary-dim)"] {
+          color: #fd8b00 !important;
+        }
+
+        body.light-theme .builder-modal-grid button.btn-outline {
+          border: 1px solid #cbd5e1 !important;
+          color: #007BFF !important;
+          background: #ffffff !important;
+        }
+
+        body.light-theme .builder-modal-grid button.btn-outline[style*="#ffdad6"] {
+          border-color: #ef4444 !important;
+          color: #ef4444 !important;
+          background: rgba(239, 68, 68, 0.05) !important;
+        }
+
+        body.light-theme .builder-modal-grid button.btn-primary {
+          background: #007BFF !important;
+          color: #ffffff !important;
+          border-color: #007BFF !important;
+        }

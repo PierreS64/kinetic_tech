@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/components/cart.css';
+import '../../styles/components/cart.css';
 import { X, Trash2, Plus, Minus, CreditCard, ShoppingBag, CheckCircle } from 'lucide-react';
 
 export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem, onClearCart, onCheckout, theme, toggleTheme }) {

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useLayoutEffect, useEffect, useRef } from 'react';
-import '../styles/components/dropdown.css';
+import '../../styles/components/dropdown.css';
 import { 
   ShoppingCart, 
   Search, 
@@ -259,20 +259,7 @@ export default function Navbar({
                             handleNavClick(cat.id);
                             setDropdownOpen(false);
                           }}
-                          className="btn btn-ghost global-dropdown-item"
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                            gap: '10px',
-                            padding: '10px 12px',
-                            fontSize: '13px',
-                            width: '100%',
-                            borderRadius: 'var(--rounded)',
-                            color: isCatActive ? 'white' : 'var(--color-on-surface-variant)',
-                            background: isCatActive ? 'rgba(0,123,255,0.15)' : 'transparent',
-                            textAlign: 'left'
-                          }}
+                          className={`btn btn-ghost global-dropdown-item ${isCatActive ? 'active' : ''}`}
                         >
                           <CatIcon size={14} color={isCatActive ? 'var(--color-primary-dim)' : 'currentColor'} />
                           {cat.label}
@@ -364,23 +351,10 @@ export default function Navbar({
                             handleNavClick(item.id);
                             setSupportDropdownOpen(false);
                           }}
-                          className="btn btn-ghost global-dropdown-item"
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'flex-start',
-                            justifyContent: 'center',
-                            gap: '2px',
-                            padding: '10px 12px',
-                            width: '100%',
-                            borderRadius: 'var(--rounded)',
-                            color: isItemActive ? 'white' : 'var(--color-on-surface-variant)',
-                            background: isItemActive ? 'rgba(0,123,255,0.15)' : 'transparent',
-                            textAlign: 'left'
-                          }}
+                          className={`btn btn-ghost global-dropdown-item multi-line ${isItemActive ? 'active' : ''}`}
                         >
-                          <span style={{ fontSize: '13px', fontWeight: '700', color: isItemActive ? 'white' : 'inherit' }}>{item.label}</span>
-                          <span style={{ fontSize: '10px', color: 'var(--color-outline)' }}>{item.desc}</span>
+                          <span className="dropdown-title">{item.label}</span>
+                          <span className="dropdown-desc">{item.desc}</span>
                         </button>
                       );
                     })}
@@ -558,18 +532,6 @@ export default function Navbar({
                       setUserDropdownOpen(false);
                     }}
                     className="btn btn-ghost global-dropdown-item"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-start',
-                      gap: '10px',
-                      padding: '8px 12px',
-                      fontSize: '12px',
-                      width: '100%',
-                      borderRadius: 'var(--rounded)',
-                      color: 'var(--color-on-surface)',
-                      textAlign: 'left'
-                    }}
                   >
                     <User size={14} />
                     Tài khoản của tôi
@@ -580,19 +542,7 @@ export default function Navbar({
                         setActiveView('admin');
                         setUserDropdownOpen(false);
                       }}
-                      className="btn btn-ghost global-dropdown-item"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'flex-start',
-                        gap: '10px',
-                        padding: '8px 12px',
-                        fontSize: '12px',
-                        width: '100%',
-                        borderRadius: 'var(--rounded)',
-                        color: 'var(--color-primary-dim)',
-                        textAlign: 'left'
-                      }}
+                      className="btn btn-ghost global-dropdown-item item-primary"
                     >
                       <Shield size={14} />
                       Trang quản lý
@@ -604,19 +554,7 @@ export default function Navbar({
                       setUserDropdownOpen(false);
                       setActiveView('deals');
                     }}
-                    className="btn btn-ghost global-dropdown-item"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-start',
-                      gap: '10px',
-                      padding: '8px 12px',
-                      fontSize: '12px',
-                      width: '100%',
-                      borderRadius: 'var(--rounded)',
-                      color: 'var(--color-error)',
-                      textAlign: 'left'
-                    }}
+                    className="btn btn-ghost global-dropdown-item item-danger"
                   >
                     <LogOut size={14} />
                     Đăng xuất
@@ -793,18 +731,7 @@ export default function Navbar({
                       <li key={cat.id}>
                         <button
                           onClick={() => handleNavClick(cat.id)}
-                          className="btn btn-ghost dropdown-category-item"
-                          style={{
-                            width: '100%',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'flex-start',
-                            gap: '10px',
-                            padding: '10px 16px',
-                            color: isActive ? 'white' : 'var(--color-on-surface-variant)',
-                            background: isActive ? 'rgba(0, 123, 255, 0.1)' : 'transparent',
-                            fontSize: '13px'
-                          }}
+                          className={`btn btn-ghost global-dropdown-item ${isActive ? 'active' : ''}`}
                         >
                           <CatIcon size={14} color={isActive ? 'var(--color-primary-dim)' : 'currentColor'} />
                           {cat.label}
@@ -878,22 +805,10 @@ export default function Navbar({
                       <li key={item.id}>
                         <button
                           onClick={() => handleNavClick(item.id)}
-                          className="btn btn-ghost"
-                          style={{
-                            width: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'flex-start',
-                            justifyContent: 'center',
-                            gap: '2px',
-                            padding: '10px 16px',
-                            color: isActive ? 'white' : 'var(--color-on-surface-variant)',
-                            background: isActive ? 'rgba(0, 123, 255, 0.1)' : 'transparent',
-                            textAlign: 'left'
-                          }}
+                          className={`btn btn-ghost global-dropdown-item multi-line ${isActive ? 'active' : ''}`}
                         >
-                          <span style={{ fontSize: '13px', fontWeight: '700', color: isActive ? 'white' : 'inherit' }}>{item.label}</span>
-                          <span style={{ fontSize: '10px', color: 'var(--color-outline)' }}>{item.desc}</span>
+                          <span className="dropdown-title">{item.label}</span>
+                          <span className="dropdown-desc">{item.desc}</span>
                         </button>
                       </li>
                     );
