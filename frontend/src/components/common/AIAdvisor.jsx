@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, User, ShoppingCart, Loader2, X } from 'lucide-react';
-import { products } from '../../utils/mockData.js';
+import { products } from '../../utils/mockData';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true
+});
 
 export default function AIAdvisor({ onAddToCart, theme, onClose }) {
   const [messages, setMessages] = useState([
@@ -32,7 +38,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
     }
   }, [messages, isTyping]);
 
-  const handleSend = (text) => {
+  const handleSend = async (text) => {
     if (!text.trim()) return;
 
     // User Message
@@ -43,46 +49,52 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
       time: new Date()
     };
 
-    setMessages(prev => [...prev, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInput('');
     setIsTyping(true);
 
-    // Simulate AI response delay
-    setTimeout(() => {
-      let aiResponseText = '';
-      let recommendedProducts = [];
+    try {
+      // Build conversation history for OpenAI
+      const apiMessages = [
+        {
+          role: 'system',
+          content: 'Bạn là trợ lý AI chuyên nghiệp của cửa hàng Kinetic Tech, chuyên tư vấn cấu hình PC, laptop và linh kiện máy tính. Hãy trả lời ngắn gọn, thân thiện bằng tiếng Việt. Tập trung vào việc đưa ra lời khuyên hữu ích về công nghệ.'
+        },
+        ...newMessages.map(msg => ({
+          role: msg.sender === 'ai' ? 'assistant' : 'user',
+          content: msg.text
+        }))
+      ];
 
-      const normalizedText = text.toLowerCase();
+      const completion = await openai.chat.completions.create({
+        messages: apiMessages,
+        model: 'gpt-4o-mini',
+      });
 
-      if (normalizedText.includes('laptop') || normalizedText.includes('lập trình') || normalizedText.includes('đồ họa') || normalizedText.includes('40 triệu')) {
-        // Recommend Laptop M3 or ROG Strix
-        const matched = products.filter(p => p.category === 'laptop');
-        recommendedProducts = matched;
-        aiResponseText = 'Dựa trên nhu cầu làm việc chuyên nghiệp, lập trình và đồ họa dưới 40 triệu, tôi đề xuất 2 mẫu máy hàng đầu hiện nay. MacBook Pro 14" M3 cực kỳ tiết kiệm pin, màn hình siêu đẹp thích hợp lập trình viên. Trong khi đó ASUS ROG Strix G16 có cấu hình i7 cực mạnh cùng RTX 4060 cân tốt mọi tác vụ đồ họa 3D và dựng video nặng.';
-      } else if (normalizedText.includes('chuột') || normalizedText.includes('bàn phím') || normalizedText.includes('gear') || normalizedText.includes('đỉnh')) {
-        // Recommend ROG Azoth or Logitech Superlight 2
-        const matched = products.filter(p => p.category === 'gaming gear');
-        recommendedProducts = matched;
-        aiResponseText = 'Đối với gaming gear phân khúc hi-end, combo tuyệt vời nhất hiện tại là Bàn phím cơ ASUS ROG Azoth (gasket-mount, switch pre-lubed mượt mà, màn hình OLED) đi cùng chuột siêu nhẹ Logitech G Pro X Superlight 2 (chỉ 60g, cảm biến HERO 2 siêu chính xác). Đây là vũ khí tối thượng cho các game thủ chuyên nghiệp.';
-      } else if (normalizedText.includes('pc') || normalizedText.includes('cấu hình') || normalizedText.includes('ráp') || normalizedText.includes('chơi game')) {
-        aiResponseText = 'Để chơi game mượt mà nhất trong phân khúc tầm trung - cao cấp, tôi đề xuất bạn kết hợp CPU AMD Ryzen 7 7800X3D (vua chơi game hiện tại) cùng card đồ họa ASUS RTX 4080 Super OC. Hệ thống này đảm bảo FPS cực cao ở độ phân giải 2K/4K và hỗ trợ Ray Tracing đỉnh cao.';
-        // Match a component (VGA/CPU)
-        recommendedProducts = products.filter(p => p.category === 'linh kiện').slice(0, 2);
-      } else {
-        aiResponseText = 'Xin lỗi, tôi chưa hiểu rõ nhu cầu của bạn lắm. Bạn có thể cho tôi biết ngân sách dự kiến (ví dụ: dưới 20 triệu, khoảng 30 triệu) và mục đích sử dụng chính (chơi game, lập trình, học tập văn phòng) được không?';
-      }
+      const aiResponseText = completion.choices[0].message.content;
 
       const aiMsg = {
         id: Date.now() + 1,
         sender: 'ai',
         text: aiResponseText,
-        recommendations: recommendedProducts,
+        recommendations: [], // Advanced logic needed to parse real recommendations
         time: new Date()
       };
 
       setMessages(prev => [...prev, aiMsg]);
+    } catch (error) {
+      console.error("OpenAI API Error:", error);
+      const errorMsg = {
+        id: Date.now() + 1,
+        sender: 'ai',
+        text: 'Xin lỗi, hệ thống AI đang gặp sự cố kết nối. Vui lòng thử lại sau.',
+        time: new Date()
+      };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const formatVND = (value) => {
@@ -132,7 +144,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
           </div>
         </div>
         {onClose && (
-          <button 
+          <button
             type="button"
             onClick={onClose}
             className="btn btn-ghost"
@@ -157,7 +169,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
         {messages.map((msg) => {
           const isAI = msg.sender === 'ai';
           return (
-            <div 
+            <div
               key={msg.id}
               style={{
                 display: 'flex',
@@ -205,8 +217,8 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
                     marginTop: '8px'
                   }}>
                     {msg.recommendations.map((prod) => (
-                      <div 
-                        key={prod.id} 
+                      <div
+                        key={prod.id}
                         style={{
                           background: 'var(--color-surface-container-lowest)',
                           border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)',
@@ -219,9 +231,9 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <img 
-                            src={prod.image} 
-                            alt={prod.name} 
+                          <img
+                            src={prod.image}
+                            alt={prod.name}
                             style={{ width: '36px', height: '36px', borderRadius: '4px', objectFit: 'cover' }}
                           />
                           <div>
@@ -234,7 +246,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
                           </div>
                         </div>
 
-                        <button 
+                        <button
                           onClick={() => onAddToCart(prod)}
                           className="btn btn-primary"
                           style={{ padding: '4px 10px', fontSize: '11px', borderRadius: 'var(--rounded-sm)' }}
@@ -289,7 +301,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
         borderTop: '1px solid rgba(255, 255, 255, 0.04)'
       }}>
         {presetQuestions.map((q, idx) => (
-          <button 
+          <button
             key={idx}
             onClick={() => handleSend(q.text)}
             className="btn btn-outline"
@@ -307,7 +319,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
       </div>
 
       {/* Input Tray */}
-      <form 
+      <form
         onSubmit={(e) => {
           e.preventDefault();
           handleSend(input);
@@ -320,7 +332,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
           gap: '10px'
         }}
       >
-        <input 
+        <input
           type="text"
           placeholder="Nhập câu hỏi của bạn tại đây..."
           value={input}
@@ -328,7 +340,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
           className="form-input"
           style={{ flex: 1 }}
         />
-        <button 
+        <button
           type="submit"
           className="btn btn-primary"
           style={{ padding: '10px 18px' }}
