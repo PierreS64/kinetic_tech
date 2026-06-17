@@ -54,7 +54,8 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
             type="button"
             onClick={() => {
               if (rowRef.current) {
-                rowRef.current.scrollBy({ left: -320, behavior: 'smooth' });
+                const itemWidth = rowRef.current.children[0]?.offsetWidth || 0;
+                rowRef.current.scrollBy({ left: -(itemWidth + 20), behavior: 'smooth' });
               }
             }}
             className="btn btn-ghost category-scroll-btn"
@@ -83,6 +84,7 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
             gap: '20px',
             overflowX: 'auto',
             scrollBehavior: 'smooth',
+            scrollSnapType: 'x mandatory',
             padding: '8px 0 20px',
             width: '100%',
             scrollbarWidth: 'none',
@@ -91,7 +93,7 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
           className="no-scrollbar"
         >
           {categoryProducts.map((product) => (
-            <div key={product.id} style={{ flex: '0 0 calc(25% - 15px)', minWidth: 'calc(25% - 15px)', maxWidth: 'calc(25% - 15px)' }} >
+            <div key={product.id} style={{ flex: '0 0 calc(25% - 15px)', minWidth: 'calc(25% - 15px)', maxWidth: 'calc(25% - 15px)', scrollSnapAlign: 'start' }} >
               <ProductCard 
                 product={product} 
                 onAddToCart={onAddToCart}
@@ -109,7 +111,8 @@ function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBu
           type="button"
           onClick={() => {
             if (rowRef.current) {
-              rowRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+              const itemWidth = rowRef.current.children[0]?.offsetWidth || 0;
+              rowRef.current.scrollBy({ left: itemWidth + 20, behavior: 'smooth' });
             }
           }}
           className="btn btn-ghost category-scroll-btn"
@@ -2574,7 +2577,8 @@ export default function App() {
                         <button 
                           onClick={() => {
                             if (relatedScrollRef.current) {
-                              relatedScrollRef.current.scrollBy({ left: -220, behavior: 'smooth' });
+                              const itemWidth = relatedScrollRef.current.children[0]?.offsetWidth || 0;
+                              relatedScrollRef.current.scrollBy({ left: -(itemWidth + 16), behavior: 'smooth' });
                             }
                           }}
                           className="btn btn-ghost"
@@ -2605,6 +2609,7 @@ export default function App() {
                           gap: '16px',
                           overflowX: 'auto',
                           scrollBehavior: 'smooth',
+                          scrollSnapType: 'x mandatory',
                           padding: '4px 0 16px',
                           width: '100%',
                           scrollbarWidth: 'none',
@@ -2620,6 +2625,7 @@ export default function App() {
                               flex: '0 0 calc(25% - 12px)',
                               minWidth: 'calc(25% - 12px)',
                               maxWidth: 'calc(25% - 12px)',
+                              scrollSnapAlign: 'start',
                               background: 'var(--color-surface-container-low)',
                               border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)',
                               borderRadius: 'var(--rounded)',
@@ -2649,7 +2655,8 @@ export default function App() {
                       <button 
                         onClick={() => {
                           if (relatedScrollRef.current) {
-                            relatedScrollRef.current.scrollBy({ left: 220, behavior: 'smooth' });
+                            const itemWidth = relatedScrollRef.current.children[0]?.offsetWidth || 0;
+                            relatedScrollRef.current.scrollBy({ left: itemWidth + 16, behavior: 'smooth' });
                           }
                         }}
                         className="btn btn-ghost"

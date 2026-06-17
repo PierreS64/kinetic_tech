@@ -335,7 +335,8 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                       type="button"
                       onClick={() => {
                         if (saleScrollRef.current) {
-                          saleScrollRef.current.scrollBy({ left: -320, behavior: 'smooth' });
+                          const itemWidth = saleScrollRef.current.children[0]?.offsetWidth || 0;
+                          saleScrollRef.current.scrollBy({ left: -(itemWidth + 20), behavior: 'smooth' });
                         }
                       }}
                       className="btn btn-ghost"
@@ -366,6 +367,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                       gap: '20px',
                       overflowX: 'auto',
                       scrollBehavior: 'smooth',
+                      scrollSnapType: 'x mandatory',
                       padding: '10px 4px 20px',
                       width: '100%',
                       scrollbarWidth: 'none',
@@ -374,7 +376,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                     className="no-scrollbar"
                   >
                     {saleProducts.map((prod) => (
-                      <div key={prod.id} style={{ flex: '0 0 calc(25% - 15px)', minWidth: 'calc(25% - 15px)', maxWidth: 'calc(25% - 15px)' }}>
+                      <div key={prod.id} style={{ flex: '0 0 calc(25% - 15px)', minWidth: 'calc(25% - 15px)', maxWidth: 'calc(25% - 15px)', scrollSnapAlign: 'start' }}>
                         <ProductCard
                           product={prod}
                           onAddToCart={onAddToCart}
@@ -392,7 +394,8 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                     type="button"
                     onClick={() => {
                       if (saleScrollRef.current) {
-                        saleScrollRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+                        const itemWidth = saleScrollRef.current.children[0]?.offsetWidth || 0;
+                        saleScrollRef.current.scrollBy({ left: itemWidth + 20, behavior: 'smooth' });
                       }
                     }}
                     className="btn btn-ghost"
