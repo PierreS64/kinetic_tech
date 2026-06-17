@@ -1,0 +1,48 @@
+/* ======== Brand Benefits Section (dark default) ======== */
+.brand-benefits-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ======== Category Scroll Buttons (dark default) ======== */
+.category-scroll-btn {
+  background: rgba(21, 24, 25, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   Light Mode – Homepage Section Fixes
+   ========================================================================== */
+
+/* Brand benefits section – visible background in light mode */
+body.light-theme .brand-benefits-section {
+  background: rgba(0, 123, 255, 0.03) !important;
+  border: 1px solid rgba(0, 123, 255, 0.1) !important;
+}
+
+/* Category scroll arrow buttons */
+body.light-theme .category-scroll-btn {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme .category-scroll-btn:hover {
+  background: #ffffff !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.12) !important;
+}
+
+/* SVG icon color inside scroll buttons */
+body.light-theme .category-scroll-btn svg {
+  color: #334155 !important;
+  stroke: #334155 !important;
+}
+
+body.light-theme .category-scroll-btn:hover svg {
+  color: var(--color-primary) !important;
+  stroke: var(--color-primary) !important;
+}

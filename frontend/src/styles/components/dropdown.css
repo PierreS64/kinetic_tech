@@ -1,0 +1,30 @@
+/* Global Dropdown Custom styling */
+.global-dropdown-menu {
+  background: rgba(21, 24, 25, 0.95) !important;
+  border-radius: var(--rounded-md);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.08);
+  z-index: 999;
+}
+
+body.light-theme .global-dropdown-menu {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.global-dropdown-item {
+  transition: var(--transition-smooth);
+}
+
+.global-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--color-primary) !important;
+}
+
+body.light-theme .global-dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: var(--color-primary) !important;
+}

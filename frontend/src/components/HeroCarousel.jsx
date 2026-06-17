@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import '../styles/components/hero-carousel.css';
 import { ArrowLeft, ArrowRight, Flame } from 'lucide-react';
 import ProductCard from './ProductCard';
 

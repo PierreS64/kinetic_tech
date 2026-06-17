@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useLayoutEffect, useEffect, useRef } from 'react';
+import '../styles/components/dropdown.css';
 import { 
   ShoppingCart, 
   Search, 
@@ -247,18 +248,7 @@ export default function Navbar({
                     zIndex: 100
                   }}
                 >
-                  <div 
-                    className="glass-panel animate-fade-in-up dropdown-menu-opaque" 
-                    style={{
-                      borderRadius: 'var(--rounded-md)',
-                      padding: '8px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '4px',
-                      boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-                      border: '1px solid rgba(255,255,255,0.08)'
-                    }}
-                  >
+                  <div className="glass-panel animate-fade-in-up global-dropdown-menu">
                     {categories.map((cat) => {
                       const CatIcon = cat.icon;
                       const isCatActive = activeView === cat.id;
@@ -269,7 +259,7 @@ export default function Navbar({
                             handleNavClick(cat.id);
                             setDropdownOpen(false);
                           }}
-                          className="btn btn-ghost dropdown-category-item"
+                          className="btn btn-ghost global-dropdown-item"
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -364,18 +354,7 @@ export default function Navbar({
                     zIndex: 100
                   }}
                 >
-                  <div 
-                    className="glass-panel animate-fade-in-up" 
-                    style={{
-                      borderRadius: 'var(--rounded-md)',
-                      padding: '8px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '4px',
-                      boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-                      border: '1px solid rgba(255,255,255,0.08)'
-                    }}
-                  >
+                  <div className="glass-panel animate-fade-in-up global-dropdown-menu">
                     {supportItems.map((item) => {
                       const isItemActive = activeView === item.id;
                       return (
@@ -385,7 +364,7 @@ export default function Navbar({
                             handleNavClick(item.id);
                             setSupportDropdownOpen(false);
                           }}
-                          className="btn btn-ghost"
+                          className="btn btn-ghost global-dropdown-item"
                           style={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -561,18 +540,7 @@ export default function Navbar({
                   zIndex: 100
                 }}
               >
-                <div 
-                  className="glass-panel animate-fade-in-up" 
-                  style={{
-                    borderRadius: 'var(--rounded-md)',
-                    padding: '8px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-                    border: '1px solid rgba(255,255,255,0.08)'
-                  }}
-                >
+                <div className="glass-panel animate-fade-in-up global-dropdown-menu">
                   <div style={{ 
                     padding: '8px 12px', 
                     fontSize: '11px', 
@@ -589,7 +557,7 @@ export default function Navbar({
                       setActiveView('account');
                       setUserDropdownOpen(false);
                     }}
-                    className="btn btn-ghost"
+                    className="btn btn-ghost global-dropdown-item"
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -612,7 +580,7 @@ export default function Navbar({
                         setActiveView('admin');
                         setUserDropdownOpen(false);
                       }}
-                      className="btn btn-ghost"
+                      className="btn btn-ghost global-dropdown-item"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -636,7 +604,7 @@ export default function Navbar({
                       setUserDropdownOpen(false);
                       setActiveView('deals');
                     }}
-                    className="btn btn-ghost"
+                    className="btn btn-ghost global-dropdown-item"
                     style={{
                       display: 'flex',
                       alignItems: 'center',

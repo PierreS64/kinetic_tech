@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../styles/components/modal.css';
 import { createPortal } from 'react-dom';
 import { Check, AlertTriangle, Cpu, Wrench, ShoppingCart, RefreshCw, Layers, Search, X, Filter } from 'lucide-react';
 import { builderParts } from '../mockData';

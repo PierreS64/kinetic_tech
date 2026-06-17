@@ -1,0 +1,51 @@
+/* Badges / spec chips */
+.spec-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--rounded-sm);
+  background: var(--color-surface-container-high);
+  color: var(--color-on-surface-variant);
+  border: 1px solid var(--color-outline-variant);
+  font-family: 'Inter', sans-serif;
+}
+
+.spec-chip-primary {
+  background: rgba(0, 123, 255, 0.1);
+  color: #adc7ff;
+  border: 1px solid rgba(0, 123, 255, 0.25);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: var(--rounded-sm);
+}
+
+.status-badge-sale {
+  background: #93000a;
+  color: #ffdad6;
+}
+
+.status-badge-stock {
+  background: rgba(76, 175, 80, 0.15);
+  color: #81c784;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+body.light-theme .spec-chip {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.light-theme .spec-chip-primary {
+  background: rgba(0, 123, 255, 0.05) !important;
+  color: #0053b3 !important;
+  border-color: rgba(0, 123, 255, 0.12) !important;
+}

@@ -1,0 +1,126 @@
+/* Custom RGB Glows for Gamer Mode / Gear catalog */
+.rgb-glow-card {
+  position: relative;
+  z-index: 1;
+}
+
+body.light-theme .flash-sale-block {
+  /* Nền màu cam siêu nhạt ở lightmode giúp làm nổi bật thẻ sản phẩm */
+  background: #fff9f5 !important; 
+  padding: 24px 20px 10px 20px !important;
+  border-radius: var(--rounded-lg);
+  border: 1px solid #ffe3d1 !important;
+  margin-bottom: 40px;
+}
+
+.rgb-glow-card::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: linear-gradient(45deg, #ff0055, #00ffcc, #007bff, #ff8c00);
+  border-radius: var(--rounded-lg);
+  z-index: -1;
+  opacity: 0;
+  transition: var(--transition-smooth);
+  filter: blur(6px);
+}
+
+.rgb-glow-card:hover::after {
+  opacity: 0.5;
+}
+.countdown-container {
+  display: flex;
+  gap: 8px;             
+  align-items: center;
+  justify-content: center; 
+}
+
+.countdown-box {
+  width: 45px;           
+  height: 45px;         
+  background-color: var(--color-surface-container-high);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--rounded); 
+  display: flex;
+  align-items: center;    
+  justify-content: center;   
+  
+  font-family: 'Montserrat', sans-serif; 
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Dấu hai chấm (:) phân cách giữa các ô */
+.countdown-separator {
+  font-weight: bold;
+  font-size: 18px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+  transform: translateY(1px);
+}
+/* Countdown boxes & separator – dark text in light mode */
+body.light-theme .countdown-box {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .countdown-separator,
+body.light-theme .countdown-divider {
+  color: #334155 !important;
+}
+
+/* Flash sale nav buttons – dark mode default */
+.flash-sale-nav-btn {
+  background: rgba(21, 24, 25, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  position: absolute !important;
+  z-index: 10 !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+/* Flash sale nav buttons – light mode */
+body.light-theme .flash-sale-nav-btn {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme .flash-sale-nav-btn svg {
+  color: #334155 !important;
+  stroke: #334155 !important;
+}
+
+body.light-theme .flash-sale-nav-btn:hover {
+  background: #ffffff !important;
+  color: var(--color-primary) !important;
+}
+
+body.light-theme .flash-sale-nav-btn:hover svg {
+  color: var(--color-primary) !important;
+  stroke: var(--color-primary) !important;
+}
+
+/* Flash sale title dot and text */
+body.light-theme .flash-sale-title {
+  color: #0f172a !important;
+}
+
+body.light-theme .flash-sale-dot {
+  background: var(--color-secondary) !important;
+}

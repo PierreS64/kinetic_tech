@@ -1,4 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './styles/components/category-slider.css';
+import './styles/components/footer.css';
+import './styles/components/button.css';
+import './styles/components/badge.css';
+import './styles/components/form.css';
+import './styles/components/table.css';
 import Navbar from './components/Navbar';
 import HeroCarousel from './components/HeroCarousel';
 import ProductCard from './components/ProductCard';
