@@ -122,3 +122,24 @@ body.light-theme .global-dropdown-item.active .dropdown-title {
 .global-dropdown-item:hover .dropdown-desc {
   color: var(--color-outline);
 }
+
+/* Navigation Item Styles */
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px !important;
+  height: 42px;
+  border-radius: var(--rounded-md) !important;
+  font-size: 13px;
+  transition: all 0.2s ease-in-out !important;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.light-theme .nav-item:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}

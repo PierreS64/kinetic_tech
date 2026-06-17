@@ -216,19 +216,14 @@ export default function Navbar({
                   navButtonRefs.current[0] = element;
                 }}
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="btn btn-ghost"
+                className="btn btn-ghost nav-item"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
                   gap: '8px',
-                  whiteSpace: 'nowrap',
                   position: 'relative',
                   zIndex: 1,
                   color: ['laptop', 'điện thoại', 'gaming gear', 'linh kiện'].includes(activeView) ? 'var(--color-active-nav-text, #ffffff)' : 'var(--color-on-surface-variant)',
                   background: 'transparent',
-                  border: '1px solid transparent',
-                  padding: '8px 14px',
-                  borderRadius: 'var(--rounded-md)'
+                  border: '1px solid transparent'
                 }}
               >
                 <List size={16} color={['laptop', 'điện thoại', 'gaming gear', 'linh kiện'].includes(activeView) ? 'var(--color-primary-dim)' : 'currentColor'} />
@@ -278,19 +273,14 @@ export default function Navbar({
                   navButtonRefs.current[1] = element;
                 }}
                 onClick={() => handleNavClick('trade-in')}
-                className="btn btn-ghost"
+                className="btn btn-ghost nav-item"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
                   gap: '8px',
-                  whiteSpace: 'nowrap',
                   position: 'relative',
                   zIndex: 1,
                   color: activeView === 'trade-in' ? 'var(--color-active-nav-text, #ffffff)' : 'var(--color-on-surface-variant)',
                   background: 'transparent',
-                  border: '1px solid transparent',
-                  padding: '8px 14px',
-                  borderRadius: 'var(--rounded-md)'
+                  border: '1px solid transparent'
                 }}
               >
                 <RotateCcw size={16} color={activeView === 'trade-in' ? 'var(--color-primary-dim)' : 'currentColor'} />
@@ -309,19 +299,14 @@ export default function Navbar({
                   navButtonRefs.current[2] = element;
                 }}
                 onClick={() => setSupportDropdownOpen(!supportDropdownOpen)}
-                className="btn btn-ghost"
+                className="btn btn-ghost nav-item"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
                   gap: '8px',
-                  whiteSpace: 'nowrap',
                   position: 'relative',
                   zIndex: 1,
                   color: ['warranty', 'order-tracking', 'support-ticket', 'about-us'].includes(activeView) ? 'var(--color-active-nav-text, #ffffff)' : 'var(--color-on-surface-variant)',
                   background: 'transparent',
-                  border: '1px solid transparent',
-                  padding: '8px 14px',
-                  borderRadius: 'var(--rounded-md)'
+                  border: '1px solid transparent'
                 }}
               >
                 <HelpCircle size={16} color={['warranty', 'order-tracking', 'support-ticket', 'about-us'].includes(activeView) ? 'var(--color-primary-dim)' : 'currentColor'} />
@@ -382,8 +367,7 @@ export default function Navbar({
             style={{
               paddingLeft: '34px',
               fontSize: '12px',
-              paddingTop: '8px',
-              paddingBottom: '8px'
+              height: '42px'
             }}
           />
           <Search size={14} style={{
@@ -413,14 +397,14 @@ export default function Navbar({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '36px',
-              height: '36px',
+              width: '42px',
+              height: '42px',
               cursor: 'pointer',
               color: 'var(--color-on-surface)'
             }}
             title={theme === 'light' ? 'Chuyển sang Chế độ tối' : 'Chuyển sang Chế độ sáng'}
           >
-            {theme === 'light' ? <Moon size={16} color="#fd8b00" /> : <Sun size={16} color="#ffb300" />}
+            {theme === 'light' ? <Moon size={22} color="#fd8b00" /> : <Sun size={22} color="#ffb300" />}
           </button>
 
           {/* Custom PC Builder */}
@@ -430,10 +414,12 @@ export default function Navbar({
             style={{
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '6px',
               fontSize: '13px',
               whiteSpace: 'nowrap',
-              padding: '8px 12px',
+              padding: '0 16px',
+              height: '42px',
               borderRadius: 'var(--rounded-md)'
             }}
           >
@@ -459,9 +445,9 @@ export default function Navbar({
                   fontSize: '13px',
                   padding: '8px 10px',
                   borderRadius: 'var(--rounded-md)',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  color: 'white'
+                  background: isLight ? 'rgba(0, 0, 0, 0.03)' : 'rgba(255, 255, 255, 0.04)',
+                  border: isLight ? '1px solid rgba(0, 0, 0, 0.12)' : '1px solid rgba(255, 255, 255, 0.08)',
+                  color: isLight ? 'var(--color-on-surface)' : 'white'
                 }}
               >
                 <div style={{
@@ -490,9 +476,11 @@ export default function Navbar({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '6px',
                   fontSize: '13px',
-                  padding: '8px 12px',
+                  padding: '0 16px',
+                  height: '42px',
                   borderRadius: 'var(--rounded-md)',
                 }}
               >
@@ -671,7 +659,7 @@ export default function Navbar({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="form-input"
-              style={{ paddingLeft: '34px' }}
+              style={{ paddingLeft: '34px', height: '42px' }}
             />
             <Search size={14} style={{
               position: 'absolute',
