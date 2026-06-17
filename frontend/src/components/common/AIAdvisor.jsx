@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, User, ShoppingCart, Loader2, X } from 'lucide-react';
-import { products } from '../../mockData';
+import { products } from '../../utils/mockData.js';
 
 export default function AIAdvisor({ onAddToCart, theme, onClose }) {
   const [messages, setMessages] = useState([

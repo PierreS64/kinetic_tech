@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import EmptyCart from './EmptyCart';
-import OrderReceipt from './OrderReceipt';
-import CheckoutSidebar from './CheckoutSidebar';
+import EmptyCart from '../../components/checkout/EmptyCart';
+import OrderReceipt from '../../components/checkout/OrderReceipt';
+import CheckoutSidebar from '../../components/checkout/CheckoutSidebar';
 import { 
   CreditCard, 
   MapPin, 

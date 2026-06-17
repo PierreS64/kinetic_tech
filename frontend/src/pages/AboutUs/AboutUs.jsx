@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import '../../styles/components/about.css';
+import './aboutUs.css';
 import {
   Cpu,
   Terminal,

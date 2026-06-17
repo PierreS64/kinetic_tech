@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PCBuilderModal from './PCBuilderModal';
-import '../../styles/components/modal.css';
-import '../../styles/components/pcbuilder.css';
+import '../../styles/base/modal.css';
+import './pcBuilder.css';
 import { createPortal } from 'react-dom';
 import { Check, AlertTriangle, Cpu, Wrench, ShoppingCart, RefreshCw, Layers, Search, X, Filter } from 'lucide-react';
-import { builderParts } from '../../mockData';
+import { builderParts } from '../../utils/mockData.js';
 
 export default function PCBuilder({ onAddPartsToCart }) {
   const [selectedParts, setSelectedParts] = useState({

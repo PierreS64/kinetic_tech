@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import '../../styles/components/hero-carousel.css';
+import './heroCarousel.css';
 import { ArrowLeft, ArrowRight, Flame } from 'lucide-react';
-import ProductCard from '../common/ProductCard';
+import ProductCard from '../../components/common/ProductCard';
 
 const bannerSlides = [
   {

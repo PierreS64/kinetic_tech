@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/components/product-card.css';
+import './productCard.css';
 import { Star, ShoppingCart, CreditCard, Heart } from 'lucide-react';
 
 export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = false, onToggleLike, onViewDetails }) {

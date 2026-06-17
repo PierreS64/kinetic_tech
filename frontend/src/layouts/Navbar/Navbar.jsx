@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useLayoutEffect, useEffect, useRef } from 'react';
-import '../../styles/components/dropdown.css';
+import './navbar.css';
 import { 
   ShoppingCart, 
   Search, 

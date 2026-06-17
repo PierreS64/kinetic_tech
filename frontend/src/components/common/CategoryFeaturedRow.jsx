@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import ProductCard from '../common/ProductCard';
+import ProductCard from './ProductCard';
 
 export default function CategoryFeaturedRow({ categoryName, categoryProducts, onAddToCart, onBuyNow, likedProductIds, onToggleLike, onViewDetails, theme }) {
   const rowRef = useRef(null);
