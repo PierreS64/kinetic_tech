@@ -1,0 +1,326 @@
+﻿body.light-theme .flash-sale-block {
+  /* Ná»n mÃ u cam siÃªu nháº¡t á»Ÿ lightmode giÃºp lÃ m ná»•i báº­t tháº» sáº£n pháº©m */
+  background: #fff9f5 !important; 
+  padding: 24px 20px 10px 20px !important;
+  border-radius: var(--rounded-lg);
+  border: 1px solid #ffe3d1 !important;
+  margin-bottom: 40px;
+}
+
+   Light Mode Design Override (Dá»±a theo thiáº¿t káº¿ hiá»‡n táº¡i)
+   ========================================================================== */
+:root {
+  --color-active-nav-text: #ffffff;
+}
+
+
+body.light-theme {
+  --color-active-nav-text: var(--color-primary);
+
+  --color-surface: #ffffff;
+  --color-surface-dim: #f8fafc;
+  --color-surface-bright: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f5f9;
+  --color-surface-container: #ffffff;
+  --color-surface-container-high: #e2e8f0;
+  --color-surface-container-highest: #cbd5e1;
+  
+  --color-on-surface: #0f172a;
+  --color-on-surface-variant: #334155;
+  --color-inverse-surface: #0f172a;
+  --color-inverse-on-surface: #f8fafc;
+  --color-outline: #475569;
+  --color-outline-variant: #94a3b8;
+  --color-surface-tint: #007BFF;
+  
+  --color-primary-dim: #0053b3;
+  --color-secondary-dim: #cc7000;
+  
+  --color-background: #f1f5f9; /* Soft light gray - not blinding white */
+  --color-background-darker: #e2e8f0;
+  --color-on-background: #0f172a;
+  --color-surface-variant: #e2e8f0;
+
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(0, 123, 255, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(253, 139, 0, 0.03) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(255, 255, 255, 0.95) 0px, transparent 100%) !important;
+}
+
+
+/* Base text contrast overrides in light theme */
+body.light-theme h1,
+body.light-theme h2,
+body.light-theme h3,
+body.light-theme h4,
+body.light-theme h5,
+body.light-theme h6,
+body.light-theme strong,
+body.light-theme th,
+body.light-theme .btn-outline,
+body.light-theme label {
+  color: #0f172a;
+}
+
+body.light-theme p,
+body.light-theme li,
+body.light-theme td,
+body.light-theme select,
+body.light-theme option,
+body.light-theme textarea {
+  color: #334155 !important;
+}
+
+/* Solve light mode readability for muted text or inline styles */
+body.light-theme span:not(.status-badge):not(.spec-chip):not(.banner-badge):not(.brand-logo-text):not(.brand-logo-subtext):not([style*="color: var(--color-secondary)"]):not([style*="color: var(--color-primary)"]):not([style*="color: #ffb77d"]):not([style*="color: #81c784"]):not([style*="color: #a5d6a7"]),
+body.light-theme div[style*="color: var(--color-outline)"],
+body.light-theme div[style*="color: var(--color-on-surface-variant)"],
+body.light-theme div[style*="color: rgba(255,255,255"],
+body.light-theme span[style*="color: var(--color-outline)"],
+body.light-theme span[style*="color: var(--color-on-surface-variant)"],
+body.light-theme span[style*="color: rgba(255,255,255"],
+body.light-theme span[style*="color: white"],
+body.light-theme p[style*="color: var(--color-outline)"],
+body.light-theme p[style*="color: var(--color-on-surface-variant)"],
+body.light-theme p[style*="color: rgba(255,255,255"] {
+  color: #475569 !important;
+}
+
+body.light-theme .glass-panel,
+body.light-theme header.glass-panel,
+body.light-theme .builder-modal,
+body.light-theme .filter-sidebar {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(25px) !important;
+  -webkit-backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+body.light-theme .glass-panel-glow-blue {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(0, 123, 255, 0.25) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 123, 255, 0.04), 0 0 16px rgba(0, 123, 255, 0.02) !important;
+}
+
+body.light-theme .glass-panel-glow-orange {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(253, 139, 0, 0.25) !important;
+  box-shadow: 0 8px 32px 0 rgba(253, 139, 0, 0.04), 0 0 16px rgba(253, 139, 0, 0.02) !important;
+}
+
+body.light-theme .product-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+body.light-theme .product-card:hover {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 12px 30px rgba(0, 123, 255, 0.06) !important;
+}
+
+body.light-theme .product-card-image-container {
+  background: #f8fafc !important;
+}
+
+body.light-theme .product-card-image {
+  filter: brightness(1.08) saturate(1.05) contrast(1.02);
+}
+
+body.light-theme .form-input {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .form-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+body.light-theme .form-input:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1) !important;
+}
+
+body.light-theme .btn-outline {
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+body.light-theme .btn-outline:hover {
+  background: rgba(0, 0, 0, 0.02) !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .btn-ghost {
+  color: #475569 !important;
+}
+
+body.light-theme .btn-ghost:hover {
+  background: rgba(0, 0, 0, 0.03) !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .spec-chip {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.light-theme .spec-chip-primary {
+  background: rgba(0, 123, 255, 0.05) !important;
+  color: #0053b3 !important;
+  border-color: rgba(0, 123, 255, 0.12) !important;
+}
+
+body.light-theme .zebra-table tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.01) !important;
+}
+
+body.light-theme .zebra-table tr:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+body.light-theme .zebra-table td, 
+body.light-theme .zebra-table th {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+  color: #334155 !important;
+}
+
+body.light-theme .cart-drawer {
+  background: #ffffff !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme .cart-drawer-overlay {
+  background: rgba(0, 0, 0, 0.25) !important;
+}
+
+body.light-theme footer {
+  background: #f1f5f9 !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+body.light-theme footer h4 {
+  color: #0f172a !important;
+}
+
+body.light-theme footer p,
+body.light-theme footer li {
+  color: #475569 !important;
+}
+
+body.light-theme footer div[style*="borderTop"] {
+  border-top: 1px solid rgba(0, 0, 0, 0.04) !important;
+  color: #94a3b8 !important;
+}
+
+.brand-logo-text {
+  background: linear-gradient(90deg, #ffffff, #adc7ff) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+body.light-theme .brand-logo-text {
+  background: linear-gradient(90deg, #091e42, #0052cc) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+body.light-theme .brand-logo-subtext {
+  color: var(--color-secondary) !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+   ========================================================================== */
+
+/* Brand benefits section â€“ visible background in light mode */
+body.light-theme .brand-benefits-section {
+  background: rgba(0, 123, 255, 0.03) !important;
+  border: 1px solid rgba(0, 123, 255, 0.1) !important;
+}
+
+/* Category scroll arrow buttons */
+body.light-theme .category-scroll-btn {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme .category-scroll-btn:hover {
+  background: #ffffff !important;
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.12) !important;
+}
+
+/* SVG icon color inside scroll buttons */
+body.light-theme .category-scroll-btn svg {
+  color: #334155 !important;
+  stroke: #334155 !important;
+}
+
+body.light-theme .category-scroll-btn:hover svg {
+  color: var(--color-primary) !important;
+  stroke: var(--color-primary) !important;
+}
+
+/* Countdown boxes & separator â€“ dark text in light mode */
+body.light-theme .countdown-box {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+body.light-theme .countdown-separator,
+body.light-theme .countdown-divider {
+  color: #334155 !important;
+}
+
+/* Flash sale nav buttons â€“ dark mode default */
+body.light-theme .flash-sale-nav-btn {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme .flash-sale-nav-btn svg {
+  color: #334155 !important;
+  stroke: #334155 !important;
+}
+
+body.light-theme .flash-sale-nav-btn:hover {
+  background: #ffffff !important;
+  color: var(--color-primary) !important;
+}
+
+body.light-theme .flash-sale-nav-btn:hover svg {
+  color: var(--color-primary) !important;
+  stroke: var(--color-primary) !important;
+}
+
+/* Flash sale title dot and text */
+body.light-theme .flash-sale-title {
+  color: #0f172a !important;
+}
+
+body.light-theme .flash-sale-dot {
+  background: var(--color-secondary) !important;
+}
+
+/* Categories Dropdown Custom styling */
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.dropdown-category-item {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: var(--color-primary) !important;
+}
