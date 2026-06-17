@@ -18,8 +18,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
         position: 'absolute',
         top: '12px',
         left: '12px',
-        zIndex: 5,
-        opacity: 0.75
+        zIndex: 5
       }}>
         {inStock ? (
           <span className="status-badge status-badge-stock" style={{ background: '#4caf50', color: '#ffffff', border: 'none', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold' }}>Còn hàng</span>
@@ -112,7 +111,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
               />
             ))}
           </div>
-          <span style={{ fontSize: '14px', color: 'var(--color-on-surface-variant)', lineHeight: '1.8' }}>
+          <span style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', lineHeight: '1.5' }}>
             ({reviews} đánh giá)
           </span>
         </div>
@@ -122,12 +121,12 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
           background: 'rgba(255, 255, 255, 0.02)',
           padding: '10px',
           borderRadius: 'var(--rounded-sm)',
-          fontSize: '14px',
+          fontSize: '13px',
           color: 'var(--color-on-surface-variant)',
           display: 'flex',
           flexDirection: 'column',
           gap: '6px',
-          lineHeight: '1.8',
+          lineHeight: '1.5',
           marginTop: '4px',
           border: '1px solid rgba(255, 255, 255, 0.04)'
         }}>
@@ -173,8 +172,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
         display: 'flex',
         gap: '8px',
         marginTop: '12px',
-        width: '100%',
-        flexDirection: 'row'
+        width: '100%'
       }}>
         <button
           onClick={(e) => { e.stopPropagation(); onBuyNow(product); }}
@@ -202,7 +200,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
           disabled={!inStock}
           style={{
             padding: '8px 12px',
-            fontSize: '14px',
+            fontSize: '12px',
             opacity: inStock ? 1 : 0.5,
             cursor: inStock ? 'pointer' : 'default',
             display: 'flex',
@@ -213,8 +211,8 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
           }}
           title="Thêm vào giỏ hàng"
         >
-          <ShoppingCart size={16} />
-          <span style={{ fontSize: '14px', fontWeight: 'bold' }}>+</span>
+          <ShoppingCart size={14} />
+          <span style={{ fontSize: '12px', fontWeight: 'bold' }}>+</span>
         </button>
       </div>
     </div>

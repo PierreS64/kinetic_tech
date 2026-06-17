@@ -139,7 +139,6 @@ export default function App() {
   const relatedScrollRef = useRef(null);
   const [showRelatedLeftArrow, setShowRelatedLeftArrow] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [detailedProduct, setDetailedProduct] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [toast, setToast] = useState(null); // { message: '', visible: false }
@@ -971,92 +970,6 @@ export default function App() {
 
       {/* Main layout container */}
       <main style={{ flex: 1, padding: '0 0 60px' }}>
-        
-        {/* VIEW: Product Details */}
-        {activeView === 'product-details' && detailedProduct && (
-          <div className="container animate-fade-in-up" style={{ marginTop: '40px' }}>
-            <button 
-              onClick={() => { setActiveView(detailedProduct.category === 'laptop' ? 'laptop' : detailedProduct.category === 'điện thoại' ? 'điện thoại' : detailedProduct.category === 'gaming gear' ? 'gaming gear' : detailedProduct.category === 'linh kiện' ? 'linh kiện' : 'deals'); setDetailedProduct(null); }}
-              className="btn btn-outline"
-              style={{ marginBottom: '20px' }}
-            >
-              <ArrowLeft size={16} /> Quay lại
-            </button>
-            <div className="glass-panel" style={{ padding: '40px', display: 'flex', gap: '40px', flexDirection: 'row', flexWrap: 'wrap' }}>
-               <div style={{ flex: '1 1 400px' }}>
-                 <img src={detailedProduct.image} alt={detailedProduct.name} style={{ width: '100%', borderRadius: '12px', background: 'white' }} />
-               </div>
-               <div style={{ flex: '2 1 500px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                 <h1 style={{ fontSize: '32px', color: theme === 'light' ? '#0f172a' : 'white' }}>{detailedProduct.name}</h1>
-                 <p style={{ fontSize: '28px', color: 'var(--color-secondary)', fontWeight: '800' }}>
-                   {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(detailedProduct.price)}
-                   {detailedProduct.oldPrice && (
-                     <span style={{ fontSize: '18px', color: 'var(--color-outline)', textDecoration: 'line-through', marginLeft: '12px' }}>
-                       {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(detailedProduct.oldPrice)}
-                     </span>
-                   )}
-                 </p>
-                 <div style={{ display: 'flex', gap: '16px', marginTop: '10px' }}>
-                    <button 
-                      onClick={() => handleBuyNow(detailedProduct)}
-                      disabled={!detailedProduct.inStock}
-                      className="btn btn-secondary"
-                      style={{ padding: '16px 32px', fontSize: '16px', flex: 1 }}
-                    >Mua Ngay</button>
-                    <button 
-                      onClick={() => handleAddToCart(detailedProduct)}
-                      disabled={!detailedProduct.inStock}
-                      className="btn btn-outline"
-                      style={{ padding: '16px 32px', fontSize: '16px' }}
-                    ><ShoppingCart size={20} /> Thêm Vào Giỏ</button>
-                 </div>
-                 <div style={{ background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: '12px', marginTop: '10px', border: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)' }}>
-                    <h3 style={{ fontSize: '18px', marginBottom: '16px', color: theme === 'light' ? '#0f172a' : 'white' }}>Thông số kỹ thuật</h3>
-                    <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', listStyle: 'none', padding: 0 }}>
-                      {Object.entries(detailedProduct.specs).map(([k, v]) => (
-                        <li key={k} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)', paddingBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: 'var(--color-outline)', textTransform: 'uppercase', fontSize: '14px' }}>{k}</span>
-                          <span style={{ color: theme === 'light' ? '#0f172a' : 'var(--color-on-surface)', textAlign: 'right', maxWidth: '60%', fontWeight: '500' }}>{v}</span>
-                        </li>
-                      ))}
-                    </ul>
-                 </div>
-               </div>
-            </div>
-            
-            {detailedProduct.longDescription && (
-              <div style={{ marginTop: '40px' }} className="animate-fade-in-up">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-                  <Tag size={24} color="var(--color-primary)" />
-                  <h2 style={{ fontSize: '24px', fontWeight: '800', color: theme === 'light' ? '#0f172a' : 'white', margin: 0 }}>Thông tin sản phẩm</h2>
-                </div>
-                
-                <div className="glass-panel" style={{ padding: '40px', borderRadius: '16px' }}>
-                  {detailedProduct.longDescription.map((section, index) => (
-                    <div key={index} style={{ marginBottom: index === detailedProduct.longDescription.length - 1 ? 0 : '40px' }}>
-                      <h3 style={{ fontSize: '20px', fontWeight: '700', color: 'var(--color-primary-dim)', marginBottom: '16px' }}>
-                        {section.title}
-                      </h3>
-                      <p style={{ fontSize: '16px', lineHeight: '1.8', color: theme === 'light' ? '#334155' : '#cbd5e1', marginBottom: section.image ? '24px' : '0' }}>
-                        {section.content}
-                      </p>
-                      {section.image && (
-                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                          <img src={section.image} alt={section.title} style={{ maxWidth: '100%', borderRadius: '12px', border: theme === 'light' ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.05)' }} />
-                          {section.imageCaption && (
-                            <p style={{ fontSize: '13px', color: 'var(--color-outline)', marginTop: '12px', fontStyle: 'italic' }}>
-                              {section.imageCaption}
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
         
         {/* VIEW 1: Showcase & Benefits */}
         {activeView === 'deals' && (
@@ -2456,10 +2369,8 @@ export default function App() {
       {/* Product Detail Modal */}
       {selectedProduct && (() => {
         let description = '';
-        if (selectedProduct.longDescription && selectedProduct.longDescription.length > 0) {
-          description = selectedProduct.longDescription[0].content;
-        } else if (selectedProduct.category === 'laptop') {
-          description = `Laptop ${selectedProduct.name} sở hữu hiệu năng mạnh mẽ đột phá với CPU và GPU thế hệ mới nhất, mang lại trải nghiệm mượt mà cho các tác vụ gaming đồ họa nặng lẫn công việc thiết kế chuyên nghiệp. Màn hình tần số quét cao giúp giảm thiểu tối đa hiện tượng xé hình, mang lại hình ảnh sắc nét đến từng chi tiết.`;
+        if (selectedProduct.category === 'laptop') {
+          description = `Laptop ${selectedProduct.name} sở hữu hiệu năng mạnh mẽ đột phá với CPU và GPU thế hệ mới nhất, mang lại trải nghiệm mượt mà cho cả tác vụ gaming đồ họa nặng lẫn công việc thiết kế chuyên nghiệp. Màn hình tần số quét cao giúp giảm thiểu tối đa hiện tượng xé hình, mang lại hình ảnh sắc nét đến từng chi tiết.`;
         } else if (selectedProduct.category === 'điện thoại') {
           description = `Điện thoại ${selectedProduct.name} mang ngôn ngữ thiết kế sang trọng, thời thượng. Được trang bị hệ thống camera siêu sắc nét cùng bộ xử lý tối tân và dung lượng pin bền bỉ, chiếc điện thoại này sẵn sàng đáp ứng mọi nhu cầu giải trí và làm việc cường độ cao trong ngày.`;
         } else if (selectedProduct.category === 'gaming gear') {
@@ -2623,42 +2534,29 @@ export default function App() {
                     </div>
 
                     {/* Action buttons */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'auto', paddingTop: '10px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: 'auto', paddingTop: '10px' }}>
                       <button 
                         onClick={() => {
-                          setDetailedProduct(selectedProduct);
-                          setActiveView('product-details');
+                          handleAddToCart(selectedProduct);
+                        }}
+                        disabled={!selectedProduct.inStock}
+                        className="btn btn-outline"
+                        style={{ padding: '12px', fontSize: '13px', fontWeight: '700' }}
+                      >
+                        <ShoppingCart size={16} />
+                        Thêm Vào Giỏ Hàng
+                      </button>
+                      <button 
+                        onClick={() => {
+                          handleBuyNow(selectedProduct);
                           setSelectedProduct(null);
                         }}
-                        className="btn btn-primary"
-                        style={{ padding: '12px', fontSize: '13px', fontWeight: '700', width: '100%', justifyContent: 'center' }}
+                        disabled={!selectedProduct.inStock}
+                        className="btn btn-secondary"
+                        style={{ padding: '12px', fontSize: '13px', fontWeight: '700' }}
                       >
-                        Xem Chi Tiết
+                        Mua Ngay
                       </button>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                        <button 
-                          onClick={() => {
-                            handleAddToCart(selectedProduct);
-                          }}
-                          disabled={!selectedProduct.inStock}
-                          className="btn btn-outline"
-                          style={{ padding: '12px', fontSize: '13px', fontWeight: '700' }}
-                        >
-                          <ShoppingCart size={16} />
-                          Thêm Vào Giỏ
-                        </button>
-                        <button 
-                          onClick={() => {
-                            handleBuyNow(selectedProduct);
-                            setSelectedProduct(null);
-                          }}
-                          disabled={!selectedProduct.inStock}
-                          className="btn btn-secondary"
-                          style={{ padding: '12px', fontSize: '13px', fontWeight: '700' }}
-                        >
-                          Mua Ngay
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </div>
