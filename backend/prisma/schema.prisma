@@ -1,0 +1,379 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Appointment {
+  id                                  String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId                          String             @db.Uuid
+  technicianId                        String             @db.Uuid
+  date                                DateTime
+  timeSlot                            String             @db.VarChar(50)
+  type                                AppointmentType
+  status                              AppointmentStatus? @default(PENDING)
+  createdAt                           DateTime           @default(now())
+  User_Appointment_customerIdToUser   User               @relation("Appointment_customerIdToUser", fields: [customerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  User_Appointment_technicianIdToUser User               @relation("Appointment_technicianIdToUser", fields: [technicianId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Attribute {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String                  @unique @db.VarChar(255)
+  ProductAttributeValue ProductAttributeValue[]
+}
+
+model Banner {
+  id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  imageUrl String
+  linkUrl  String?
+  isActive Boolean? @default(true)
+}
+
+model Cart {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String     @unique @db.Uuid
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  User      User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  CartItem  CartItem[]
+}
+
+model CartItem {
+  id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cartId           String         @db.Uuid
+  productVariantId String         @db.Uuid
+  quantity         Int
+  createdAt        DateTime       @default(now())
+  Cart             Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ProductVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Category {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String    @db.VarChar(255)
+  description String?
+  deletedAt   DateTime?
+  Product     Product[]
+}
+
+model ChatMessage {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  chatSessionId String      @db.Uuid
+  senderType    SenderType
+  content       String
+  attachments   String[]
+  createdAt     DateTime    @default(now())
+  ChatSession   ChatSession @relation(fields: [chatSessionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model ChatSession {
+  id                                  String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId                          String             @db.Uuid
+  technicianId                        String?            @db.Uuid
+  status                              ChatSessionStatus? @default(AI_HANDLING)
+  createdAt                           DateTime           @default(now())
+  updatedAt                           DateTime           @default(now())
+  ChatMessage                         ChatMessage[]
+  User_ChatSession_customerIdToUser   User               @relation("ChatSession_customerIdToUser", fields: [customerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  User_ChatSession_technicianIdToUser User?              @relation("ChatSession_technicianIdToUser", fields: [technicianId], references: [id], onUpdate: NoAction)
+}
+
+model Coupon {
+  id                 String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code               String          @unique @db.VarChar(50)
+  type               CouponType?     @default(ORDER_DISCOUNT)
+  discountAmount     Float?
+  discountPercentage Float?
+  validFrom          DateTime
+  validUntil         DateTime
+  isActive           Boolean         @default(true)
+  deletedAt          DateTime?
+  CouponProduct      CouponProduct[]
+  Order              Order[]
+}
+
+model CouponProduct {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  couponId  String  @db.Uuid
+  productId String  @db.Uuid
+  Coupon    Coupon  @relation(fields: [couponId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Favorite {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String  @db.Uuid
+  productId String  @db.Uuid
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Feedback {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  title     String   @db.VarChar(255)
+  content   String
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model KnowledgeBase {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String   @db.VarChar(255)
+  content   String
+  category  String   @db.VarChar(100)
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String         @db.Uuid
+  userAddressId String?        @db.Uuid
+  couponId      String?        @db.Uuid
+  totalAmount   Float
+  status        OrderStatus?   @default(PENDING)
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus? @default(PENDING)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  Coupon        Coupon?        @relation(fields: [couponId], references: [id], onUpdate: NoAction)
+  UserAddress   UserAddress?   @relation(fields: [userAddressId], references: [id], onUpdate: NoAction)
+  User          User           @relation(fields: [userId], references: [id], onUpdate: NoAction)
+  OrderItem     OrderItem[]
+  Transaction   Transaction[]
+}
+
+model OrderItem {
+  id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId          String         @db.Uuid
+  productVariantId String         @db.Uuid
+  quantity         Int
+  price            Float
+  Order            Order          @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ProductVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onUpdate: NoAction)
+}
+
+model Product {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String                  @db.VarChar(255)
+  categoryId            String                  @db.Uuid
+  brand                 String                  @db.VarChar(255)
+  description           String
+  deletedAt             DateTime?
+  CouponProduct         CouponProduct[]
+  Favorite              Favorite[]
+  Category              Category                @relation(fields: [categoryId], references: [id], onUpdate: NoAction)
+  ProductAttributeValue ProductAttributeValue[]
+  ProductImage          ProductImage[]
+  ProductVariant        ProductVariant[]
+  Review                Review[]
+  UserDevice            UserDevice[]
+}
+
+model ProductAttributeValue {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId   String    @db.Uuid
+  attributeId String    @db.Uuid
+  value       String    @db.VarChar(255)
+  Attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model ProductImage {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId   String   @db.Uuid
+  imageUrl    String
+  isThumbnail Boolean? @default(false)
+  createdAt   DateTime @default(now())
+  Product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model ProductVariant {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId     String      @db.Uuid
+  color         String?     @db.VarChar(100)
+  price         Float
+  stockQuantity Int         @default(0)
+  deletedAt     DateTime?
+  CartItem      CartItem[]
+  OrderItem     OrderItem[]
+  Product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Review {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  productId String   @db.Uuid
+  rating    Int
+  comment   String?
+  imageUrls String[]
+  createdAt DateTime @default(now())
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Ticket {
+  id                             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId                     String        @db.Uuid
+  technicianId                   String?       @db.Uuid
+  userDeviceId                   String?       @db.Uuid
+  description                    String
+  imageUrls                      String[]
+  severity                       Severity?     @default(LOW)
+  status                         TicketStatus? @default(OPEN)
+  createdAt                      DateTime      @default(now())
+  updatedAt                      DateTime      @default(now())
+  User_Ticket_customerIdToUser   User          @relation("Ticket_customerIdToUser", fields: [customerId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  User_Ticket_technicianIdToUser User?         @relation("Ticket_technicianIdToUser", fields: [technicianId], references: [id], onUpdate: NoAction)
+  UserDevice                     UserDevice?   @relation(fields: [userDeviceId], references: [id], onUpdate: NoAction)
+}
+
+model TradeIn {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String         @db.Uuid
+  deviceName     String         @db.VarChar(255)
+  condition      String
+  estimatedValue Float?
+  status         TradeInStatus? @default(PENDING)
+  createdAt      DateTime       @default(now())
+  User           User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Transaction {
+  id                   String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId              String        @db.Uuid
+  gatewayTransactionId String?       @db.VarChar(255)
+  amount               Float
+  paymentMethod        PaymentMethod
+  status               PaymentStatus
+  createdAt            DateTime      @default(now())
+  Order                Order         @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model User {
+  id                                         String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fullName                                   String        @db.VarChar(255)
+  phoneNumber                                String?       @unique @db.VarChar(20)
+  email                                      String        @unique @db.VarChar(255)
+  password                                   String        @db.VarChar(255)
+  role                                       Role?         @default(CUSTOMER)
+  createdAt                                  DateTime      @default(now())
+  updatedAt                                  DateTime      @default(now())
+  deletedAt                                  DateTime?
+  Appointment_Appointment_customerIdToUser   Appointment[] @relation("Appointment_customerIdToUser")
+  Appointment_Appointment_technicianIdToUser Appointment[] @relation("Appointment_technicianIdToUser")
+  Cart                                       Cart?
+  ChatSession_ChatSession_customerIdToUser   ChatSession[] @relation("ChatSession_customerIdToUser")
+  ChatSession_ChatSession_technicianIdToUser ChatSession[] @relation("ChatSession_technicianIdToUser")
+  Favorite                                   Favorite[]
+  Feedback                                   Feedback[]
+  Order                                      Order[]
+  Review                                     Review[]
+  Ticket_Ticket_customerIdToUser             Ticket[]      @relation("Ticket_customerIdToUser")
+  Ticket_Ticket_technicianIdToUser           Ticket[]      @relation("Ticket_technicianIdToUser")
+  TradeIn                                    TradeIn[]
+  UserAddress                                UserAddress[]
+  UserDevice                                 UserDevice[]
+}
+
+model UserAddress {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  address   String
+  isDefault Boolean? @default(false)
+  createdAt DateTime @default(now())
+  Order     Order[]
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model UserDevice {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId             String   @db.Uuid
+  productId          String   @db.Uuid
+  serialNumber       String   @unique @db.VarChar(100)
+  purchaseDate       DateTime
+  warrantyExpiryDate DateTime
+  Ticket             Ticket[]
+  Product            Product  @relation(fields: [productId], references: [id], onUpdate: NoAction)
+  User               User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum AppointmentType {
+  IN_STORE
+  AT_HOME
+}
+
+enum ChatSessionStatus {
+  AI_HANDLING
+  WAITING_FOR_TECH
+  TECHNICIAN_HANDLING
+  CLOSED
+}
+
+enum CouponType {
+  ORDER_DISCOUNT
+  PRODUCT_DISCOUNT
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  COD
+  PAYOS
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum Role {
+  ADMIN
+  TECHNICIAN
+  CUSTOMER
+}
+
+enum SenderType {
+  CUSTOMER
+  AI
+  TECHNICIAN
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TradeInStatus {
+  PENDING
+  APPROVED
+  PURCHASED
+  CANCELLED
+}
