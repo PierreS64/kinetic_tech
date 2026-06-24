@@ -208,8 +208,7 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
             {/* Social Logins */}
             <div style={{ display: 'flex', gap: '12px', marginBottom: '32px' }}>
               <button 
-                type="button"
-                onClick={(e) => { e.preventDefault(); window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/auth/google`; }}
+                onClick={(e) => { e.preventDefault(); window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/google`; }}
                 style={{
                 flex: 1, height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                 background: 'var(--color-surface)', border: '1px solid var(--color-outline-variant)',
@@ -220,8 +219,7 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                 Google
               </button>
               <button 
-                type="button"
-                onClick={(e) => { e.preventDefault(); window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/auth/facebook`; }}
+                onClick={(e) => { e.preventDefault(); window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/facebook`; }}
                 style={{
                 flex: 1, height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                 background: 'var(--color-surface)', border: '1px solid var(--color-outline-variant)',
