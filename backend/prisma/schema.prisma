@@ -262,6 +262,7 @@ model User {
   password                                   String?       @db.VarChar(255)
   provider                                   AuthProvider? @default(LOCAL)
   providerId                                 String?       @db.VarChar(255)
+  phone                                      String?
   role                                       Role?         @default(CUSTOMER)
   createdAt                                  DateTime      @default(now())
   updatedAt                                  DateTime      @default(now())

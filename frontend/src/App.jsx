@@ -271,15 +271,40 @@ export default function App() {
   });
 
 
-  const handleLoginSuccess = (userData) => {
+  // Parse OAuth data from URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const userDataStr = urlParams.get('userData');
+
+    if (token && userDataStr) {
+      try {
+        const userData = JSON.parse(decodeURIComponent(userDataStr));
+        localStorage.setItem('kinetic_token', token);
+        localStorage.setItem('kinetic_user', JSON.stringify(userData));
+        setCurrentUser(userData);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        showToast('Đăng nhập thành công!');
+        setActiveView('account');
+      } catch (err) {
+        console.error('Failed to parse OAuth data', err);
+      }
+    }
+  }, []);
+
+  const handleLoginSuccess = (userData, token) => {
     setCurrentUser(userData);
     localStorage.setItem('kinetic_user', JSON.stringify(userData));
+    if (token) {
+      localStorage.setItem('kinetic_token', token);
+    }
     setActiveView('account');
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
     localStorage.removeItem('kinetic_user');
+    localStorage.removeItem('kinetic_token');
   };
 
   // Catalog search filter states

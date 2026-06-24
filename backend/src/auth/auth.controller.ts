@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Get, Req, Body } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Get, Req, Body, Res } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
@@ -12,6 +12,11 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @Post('register')
+  async register(@Body() body: any) {
+    return this.authService.register(body);
+  }
+
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req: any) {
@@ -20,8 +25,9 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req: any) {
-    return this.authService.login(req.user);
+  async googleAuthRedirect(@Req() req: any, @Res() res: any) {
+    const result = await this.authService.login(req.user);
+    res.redirect(`http://localhost:5173/?token=${result.access_token}&userData=${encodeURIComponent(JSON.stringify(result.user))}`);
   }
 
   @Get('facebook')
@@ -32,7 +38,8 @@ export class AuthController {
 
   @Get('facebook/redirect')
   @UseGuards(AuthGuard('facebook'))
-  async facebookAuthRedirect(@Req() req: any) {
-    return this.authService.login(req.user);
+  async facebookAuthRedirect(@Req() req: any, @Res() res: any) {
+    const result = await this.authService.login(req.user);
+    res.redirect(`http://localhost:5173/?token=${result.access_token}&userData=${encodeURIComponent(JSON.stringify(result.user))}`);
   }
 }

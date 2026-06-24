@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, Phone, ArrowRight, UserPlus, LogIn, CheckCircle2, ShieldCheck, Facebook } from 'lucide-react';
+import api from '../../utils/api';
 
 export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHome }) {
   const [activeTab, setActiveTab] = useState(initialTab); // 'login' or 'register'
@@ -79,7 +80,7 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
     setError('');
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!formData.username || !formData.password) {
       setError('Vui lòng điền đầy đủ Tên đăng nhập và Mật khẩu.');
@@ -87,26 +88,20 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
     }
 
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const response = await api.post('/auth/login', {
+        email: formData.username.trim().toLowerCase(),
+        password: formData.password
+      });
+      setSuccessMsg('Đăng nhập thành công! Chào mừng quay trở lại.');
+      setTimeout(() => { onLoginSuccess(response.data.user, response.data.access_token); }, 1200);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Tên đăng nhập hoặc Mật khẩu không đúng.');
       setLoading(false);
-      const username = formData.username.trim().toLowerCase();
-      const password = formData.password;
-
-      if (username === 'admin' && password === 'admin123') {
-        const mockUser = { username: 'admin', fullName: 'Quản Trị Viên (Admin)', email: 'admin@kinetic.vn', phone: '0987654321', role: 'admin' };
-        setSuccessMsg('Đăng nhập thành công với quyền Admin! Chào mừng quay trở lại.');
-        setTimeout(() => { onLoginSuccess(mockUser); }, 1200);
-      } else if (username === 'guest' && password === 'guest123') {
-        const mockUser = { username: 'guest', fullName: 'Khách Hàng KINETIC', email: 'guest@kinetic.vn', phone: '0987654321', role: 'guest' };
-        setSuccessMsg('Đăng nhập thành công! Chào mừng quay trở lại.');
-        setTimeout(() => { onLoginSuccess(mockUser); }, 1200);
-      } else {
-        setError('Tên đăng nhập hoặc Mật khẩu không đúng. Thử admin/admin123 hoặc guest/guest123.');
-      }
-    }, 1200);
+    }
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     const { email, password, confirmPassword, fullName, phone } = formData;
 
@@ -118,18 +113,25 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
       setError('Mật khẩu xác nhận không khớp.');
       return;
     }
-    if (password.length < 6) {
-      setError('Mật khẩu phải dài ít nhất 6 ký tự.');
+    
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,20}$/;
+    if (!passwordRegex.test(password)) {
+      setError('Mật khẩu phải từ 6-20 ký tự, gồm ít nhất 1 chữ hoa, 1 chữ thường và 1 ký tự đặc biệt');
       return;
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      const mockUser = { username: email.split('@')[0], fullName: fullName, email: email, phone: phone };
+    try {
+      await api.post('/auth/register', { email, password, fullName, phone });
+      
+      const loginRes = await api.post('/auth/login', { email, password });
+      
       setSuccessMsg('Tạo tài khoản thành công! Tự động đăng nhập...');
-      setTimeout(() => { onLoginSuccess(mockUser); }, 1500);
-    }, 1200);
+      setTimeout(() => { onLoginSuccess(loginRes.data.user, loginRes.data.access_token); }, 1500);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Có lỗi xảy ra khi tạo tài khoản.');
+      setLoading(false);
+    }
   };
 
   // Shared input style
@@ -205,7 +207,10 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
 
             {/* Social Logins */}
             <div style={{ display: 'flex', gap: '12px', marginBottom: '32px' }}>
-              <button style={{
+              <button 
+                type="button"
+                onClick={(e) => { e.preventDefault(); window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/auth/google`; }}
+                style={{
                 flex: 1, height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                 background: 'var(--color-surface)', border: '1px solid var(--color-outline-variant)',
                 borderRadius: 'var(--rounded-md)', color: 'var(--color-on-surface)', fontWeight: '600', cursor: 'pointer',
@@ -214,7 +219,10 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                 <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" /></svg>
                 Google
               </button>
-              <button style={{
+              <button 
+                type="button"
+                onClick={(e) => { e.preventDefault(); window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/auth/facebook`; }}
+                style={{
                 flex: 1, height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                 background: 'var(--color-surface)', border: '1px solid var(--color-outline-variant)',
                 borderRadius: 'var(--rounded-md)', color: 'var(--color-on-surface)', fontWeight: '600', cursor: 'pointer',
