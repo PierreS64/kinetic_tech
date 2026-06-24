@@ -4,7 +4,7 @@
 **Frontend:** ![React](https://img.shields.io/badge/Frontend-React.js-cyan) ![TailwindCSS](https://img.shields.io/badge/UI-Tailwind_CSS-38bdf8)
 **Backend:** ![NestJS](https://img.shields.io/badge/Backend-NestJS-red) ![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)
 **Database:** ![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791)
-**AI Integrated:** ![Gemini API](https://img.shields.io/badge/AI-Gemini_API-orange)
+**AI Integrated:** ![OpenAI API](https://img.shields.io/badge/AI-OpenAI_API-orange)
 **Payment:** ![PayOS](https://img.shields.io/badge/Payment-PayOS-green)
 **Status:** ![In Development](https://img.shields.io/badge/Status-In_Development-orange)
 
