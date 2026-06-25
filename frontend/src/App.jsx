@@ -17,6 +17,7 @@ import TradeIn from './pages/TradeIn/TradeIn';
 import SupportTicket from './pages/Support/SupportTicket';
 import Warranty from './pages/Support/Warranty';
 import OrderTracking from './pages/Support/OrderTracking';
+import ProductDetail from './pages/ProductDetail/ProductDetail';
 import { products } from './utils/mockData.js';
 import { getFilteredProducts } from './utils/filterProducts';
 import FilterSidebar from './layouts/FilterSidebar/FilterSidebar';
@@ -32,6 +33,7 @@ export default function App() {
   const relatedScrollRef = useRef(null);
   const [showRelatedLeftArrow, setShowRelatedLeftArrow] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedDetailProduct, setSelectedDetailProduct] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [toast, setToast] = useState(null); // { message: '', visible: false }
@@ -1211,6 +1213,17 @@ export default function App() {
                       >
                         Mua Ngay
                       </button>
+                      <button 
+                        onClick={() => {
+                          setSelectedDetailProduct(selectedProduct);
+                          setSelectedProduct(null);
+                          setActiveView('product_detail');
+                        }}
+                        className="btn btn-ghost"
+                        style={{ gridColumn: 'span 2', padding: '10px', fontSize: '13px', color: 'var(--color-primary-dim)', textDecoration: 'underline' }}
+                      >
+                        Xem chi tiết -&gt;
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1337,6 +1350,15 @@ export default function App() {
           </div>
         );
       })()}
+      {activeView === 'product_detail' && (
+        <ProductDetail 
+          product={selectedDetailProduct}
+          onBack={() => setActiveView('deals')}
+          onAddToCart={(p) => handleAddToCart(p)}
+          onBuyNow={handleBuyNow}
+          theme={theme}
+        />
+      )}
 
       {/* Embedded CSS rules for media queries responsive layout inside JS */}
       <style>{`
