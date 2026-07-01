@@ -1,12 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, User, ShoppingCart, Loader2, X } from 'lucide-react';
-import { products } from '../../utils/mockData';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true
-});
+import { io } from 'socket.io-client';
 
 export default function AIAdvisor({ onAddToCart, theme, onClose }) {
   const [messages, setMessages] = useState([
@@ -20,6 +14,10 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
+  
+  // Socket and Session refs
+  const socketRef = useRef(null);
+  const sessionIdRef = useRef(null);
 
   const presetQuestions = [
     { text: 'Laptop lập trình & đồ họa dưới 40 triệu?', category: 'work' },
@@ -27,74 +25,98 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
     { text: 'Cấu hình PC chơi game tối ưu nhất?', category: 'gaming_pc' }
   ];
 
-  // Auto-scroll to bottom of messages
+  useEffect(() => {
+    // Lấy UserID từ localStorage (yêu cầu Auth)
+    const userDataStr = localStorage.getItem('kinetic_user');
+    const userId = userDataStr ? JSON.parse(userDataStr).id : null;
+
+    if (!userId) {
+      setMessages([{
+        id: 1,
+        sender: 'ai',
+        text: 'Xin chào! Bạn cần đăng nhập tài khoản trước khi có thể sử dụng Trợ Lý Cố Vấn AI để lưu trữ lịch sử tư vấn. Vui lòng đăng nhập nhé!',
+        time: new Date()
+      }]);
+      return;
+    }
+
+    // Khởi tạo Socket.io client kết nối tới Backend (Cổng 5000)
+    socketRef.current = io('http://localhost:5000');
+
+    socketRef.current.emit('join_chat', { userId });
+
+    socketRef.current.on('session_data', (session) => {
+      sessionIdRef.current = session.id;
+      if (session.ChatMessage && session.ChatMessage.length > 0) {
+        // Khôi phục lịch sử chat từ DB
+        const history = session.ChatMessage.map(msg => ({
+          id: msg.id,
+          sender: msg.senderType === 'CUSTOMER' ? 'user' : 'ai',
+          text: msg.content,
+          time: new Date(msg.createdAt)
+        }));
+        setMessages(history);
+      }
+    });
+
+    socketRef.current.on('new_message', (msg) => {
+      // Nhận tin nhắn mới (AI hoặc do tab khác nhắn)
+      setMessages(prev => {
+        // Kiểm tra xem tin nhắn đã có chưa (để tránh lặp tin nhắn do tự mình gửi)
+        const exists = prev.find(m => m.id === msg.id);
+        if (exists) return prev;
+
+        return [...prev, {
+          id: msg.id,
+          sender: msg.senderType === 'CUSTOMER' ? 'user' : 'ai',
+          text: msg.content,
+          time: new Date(msg.createdAt)
+        }];
+      });
+      setIsTyping(false);
+    });
+
+    socketRef.current.on('handover_triggered', (data) => {
+      setMessages(prev => [...prev, {
+        id: Date.now(),
+        sender: 'ai',
+        text: `⚠️ ${data.message}`,
+        time: new Date()
+      }]);
+    });
+
+    return () => {
+      if (socketRef.current) socketRef.current.disconnect();
+    };
+  }, []);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    if (messages.length > 1 || isTyping) {
-      scrollToBottom();
-    }
+    scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSend = async (text) => {
-    if (!text.trim()) return;
+  const handleSend = (text) => {
+    if (!text.trim() || !sessionIdRef.current) return;
 
-    // User Message
+    // Hiển thị tin nhắn người dùng ngay lập tức
     const userMsg = {
-      id: Date.now(),
+      id: Date.now().toString(), // ID tạm thời
       sender: 'user',
       text: text,
       time: new Date()
     };
-
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
+    setMessages(prev => [...prev, userMsg]);
     setInput('');
     setIsTyping(true);
 
-    try {
-      // Build conversation history for OpenAI
-      const apiMessages = [
-        {
-          role: 'system',
-          content: 'Bạn là trợ lý AI chuyên nghiệp của cửa hàng Kinetic Tech, chuyên tư vấn cấu hình PC, laptop và linh kiện máy tính. Hãy trả lời ngắn gọn, thân thiện bằng tiếng Việt. Tập trung vào việc đưa ra lời khuyên hữu ích về công nghệ.'
-        },
-        ...newMessages.map(msg => ({
-          role: msg.sender === 'ai' ? 'assistant' : 'user',
-          content: msg.text
-        }))
-      ];
-
-      const completion = await openai.chat.completions.create({
-        messages: apiMessages,
-        model: 'gpt-4o-mini',
-      });
-
-      const aiResponseText = completion.choices[0].message.content;
-
-      const aiMsg = {
-        id: Date.now() + 1,
-        sender: 'ai',
-        text: aiResponseText,
-        recommendations: [], // Advanced logic needed to parse real recommendations
-        time: new Date()
-      };
-
-      setMessages(prev => [...prev, aiMsg]);
-    } catch (error) {
-      console.error("OpenAI API Error:", error);
-      const errorMsg = {
-        id: Date.now() + 1,
-        sender: 'ai',
-        text: 'Xin lỗi, hệ thống AI đang gặp sự cố kết nối. Vui lòng thử lại sau.',
-        time: new Date()
-      };
-      setMessages(prev => [...prev, errorMsg]);
-    } finally {
-      setIsTyping(false);
-    }
+    // Gửi sự kiện cho Backend xử lý (lưu DB & gọi AI)
+    socketRef.current.emit('send_message', {
+      sessionId: sessionIdRef.current,
+      content: text
+    });
   };
 
   const formatVND = (value) => {
