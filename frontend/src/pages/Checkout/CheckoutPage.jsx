@@ -19,6 +19,7 @@ import {
   Phone,
   Mail
 } from 'lucide-react';
+import api from '../../utils/api';
 
 export default function Checkout({ cartItems, onClearCart, setActiveView, onUpdateQuantity, onRemoveItem, currentUser, onAddOrder }) {
   const [formData, setFormData] = useState({
@@ -123,7 +124,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
     setCardData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitOrder = (e) => {
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
     
     // Check cart
@@ -143,67 +144,56 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
       return;
     }
 
-    // Start simulation
     setIsProcessing(true);
     
-    setTimeout(() => {
-      setIsProcessing(false);
-      const randomOrderId = 'KT-' + Math.floor(100000 + Math.random() * 900000);
-      const today = new Date().toLocaleDateString('vi-VN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-
-      const createdOrder = {
-        id: randomOrderId,
-        customerName: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        date: new Date().toISOString().replace('T', ' ').slice(0, 16),
-        total: total,
-        paymentMethod: paymentMethod === 'cod' 
-          ? 'Thanh toán COD' 
-          : paymentMethod === 'bank' 
-            ? 'Chuyển khoản VietQR' 
-            : 'Thẻ tín dụng',
-        status: 'pending',
-        items: cartItems.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity
-        })),
-        address: `${formData.address}, ${formData.ward || ''}, ${formData.district}, ${formData.city}`
+    try {
+      const fullAddress = `${formData.address}, ${formData.ward ? formData.ward + ', ' : ''}${formData.district}, ${formData.city}`;
+      
+      const payload = {
+        shippingAddress: fullAddress,
+        paymentMethod: paymentMethod === 'cod' ? 'COD' : 'PAYOS'
       };
+      
+      const res = await api.post('/orders', payload);
+      const data = res.data;
+      
+      if (data.checkoutUrl) {
+        // Redirect to PayOS
+        window.location.href = data.checkoutUrl;
+      } else {
+        // COD Success
+        setIsProcessing(false);
+        const today = new Date().toLocaleDateString('vi-VN', {
+          year: 'numeric', month: 'long', day: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
 
-      if (onAddOrder) {
-        onAddOrder(createdOrder);
+        if (onAddOrder) {
+          onAddOrder(data.order);
+        }
+
+        setOrderReceipt({
+          orderId: data.order.id,
+          date: today,
+          customerName: formData.fullName,
+          phone: formData.phone,
+          email: formData.email,
+          address: fullAddress,
+          paymentMethod: 'Thanh toán COD (Tiền mặt khi nhận hàng)',
+          items: [...cartItems],
+          subtotal,
+          shippingCost,
+          vatTax,
+          discountAmount,
+          total,
+          notes: formData.notes
+        });
       }
-
-      setOrderReceipt({
-        orderId: randomOrderId,
-        date: today,
-        customerName: formData.fullName,
-        phone: formData.phone,
-        email: formData.email,
-        address: `${formData.address}, ${formData.ward || ''}, ${formData.district}, ${formData.city}`,
-        paymentMethod: paymentMethod === 'cod' 
-          ? 'Thanh toán COD (Tiền mặt khi nhận hàng)' 
-          : paymentMethod === 'bank' 
-            ? 'Chuyển khoản Ngân hàng (Đang xác thực)' 
-            : 'Thẻ tín dụng Quốc tế (Đã thanh toán)',
-        items: [...cartItems],
-        subtotal,
-        shippingCost,
-        vatTax,
-        discountAmount,
-        total,
-        notes: formData.notes
-      });
-    }, 2000);
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
+      setIsProcessing(false);
+    }
   };
 
   const handleFinish = () => {

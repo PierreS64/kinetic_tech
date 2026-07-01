@@ -26,6 +26,8 @@ import AdminDashboard from './components/Admin/AdminDashboard';
 import AboutUs from './pages/AboutUs/AboutUs';
 import AccountPortal from './components/Account/AccountPortal';
 import CategoryFeaturedRow from './components/Common/CategoryFeaturedRow';
+import api from './utils/api';
+
 export default function App() {
   const [activeView, setActiveView] = useState('deals');
   const [cartOpen, setCartOpen] = useState(false);
@@ -72,7 +74,7 @@ export default function App() {
       paymentMethod: 'Chuyển khoản VietQR',
       status: 'processing',
       items: [
-        { id: 'lap-01', name: 'Laptop ASUS ROG Strix G16 (2024)', price: 36990000, quantity: 1 }
+        { id: '5bf5a4d1-a49c-4b9d-b95a-f036619fc401', name: 'Laptop ASUS ROG Strix G16 (2024)', price: 36990000, quantity: 1 }
       ]
     },
     {
@@ -85,8 +87,8 @@ export default function App() {
       paymentMethod: 'Thẻ tín dụng',
       status: 'completed',
       items: [
-        { id: 'phone-01', name: 'iPhone 15 Pro Max 256GB', price: 29890000, quantity: 2 },
-        { id: 'gear-01', name: 'Bàn phím cơ ASUS ROG Azoth Wireless', price: 6190000, quantity: 1 }
+        { id: 'c2acdbd0-5eaa-45be-8112-ee3cd1317af3', name: 'iPhone 15 Pro Max 256GB', price: 29890000, quantity: 2 },
+        { id: 'ad234ddf-5357-430e-ad3b-47487f59388f', name: 'Bàn phím cơ ASUS ROG Azoth Wireless', price: 6190000, quantity: 1 }
       ]
     },
     {
@@ -99,7 +101,7 @@ export default function App() {
       paymentMethod: 'Thanh toán COD',
       status: 'pending',
       items: [
-        { id: 'comp-02', name: 'CPU Intel Core i7-14700K', price: 10490000, quantity: 1 }
+        { id: '1bcd28ff-e2dd-4c96-acf5-0e8f47849e26', name: 'CPU Intel Core i7-14700K', price: 10490000, quantity: 1 }
       ]
     },
     {
@@ -112,7 +114,7 @@ export default function App() {
       paymentMethod: 'Chuyển khoản VietQR',
       status: 'cancelled',
       items: [
-        { id: 'comp-01', name: 'CPU AMD Ryzen 7 7800X3D', price: 9890000, quantity: 1 }
+        { id: '38c9ae9f-b795-4eb9-b514-b39742838c68', name: 'CPU AMD Ryzen 7 7800X3D', price: 9890000, quantity: 1 }
       ]
     }
   ]);
@@ -181,9 +183,9 @@ export default function App() {
   const [likedProductIds, setLikedProductIds] = useState(() => {
     try {
       const stored = localStorage.getItem('kinetic_liked_ids');
-      return stored ? JSON.parse(stored) : ['lap-01', 'phone-01', 'gear-01'];
+      return stored ? JSON.parse(stored) : ['5bf5a4d1-a49c-4b9d-b95a-f036619fc401', 'c2acdbd0-5eaa-45be-8112-ee3cd1317af3', 'ad234ddf-5357-430e-ad3b-47487f59388f'];
     } catch {
-      return ['lap-01', 'phone-01', 'gear-01'];
+      return ['5bf5a4d1-a49c-4b9d-b95a-f036619fc401', 'c2acdbd0-5eaa-45be-8112-ee3cd1317af3', 'ad234ddf-5357-430e-ad3b-47487f59388f'];
     }
   });
 
@@ -271,6 +273,39 @@ export default function App() {
       return null;
     }
   });
+
+  // Fetch cart from Backend on login/mount
+  const loadCart = async () => {
+    if (!currentUser) {
+      setCartItems([]);
+      return;
+    }
+    try {
+      const res = await api.get('/cart');
+      if (res.data && res.data.CartItem) {
+        // Map backend CartItem to frontend structure
+        const mappedItems = res.data.CartItem.map(item => {
+          const p = item.ProductVariant.Product;
+          const img = p.ProductImage && p.ProductImage.length > 0 ? p.ProductImage[0].imageUrl : '';
+          return {
+            id: item.productVariantId,
+            cartItemId: item.id, // For update/delete
+            name: p.name,
+            price: item.ProductVariant.price,
+            image: img,
+            quantity: item.quantity
+          };
+        });
+        setCartItems(mappedItems);
+      }
+    } catch (err) {
+      console.error('Failed to load cart', err);
+    }
+  };
+
+  useEffect(() => {
+    loadCart();
+  }, [currentUser]);
 
 
   // Parse OAuth data from URL
@@ -404,58 +439,100 @@ export default function App() {
   }, [activeView]);
 
   // Cart operations
-  const handleAddToCart = (product) => {
-    setCartItems(prev => {
-      const exists = prev.find(item => item.id === product.id);
-      if (exists) {
-        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+  const handleAddToCart = async (product) => {
+    if (currentUser) {
+      try {
+        await api.post('/cart/items', { productVariantId: product.id, quantity: 1 });
+        await loadCart();
+        showToast(`Đã thêm thành công "${product.name}" vào giỏ hàng!`);
+      } catch (err) {
+        showToast(`Lỗi khi thêm "${product.name}" vào giỏ hàng!`);
       }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-    showToast(`Đã thêm thành công "${product.name}" vào giỏ hàng!`);
+    } else {
+      showToast('Vui lòng đăng nhập để thêm vào giỏ hàng!');
+      setActiveView('login');
+    }
   };
 
-  const handleBuyNow = (product) => {
-    setCartItems(prev => {
-      const exists = prev.find(item => item.id === product.id);
-      if (exists) {
-        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+  const handleBuyNow = async (product) => {
+    if (currentUser) {
+      try {
+        await api.post('/cart/items', { productVariantId: product.id, quantity: 1 });
+        await loadCart();
+        setActiveView('checkout');
+      } catch (err) {
+        showToast(`Lỗi khi thêm "${product.name}" vào giỏ hàng!`);
       }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-    setActiveView('checkout');
+    } else {
+      showToast('Vui lòng đăng nhập để mua hàng!');
+      setActiveView('login');
+    }
   };
 
-  const handleAddPartsToCart = (parts) => {
-    setCartItems(prev => {
-      let updated = [...prev];
-      parts.forEach(part => {
-        const exists = updated.find(item => item.id === part.id);
-        if (exists) {
-          updated = updated.map(item => item.id === part.id ? { ...item, quantity: item.quantity + 1 } : item);
-        } else {
-          updated.push({ ...part, quantity: 1 });
+  const handleAddPartsToCart = async (parts) => {
+    if (currentUser) {
+      try {
+        for (const part of parts) {
+          await api.post('/cart/items', { productVariantId: part.id, quantity: 1 });
         }
-      });
-      return updated;
-    });
-    showToast(`Đã thêm thành công ${parts.length} linh kiện PC vào giỏ hàng!`);
+        await loadCart();
+        showToast(`Đã thêm thành công ${parts.length} linh kiện PC vào giỏ hàng!`);
+      } catch (err) {
+        showToast(`Lỗi khi thêm linh kiện PC vào giỏ hàng!`);
+      }
+    } else {
+      showToast('Vui lòng đăng nhập để thêm vào giỏ hàng!');
+      setActiveView('login');
+    }
   };
 
-  const handleUpdateQuantity = (id, quantity) => {
+  const handleUpdateQuantity = async (id, quantity) => {
     if (quantity <= 0) {
       handleRemoveItem(id);
       return;
     }
-    setCartItems(prev => prev.map(item => item.id === id ? { ...item, quantity } : item));
+    const item = cartItems.find(i => i.id === id);
+    if (!item) return;
+    
+    // Update locally for quick UI feedback
+    setCartItems(prev => prev.map(i => i.id === id ? { ...i, quantity } : i));
+    
+    if (currentUser && item.cartItemId) {
+      try {
+        await api.patch(`/cart/items/${item.cartItemId}`, { quantity });
+      } catch (err) {
+        console.error('Failed to update quantity', err);
+        loadCart(); // Revert on failure
+      }
+    }
   };
 
-  const handleRemoveItem = (id) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+  const handleRemoveItem = async (id) => {
+    const item = cartItems.find(i => i.id === id);
+    if (!item) return;
+
+    setCartItems(prev => prev.filter(i => i.id !== id));
+    
+    if (currentUser && item.cartItemId) {
+      try {
+        await api.delete(`/cart/items/${item.cartItemId}`);
+      } catch (err) {
+        console.error('Failed to remove item', err);
+        loadCart(); // Revert on failure
+      }
+    }
   };
 
-  const handleClearCart = () => {
+  const handleClearCart = async () => {
     setCartItems([]);
+    if (currentUser) {
+      try {
+        await api.delete('/cart');
+      } catch (err) {
+        console.error('Failed to clear cart', err);
+        loadCart();
+      }
+    }
   };
 
   // Switch view from carousel banner CTAs
