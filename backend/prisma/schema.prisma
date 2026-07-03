@@ -1,6 +1,5 @@
 generator client {
   provider        = "prisma-client-js"
-  engineType      = "library"
 }
 
 datasource db {
@@ -130,21 +129,22 @@ model KnowledgeBase {
 }
 
 model Order {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId        String         @db.Uuid
-  userAddressId String?        @db.Uuid
-  couponId      String?        @db.Uuid
-  totalAmount   Float
-  status        OrderStatus?   @default(PENDING)
-  paymentMethod PaymentMethod
-  paymentStatus PaymentStatus? @default(PENDING)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now())
-  Coupon        Coupon?        @relation(fields: [couponId], references: [id], onUpdate: NoAction)
-  UserAddress   UserAddress?   @relation(fields: [userAddressId], references: [id], onUpdate: NoAction)
-  User          User           @relation(fields: [userId], references: [id], onUpdate: NoAction)
-  OrderItem     OrderItem[]
-  Transaction   Transaction[]
+  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String         @db.Uuid
+  userAddressId   String?        @db.Uuid
+  shippingAddress String?        @db.Text
+  couponId        String?        @db.Uuid
+  totalAmount     Float
+  status          OrderStatus?   @default(PENDING)
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus? @default(PENDING)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now())
+  Coupon          Coupon?        @relation(fields: [couponId], references: [id], onUpdate: NoAction)
+  UserAddress     UserAddress?   @relation(fields: [userAddressId], references: [id], onUpdate: NoAction)
+  User            User           @relation(fields: [userId], references: [id], onUpdate: NoAction)
+  OrderItem       OrderItem[]
+  Transaction     Transaction[]
 }
 
 model OrderItem {

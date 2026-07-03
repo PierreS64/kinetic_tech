@@ -8,7 +8,7 @@ export const CATEGORIES = {
 export const products = [
   // Laptops
   {
-    id: 'lap-01',
+    id: '5bf5a4d1-a49c-4b9d-b95a-f036619fc401',
     name: 'Laptop ASUS ROG Strix G16 (2024)',
     category: CATEGORIES.LAPTOP,
     price: 36990000,
@@ -27,7 +27,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'lap-02',
+    id: 'dd6c598e-c574-4054-a04a-afe10558c6df',
     name: 'MacBook Pro 14 inch M3 (2024)',
     category: CATEGORIES.LAPTOP,
     price: 39990000,
@@ -46,7 +46,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'lap-04',
+    id: '4a466d7e-7885-4dc5-80df-2326edea0b1f',
     name: 'Laptop Dell XPS 13 9340 (2024)',
     category: CATEGORIES.LAPTOP,
     price: 41990000,
@@ -65,7 +65,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'lap-05',
+    id: '5a1bfe21-2601-44d9-a72a-47983552ba97',
     name: 'Laptop Acer Predator Helios Neo 16',
     category: CATEGORIES.LAPTOP,
     price: 33490000,
@@ -84,7 +84,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'lap-03',
+    id: '1ce08b2d-d285-4d3c-8160-7cae24017d47',
     name: 'Laptop Lenovo Legion 5 16IRX9',
     category: CATEGORIES.LAPTOP,
     price: 31490000,
@@ -103,7 +103,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'lap-06',
+    id: '28d29ac1-0464-4339-9b26-19b72ae532e8',
     name: 'Laptop HP Victus 16 (2024)',
     category: CATEGORIES.LAPTOP,
     price: 22990000,
@@ -122,7 +122,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'lap-07',
+    id: '39157655-936c-477b-b40b-af5a56e9e905',
     name: 'Laptop Gigabyte G5 KF',
     category: CATEGORIES.LAPTOP,
     price: 20490000,
@@ -143,7 +143,7 @@ export const products = [
 
   // Phones
   {
-    id: 'phone-01',
+    id: 'c2acdbd0-5eaa-45be-8112-ee3cd1317af3',
     name: 'iPhone 15 Pro Max 256GB',
     category: CATEGORIES.PHONE,
     price: 29890000,
@@ -162,7 +162,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'phone-02',
+    id: 'ed7c0fb2-1221-4ecf-85d7-e715672e7359',
     name: 'Samsung Galaxy S24 Ultra 256GB',
     category: CATEGORIES.PHONE,
     price: 26990000,
@@ -181,7 +181,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'phone-04',
+    id: '2b81c0e5-bf59-433b-bfbf-ab9f5ce8ffab',
     name: 'iPhone 15 128GB',
     category: CATEGORIES.PHONE,
     price: 19790000,
@@ -200,7 +200,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'phone-05',
+    id: '667be01a-bba9-429b-b0c4-93e27b887986',
     name: 'Samsung Galaxy Z Fold5 512GB',
     category: CATEGORIES.PHONE,
     price: 32990000,
@@ -219,7 +219,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'phone-03',
+    id: '8fbd52be-915f-4239-bd1b-3db11f1558dc',
     name: 'Xiaomi 14 Ultra 5G',
     category: CATEGORIES.PHONE,
     price: 28990000,
@@ -238,7 +238,7 @@ export const products = [
     inStock: false
   },
   {
-    id: 'phone-06',
+    id: '23cea6ff-61f8-4087-b763-78ece4881286',
     name: 'Google Pixel 8 Pro 128GB',
     category: CATEGORIES.PHONE,
     price: 17890000,
@@ -257,7 +257,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'phone-07',
+    id: '3d9aa884-1992-47ce-b805-cb3fba8e8783',
     name: 'ASUS ROG Phone 8 Pro 512GB',
     category: CATEGORIES.PHONE,
     price: 25990000,
@@ -278,7 +278,7 @@ export const products = [
 
   // Gaming Gear
   {
-    id: 'gear-01',
+    id: 'ad234ddf-5357-430e-ad3b-47487f59388f',
     name: 'Bàn phím cơ ASUS ROG Azoth Wireless',
     category: CATEGORIES.GEAR,
     price: 6190000,
@@ -297,7 +297,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'gear-02',
+    id: 'a9bc6e86-16a5-4b95-b626-f3790f4db080',
     name: 'Chuột Gaming Logitech G Pro X Superlight 2',
     category: CATEGORIES.GEAR,
     price: 3690000,
@@ -316,7 +316,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'gear-04',
+    id: 'd3abffb3-7049-4fae-b77b-852efe3b0baa',
     name: 'Tai nghe ASUS ROG Delta S Animate',
     category: CATEGORIES.GEAR,
     price: 5490000,
@@ -335,7 +335,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'gear-05',
+    id: '2ac99da7-17f6-4d3d-9b4e-2f691ad0ec45',
     name: 'Chuột Gaming Razer Cobra Pro',
     category: CATEGORIES.GEAR,
     price: 3290000,
@@ -354,7 +354,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'gear-03',
+    id: '1676bd51-f25b-4d6f-bdd8-a4fbd82a719f',
     name: 'Tai nghe Razer BlackShark V2 Pro (2023)',
     category: CATEGORIES.GEAR,
     price: 4890000,
@@ -373,7 +373,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'gear-06',
+    id: '08dd4224-30ac-491c-a09d-c1786d70fa38',
     name: 'Bàn di chuột SteelSeries QcK Prism Cloth XL',
     category: CATEGORIES.GEAR,
     price: 1590000,
@@ -392,7 +392,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'gear-07',
+    id: 'f35d5c7a-8f6a-4577-8f1f-449b1a6a9f2e',
     name: 'Tay cầm Xbox Elite Wireless Controller Series 2',
     category: CATEGORIES.GEAR,
     price: 4290000,
@@ -412,7 +412,7 @@ export const products = [
 
   // PC Components (Linh kiện)
   {
-    id: 'comp-01',
+    id: '38c9ae9f-b795-4eb9-b514-b39742838c68',
     name: 'CPU AMD Ryzen 7 7800X3D',
     category: CATEGORIES.COMPONENT,
     price: 9890000,
@@ -431,7 +431,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'comp-03',
+    id: '9083b163-194b-43ef-86f4-93eec86078cf',
     name: 'Card Màn Hình ASUS ROG Strix RTX 4080 Super OC 16GB',
     category: CATEGORIES.COMPONENT,
     price: 33990000,
@@ -450,7 +450,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'comp-04',
+    id: '1be3e66e-c820-4e1f-a614-6c4c199502cf',
     name: 'RAM Corsair Vengeance RGB 32GB (2x16GB) DDR5 6000MHz',
     category: CATEGORIES.COMPONENT,
     price: 3290000,
@@ -469,7 +469,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'comp-07',
+    id: '1acaa9c4-bcd4-42cc-abbb-8f9da6082bdf',
     name: 'Nguồn Corsair RM1000x Shift 1000W Gold',
     category: CATEGORIES.COMPONENT,
     price: 4890000,
@@ -488,7 +488,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'comp-02',
+    id: '1bcd28ff-e2dd-4c96-acf5-0e8f47849e26',
     name: 'CPU Intel Core i7-14700K',
     category: CATEGORIES.COMPONENT,
     price: 10490000,
@@ -507,7 +507,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'comp-05',
+    id: '5acdc3a5-94e9-4b6f-87a9-7b3f139f7a92',
     name: 'SSD Samsung 990 Pro 1TB NVMe M.2 PCIe Gen4',
     category: CATEGORIES.COMPONENT,
     price: 2690000,
@@ -526,7 +526,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'comp-06',
+    id: '0623d0b2-56ea-49ab-8ae8-0af9fb526b4b',
     name: 'Vỏ Máy Tính Lian Li O11 Vision Black',
     category: CATEGORIES.COMPONENT,
     price: 3890000,
@@ -545,7 +545,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'comp-08',
+    id: '12f1d5c1-bff5-4a0c-aacb-09923915d989',
     name: 'Tản nhiệt nước AIO ASUS ROG RYUJIN III 360 ARGB',
     category: CATEGORIES.COMPONENT,
     price: 9990000,
@@ -564,7 +564,7 @@ export const products = [
     inStock: true
   },
   {
-    id: 'comp-09',
+    id: 'a5ac3f65-d11c-435d-9768-a2c8cd983377',
     name: 'Mainboard ASUS ROG MAXIMUS Z790 HERO',
     category: CATEGORIES.COMPONENT,
     price: 16990000,
@@ -588,7 +588,7 @@ export const products = [
 export const builderParts = {
   cpu: [
     {
-      id: 'cpu-01',
+      id: '8cbcfae9-5d00-4438-8319-c02b58384ad0',
       name: 'AMD Ryzen 7 7800X3D (8C/16T, up to 5.0GHz, AM5)',
       price: 9890000,
       socket: 'AM5',
@@ -599,7 +599,7 @@ export const builderParts = {
       specs: 'AM5 Socket, Cache 104MB 3D V-Cache, TDP 120W'
     },
     {
-      id: 'cpu-02',
+      id: 'ab1f0c80-4e93-472b-84f8-aad99f502bf4',
       name: 'Intel Core i7-14700K (20C/28T, up to 5.6GHz, LGA1700)',
       price: 10490000,
       socket: 'LGA1700',
@@ -610,7 +610,7 @@ export const builderParts = {
       specs: 'LGA1700 Socket, 20 Cores / 28 Threads, TDP 125W'
     },
     {
-      id: 'cpu-03',
+      id: '8f70680d-e4f1-4662-ab26-0baa3ad5383b',
       name: 'AMD Ryzen 5 7600 (6C/12T, up to 5.1GHz, AM5)',
       price: 5290000,
       socket: 'AM5',
@@ -621,7 +621,7 @@ export const builderParts = {
       specs: 'AM5 Socket, 6 Cores / 12 Threads, TDP 65W'
     },
     {
-      id: 'cpu-04',
+      id: 'd87bd5a9-e28f-4307-95d9-205c2fddbc9f',
       name: 'Intel Core i5-14400F (10C/16T, up to 4.7GHz, LGA1700)',
       price: 5390000,
       socket: 'LGA1700',
@@ -634,7 +634,7 @@ export const builderParts = {
   ],
   motherboard: [
     {
-      id: 'mobo-01',
+      id: '4d17b1e5-b341-4725-a508-5ae57f8163a1',
       name: 'ASUS ROG STRIX B650-A GAMING WIFI (AM5, DDR5, Màu Trắng)',
       price: 5990000,
       socket: 'AM5',
@@ -645,7 +645,7 @@ export const builderParts = {
       specs: 'ATX Form Factor, AM5, DDR5, Hỗ trợ PCIe 5.0, Tông trắng cực đẹp'
     },
     {
-      id: 'mobo-02',
+      id: 'd4ab5706-2d2c-4b60-b6a5-f47ac28ef341',
       name: 'MSI PRO Z790-A MAX WIFI (LGA1700, DDR5, Màu Đen)',
       price: 6490000,
       socket: 'LGA1700',
@@ -656,7 +656,7 @@ export const builderParts = {
       specs: 'ATX, LGA1700, DDR5, Wi-Fi 7 thế hệ mới, Intel Z790 Chipset'
     },
     {
-      id: 'mobo-03',
+      id: '042966d1-f1bb-40a1-bd98-dbd4651ef854',
       name: 'Gigabyte B760M GAMING X AX (LGA1700, DDR5, Màu Đen)',
       price: 3690000,
       socket: 'LGA1700',
@@ -667,7 +667,7 @@ export const builderParts = {
       specs: 'Micro-ATX, LGA1700, DDR5, Wi-Fi 6E tích hợp'
     },
     {
-      id: 'mobo-04',
+      id: 'af2aec81-2670-43a0-8ce3-113ca0a1903b',
       name: 'MSI MPG B760M EDGE TI WIFI (LGA1700, DDR5, Màu Trắng)',
       price: 4990000,
       socket: 'LGA1700',
@@ -680,7 +680,7 @@ export const builderParts = {
   ],
   ram: [
     {
-      id: 'ram-01',
+      id: '2f3d8918-ef5f-404f-bb9d-ec2c10e39bb2',
       name: 'Corsair Vengeance RGB 32GB (2x16GB) DDR5 6000MHz Black',
       price: 3290000,
       ramType: 'DDR5',
@@ -690,7 +690,7 @@ export const builderParts = {
       specs: 'DDR5 RAM, Bus 6000MHz, LED RGB iCUE, Cas 36'
     },
     {
-      id: 'ram-02',
+      id: '366c0fdc-4e7c-4ba6-abcc-f455606799b7',
       name: 'Kingston FURY Beast RGB 16GB (2x8GB) DDR5 5600MHz Black',
       price: 1790000,
       ramType: 'DDR5',
@@ -700,7 +700,7 @@ export const builderParts = {
       specs: 'DDR5 RAM, Bus 5600MHz, Thiết kế tản nhiệt nhôm mỏng nhẹ'
     },
     {
-      id: 'ram-03',
+      id: '4bb5d979-7787-4921-8bf2-627743af7f29',
       name: 'Corsair Vengeance RGB 32GB (2x16GB) DDR5 6000MHz White',
       price: 3490000,
       ramType: 'DDR5',
@@ -710,7 +710,7 @@ export const builderParts = {
       specs: 'DDR5 RAM, Bus 6000MHz, Tông màu trắng tinh tế, LED RGB'
     },
     {
-      id: 'ram-04',
+      id: '7c608750-0c29-4b59-9f45-f1b51aadba76',
       name: 'Kingston FURY Beast 16GB (2x8GB) DDR4 3200MHz Black',
       price: 1090000,
       ramType: 'DDR4',
@@ -722,7 +722,7 @@ export const builderParts = {
   ],
   gpu: [
     {
-      id: 'gpu-01',
+      id: 'f26a437f-a7f3-4cf2-b081-47b1f0d49424',
       name: 'ASUS ROG Strix RTX 4080 Super OC Edition 16GB Black',
       price: 33990000,
       length: 357, // length in mm
@@ -733,7 +733,7 @@ export const builderParts = {
       specs: '16GB GDDR6X, OC Edition, Rất dài 357mm, Fan Axial-tech'
     },
     {
-      id: 'gpu-02',
+      id: 'e7729cdd-d928-4628-afef-c110b53ba824',
       name: 'MSI Gaming X Slim RTX 4070 Ti Super 16GB White',
       price: 24690000,
       length: 307,
@@ -744,7 +744,7 @@ export const builderParts = {
       specs: '16GB GDDR6X, Bản Slim mỏng nhẹ 307mm, Màu trắng tuyết'
     },
     {
-      id: 'gpu-03',
+      id: 'cd36f3d6-6661-42dd-9edc-e84533cf699d',
       name: 'Gigabyte GeForce RTX 4060 Ti Gaming OC 8G Black',
       price: 11490000,
       length: 272,
@@ -755,7 +755,7 @@ export const builderParts = {
       specs: '8GB GDDR6, Dài 272mm, Tản nhiệt WindForce 3X'
     },
     {
-      id: 'gpu-04',
+      id: 'b827c623-0b2f-4d99-b744-45f3b24f4cfa',
       name: 'GALAX GeForce RTX 4060 EX White 8GB',
       price: 7990000,
       length: 251,
@@ -768,7 +768,7 @@ export const builderParts = {
   ],
   ssd: [
     {
-      id: 'ssd-01',
+      id: '6345e661-21b1-4c0b-a507-276b7f441ae9',
       name: 'Samsung 990 Pro 1TB NVMe M.2 PCIe Gen4 x4',
       price: 2690000,
       brand: 'Samsung',
@@ -777,7 +777,7 @@ export const builderParts = {
       specs: 'Tốc độ Đọc 7450 MB/s, Ghi 6900 MB/s, Dung lượng 1TB M.2 2280'
     },
     {
-      id: 'ssd-02',
+      id: 'b5cfd199-2e9f-4c89-8472-f16a3e397025',
       name: 'Crucial P3 Plus 1TB M.2 PCIe Gen4 NVMe',
       price: 1890000,
       brand: 'Crucial',
@@ -786,7 +786,7 @@ export const builderParts = {
       specs: 'Tốc độ Đọc 5000 MB/s, Ghi 4200 MB/s, Dung lượng 1TB'
     },
     {
-      id: 'ssd-03',
+      id: '9e53fc2a-e755-4a5c-8d3f-85e6f6ae8dd3',
       name: 'Kingston NV2 500GB M.2 PCIe NVMe Gen4',
       price: 990000,
       brand: 'Kingston',
@@ -797,7 +797,7 @@ export const builderParts = {
   ],
   psu: [
     {
-      id: 'psu-01',
+      id: 'f116fbba-ccc9-4934-9caf-4600e1058f4c',
       name: 'Corsair RM850x Shift 850W Gold PCIe 5.0 (Full Modular)',
       price: 3990000,
       brand: 'Corsair',
@@ -807,7 +807,7 @@ export const builderParts = {
       specs: '850W Gold, Chuẩn PCIe 5.0/ATX 3.0, Cáp Modular cắm hông'
     },
     {
-      id: 'psu-02',
+      id: '2f360bad-b10a-444a-a52f-36a18605c51d',
       name: 'Cooler Master MWE Bronze 650W V2',
       price: 1590000,
       brand: 'Cooler Master',
@@ -817,7 +817,7 @@ export const builderParts = {
       specs: 'Công suất 650W, Chuẩn 80 Plus Bronze hiệu suất ổn định'
     },
     {
-      id: 'psu-03',
+      id: 'b1c62c3f-4ae7-427f-afb4-e29288eadd79',
       name: 'MSI MAG A750GL 750W White 80 Plus Gold',
       price: 2290000,
       brand: 'MSI',
@@ -829,7 +829,7 @@ export const builderParts = {
   ],
   cooler: [
     {
-      id: 'cooler-01',
+      id: 'be9ab0bb-c850-4224-99bd-0d7b0675f740',
       name: 'Tản nhiệt nước AIO Deepcool LT720 A-RGB 360mm Black',
       price: 3190000,
       type: 'liquid',
@@ -841,7 +841,7 @@ export const builderParts = {
       specs: 'Tản nước AIO, Radiator 360mm, Bơm vô cực ARGB thế hệ 4'
     },
     {
-      id: 'cooler-02',
+      id: 'c1e8fae7-f4c0-462e-b2f2-57074b6ca8b1',
       name: 'Tản nhiệt khí Thermalright Peerless Assassin 120 SE Black',
       price: 950000,
       type: 'air',
@@ -853,7 +853,7 @@ export const builderParts = {
       specs: 'Tản khí dual-tower, Cao 155mm, 6 ống đồng, 2 quạt 120mm PWM'
     },
     {
-      id: 'cooler-03',
+      id: 'e23eb750-4c14-434b-9d4a-9a7379a736b3',
       name: 'Tản nhiệt nước AIO ASUS ROG RYUJIN III 360 ARGB White',
       price: 9990000,
       type: 'liquid',
@@ -865,7 +865,7 @@ export const builderParts = {
       specs: 'AIO cao cấp, Màn hình LCD 3.5 inch, Radiator 360mm, Màu Trắng'
     },
     {
-      id: 'cooler-04',
+      id: '9b005e63-ff15-42f6-bfae-c4be2f2a799f',
       name: 'Tản nhiệt khí Jonsbo CR-1000 EVO ARGB White',
       price: 390000,
       type: 'air',
@@ -879,7 +879,7 @@ export const builderParts = {
   ],
   pcCase: [
     {
-      id: 'case-01',
+      id: '97030c14-46c1-419b-b76a-1c9cf3f1e9d3',
       name: 'Lian Li O11 Vision Black (Mặt kính 3 bên liền mạch)',
       price: 3890000,
       maxGpuLength: 455, // maximum GPU clearance in mm
@@ -891,7 +891,7 @@ export const builderParts = {
       specs: 'Mid Tower, VGA dài tối đa 455mm, Tản khí cao 167mm, Hỗ trợ Rad 360mm'
     },
     {
-      id: 'case-02',
+      id: 'a1bdc1a7-fb53-4cab-9f8c-cf62bc0b261a',
       name: 'Montech AIR 903 MAX Black (Có sẵn 4 quạt ARGB)',
       price: 1490000,
       maxGpuLength: 400,
@@ -903,7 +903,7 @@ export const builderParts = {
       specs: 'Mid Tower thoáng khí, GPU tối đa 400mm, Tản khí cao 180mm, Rad 360mm'
     },
     {
-      id: 'case-03',
+      id: 'e0514ad0-19a4-43f7-8970-acef50da6ed4',
       name: 'Lian Li O11 Dynamic EVO White (Màu Trắng)',
       price: 4390000,
       maxGpuLength: 426,
@@ -915,7 +915,7 @@ export const builderParts = {
       specs: 'Mid Tower cao cấp, GPU tối đa 426mm, Tản khí cao 167mm, Rad 360mm, Màu Trắng'
     },
     {
-      id: 'case-04',
+      id: '7a778bcf-9e48-48a0-84e3-5579c71959f8',
       name: 'SAMA IM01 White (Mini-ITX / Micro-ATX nhỏ gọn)',
       price: 950000,
       maxGpuLength: 335,
