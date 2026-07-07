@@ -35,8 +35,7 @@ export class PaymentService {
     const body = {
       orderCode,
       amount,
-      description: `Thanh toan don ${orderCode}`,
-      items,
+      description: `DH ${orderCode}`,
       returnUrl: `${DOMAIN}/checkout?status=success`,
       cancelUrl: `${DOMAIN}/checkout?status=cancel`
     };

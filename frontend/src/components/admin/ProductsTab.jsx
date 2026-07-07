@@ -194,6 +194,17 @@ export default function ProductsTab(props) {
                           />
                         </div>
 
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Hình ảnh sản phẩm *</label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setNewProduct(prev => ({ ...prev, file: e.target.files[0] }))}
+                            className="form-input"
+                            style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                          />
+                        </div>
+
                         <button type="submit" className="btn btn-secondary" style={{ width: '100%', padding: '12px', fontWeight: '700', marginTop: '10px' }}>
                           HOÀN TẤT THÊM SẢN PHẨM
                         </button>

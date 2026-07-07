@@ -26,6 +26,59 @@ export class ProductsService {
     });
   }
 
+  async createAdminProduct(dto: any, file?: Express.Multer.File) {
+    // Find or create category
+    let category = await this.prisma.category.findFirst({
+      where: { name: { equals: dto.category, mode: 'insensitive' } }
+    });
+
+    if (!category) {
+      category = await this.prisma.category.create({
+        data: { name: dto.category }
+      });
+    }
+
+    const description = JSON.stringify({
+      cpu: dto.cpu || 'N/A',
+      ram: dto.ram || 'N/A',
+      storage: dto.storage || 'N/A',
+      gpu: dto.gpu || 'N/A',
+      tags: dto.tags || ''
+    });
+
+    let imageUrl = '';
+    if (file) {
+      const uploadResult = await this.cloudinary.uploadFile(file);
+      imageUrl = uploadResult.secure_url;
+    }
+
+    const newProduct = await this.prisma.product.create({
+      data: {
+        name: dto.name,
+        brand: 'Khác',
+        description,
+        categoryId: category.id,
+        ProductVariant: {
+          create: {
+            price: parseFloat(dto.price) || 0,
+            stockQuantity: dto.inStock === 'false' ? 0 : 100
+          }
+        },
+        ...(imageUrl && {
+          ProductImage: {
+            create: {
+              imageUrl,
+              isThumbnail: true
+            }
+          }
+        })
+      },
+      include: { ProductImage: true, Category: true, ProductVariant: true }
+    });
+
+    return newProduct;
+  }
+
   async findAll() {
     return this.prisma.product.findMany({
       where: { deletedAt: null },

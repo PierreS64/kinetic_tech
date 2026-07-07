@@ -52,19 +52,19 @@ export default function TradeInTab(props) {
                               <span className="status-badge" style={{
                                 fontSize: '10px',
                                 background: 
-                                  trade.status === 'completed' || trade.status === 'Đã thu mua' ? 'rgba(76,175,80,0.15)' : 
-                                  trade.status === 'cancelled' || trade.status === 'Đã hủy' ? 'rgba(255,76,76,0.15)' :
+                                  trade.status === 'COMPLETED' || trade.status === 'Đã thu mua' ? 'rgba(76,175,80,0.15)' : 
+                                  trade.status === 'CANCELLED' || trade.status === 'Đã hủy' ? 'rgba(255,76,76,0.15)' :
                                   'rgba(253,139,0,0.15)',
                                 color: 
-                                  trade.status === 'completed' || trade.status === 'Đã thu mua' ? '#81c784' : 
-                                  trade.status === 'cancelled' || trade.status === 'Đã hủy' ? '#ffb4ab' :
+                                  trade.status === 'COMPLETED' || trade.status === 'Đã thu mua' ? '#81c784' : 
+                                  trade.status === 'CANCELLED' || trade.status === 'Đã hủy' ? '#ffb4ab' :
                                   '#ffb77d',
                                 padding: '2px 8px'
                               }}>
-                                {trade.status === 'completed' && 'Đã thu mua'}
-                                {trade.status === 'valued' && 'Đã định giá'}
-                                {trade.status === 'pending' && 'Chờ duyệt'}
-                                {trade.status === 'cancelled' && 'Đã hủy'}
+                                {trade.status === 'COMPLETED' && 'Đã thu mua'}
+                                {trade.status === 'VALUED' && 'Đã định giá'}
+                                {trade.status === 'PENDING' && 'Chờ duyệt'}
+                                {trade.status === 'CANCELLED' && 'Đã hủy'}
                                 {trade.status === 'Đã thu mua' && 'Đã thu mua'}
                                 {trade.status === 'Chờ duyệt' && 'Chờ duyệt'}
                                 {trade.status === 'Đã hủy' && 'Đã hủy'}

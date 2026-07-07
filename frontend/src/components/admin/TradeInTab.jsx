@@ -1,5 +1,6 @@
 import React from 'react';
 import { TrendingUp, ShoppingBag, Package, MessageSquare, Shield, Search, Plus, Trash2, CheckCircle2, XCircle, AlertCircle, ArrowRight, DollarSign, Wrench, RefreshCw, FileText, ChevronRight, Filter, Check, X, Edit2, Tag } from 'lucide-react';
+import api from '../../utils/api';
 
 export default function TradeInTab(props) {
   const { theme, orders, tickets, warranties, tradeins, feedbacks, storeProducts, setStoreProducts, setOrders, setTickets, setWarranties, setTradeins, setFeedbacks, selectedOrder, setSelectedOrder, promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo, selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo, handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handlePromoProductPriceChange, selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText, selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation, isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort, priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput, detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal, textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts, totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount } = props;
@@ -48,36 +49,45 @@ export default function TradeInTab(props) {
                               fontSize: '9px',
                               fontWeight: 'bold',
                               background:
-                                req.status === 'completed' ? (theme === 'light' ? '#4caf50' : 'rgba(76,175,80,0.15)') :
-                                  req.status === 'valued' ? (theme === 'light' ? '#2196f3' : 'rgba(0,123,255,0.15)') : (theme === 'light' ? '#ff9800' : 'rgba(253,139,0,0.15)'),
+                                req.status === 'COMPLETED' ? (theme === 'light' ? '#4caf50' : 'rgba(76,175,80,0.15)') :
+                                  req.status === 'VALUED' ? (theme === 'light' ? '#2196f3' : 'rgba(0,123,255,0.15)') : (theme === 'light' ? '#ff9800' : 'rgba(253,139,0,0.15)'),
                               color: '#ffffff',
                               border: theme === 'light' ? 'none' : '1px solid currentColor',
                               padding: '4px 6px',
                               borderRadius: '4px',
                               whiteSpace: 'nowrap'
                             }}>
-                              {req.status === 'pending' && 'Chờ thẩm định'}
-                              {req.status === 'valued' && 'Đã báo giá'}
-                              {req.status === 'completed' && 'Hoàn thành'}
+                              {req.status === 'PENDING' && 'Chờ thẩm định'}
+                              {req.status === 'VALUED' && 'Đã báo giá'}
+                              {req.status === 'COMPLETED' && 'Hoàn thành'}
                             </span>
                           </td>
                           <td style={{ padding: '10px 12px', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
-                              {req.status === 'pending' && (
+                              {req.status === 'PENDING' && (
                                 <button onClick={(e) => { e.stopPropagation(); setSelectedTradeIn(req); }} className="btn btn-primary" style={{ padding: '4px 6px', fontSize: '9px', whiteSpace: 'nowrap' }}>
                                   Thẩm định
                                 </button>
                               )}
-                              {req.status === 'valued' && (
+                              {req.status === 'VALUED' && (
                                 <button
-                                  onClick={(e) => { e.stopPropagation(); setTradeins(prev => prev.map(t => t.id === req.id ? { ...t, status: 'completed' } : t)); }}
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    try {
+                                      await api.patch(`/trade-in/${req.id}/status`, { status: 'PURCHASED' });
+                                      setTradeins(prev => prev.map(t => t.id === req.id ? { ...t, status: 'COMPLETED' } : t));
+                                    } catch (err) {
+                                      console.error(err);
+                                      alert('Lỗi khi hoàn tất yêu cầu');
+                                    }
+                                  }}
                                   className="btn"
                                   style={{ padding: '4px 6px', fontSize: '9px', background: '#388e3c', color: 'white', whiteSpace: 'nowrap' }}
                                 >
                                   Hoàn tất
                                 </button>
                               )}
-                              {req.status === 'completed' && (
+                              {req.status === 'COMPLETED' && (
                                 <span style={{ color: 'var(--color-outline)', fontSize: '9px', whiteSpace: 'nowrap' }}>Hoàn tất</span>
                               )}
                             </div>

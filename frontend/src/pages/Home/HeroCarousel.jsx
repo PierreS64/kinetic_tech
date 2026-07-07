@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './heroCarousel.css';
+import api from '../../utils/api';
 import { ArrowLeft, ArrowRight, Flame } from 'lucide-react';
 import ProductCard from '../../components/Common/ProductCard';
 
@@ -40,9 +41,30 @@ const bannerSlides = [
 ];
 
 export default function HeroCarousel({ onCtaClick, theme, products = [], onAddToCart, onBuyNow, onViewDetails, likedProductIds = [], onToggleLike }) {
+  const [slides, setSlides] = useState(bannerSlides);
   const [currentSlide, setCurrentSlide] = useState(0);
   const saleScrollRef = useRef(null);
   const [showSaleLeftArrow, setShowSaleLeftArrow] = useState(false);
+
+  useEffect(() => {
+    api.get('/banners')
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          const dbSlides = res.data.map((b, i) => {
+            const fallback = bannerSlides[i % bannerSlides.length];
+            return {
+              ...fallback,
+              id: b.id,
+              bgImage: b.imageUrl,
+              lightImage: b.imageUrl, // Use same image for both modes if from DB
+              linkUrl: b.linkUrl
+            };
+          });
+          setSlides(dbSlides);
+        }
+      })
+      .catch(err => console.error('Failed to load banners', err));
+  }, []);
 
   const [timeLeft, setTimeLeft] = useState({
     hours: 2,
@@ -72,10 +94,10 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
   // Auto-play slides
   useEffect(() => {
     const slideTimer = setInterval(() => {
-      setCurrentSlide(prev => (prev + 1) % bannerSlides.length);
+      setCurrentSlide(prev => (prev + 1) % slides.length);
     }, 6000);
     return () => clearInterval(slideTimer);
-  }, []);
+  }, [slides.length]);
 
   // Scroll arrow logic
   const handleSaleScroll = () => {
@@ -98,15 +120,15 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
   }, [products]);
 
   const handlePrev = () => {
-    setCurrentSlide(prev => (prev === 0 ? bannerSlides.length - 1 : prev - 1));
+    setCurrentSlide(prev => (prev === 0 ? slides.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentSlide(prev => (prev + 1) % bannerSlides.length);
+    setCurrentSlide(prev => (prev + 1) % slides.length);
   };
 
   const isLight = theme === 'light';
-  const slide = bannerSlides[currentSlide];
+  const slide = slides[currentSlide] || bannerSlides[0];
   const slideImage = isLight && slide.lightImage ? slide.lightImage : slide.bgImage;
   const slideGradient = isLight && slide.lightGradient ? slide.lightGradient : slide.gradient;
   const titleShadow = isLight ? '0 1px 2px rgba(15, 23, 42, 0.15)' : '0 2px 10px rgba(0, 0, 0, 0.5)';
@@ -243,7 +265,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
           gap: '8px',
           zIndex: 3
         }}>
-          {bannerSlides.map((_, idx) => (
+          {slides.map((_, idx) => (
             <div
               key={idx}
               onClick={() => setCurrentSlide(idx)}

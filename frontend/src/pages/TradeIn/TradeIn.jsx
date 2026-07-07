@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../../utils/api';
 import { 
   Cpu,
   Laptop, 
@@ -73,7 +74,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!modelName.trim()) {
       alert('Vui lòng nhập tên model thiết bị cũ của bạn.');
@@ -89,35 +90,31 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
     }
 
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      const code = 'TI-' + Math.floor(100000 + Math.random() * 900000);
-      setBookingCode(code);
-      setBookingDone(true);
-
+    try {
       const typeObj = COMPONENT_TYPES.find(t => t.id === deviceType);
       const typeLabel = typeObj ? typeObj.label : 'Linh kiện';
-
-      const newTradeIn = {
-        id: code,
-        customerName: formData.fullName,
-        phone: formData.phone,
-        email: formData.email || 'customer@kinetic.vn',
-        oldDevice: `${typeLabel}: ${modelName}`,
-        conditionDesc: `Sử dụng: ${usageTime}. Mô tả: ${notes || 'Không có mô tả thêm'}`,
-        targetDevice: formData.targetDevice,
-        dateCreated: new Date().toISOString().split('T')[0],
-        selfValuation: 0,
-        offeredPrice: 0, // Admin will set this offered value
-        attachedImage: attachedImage,
-        appointmentInfo: `${formData.appointmentDate} tại ${formData.storeLocation}`,
-        status: 'pending' // pending = Chờ thẩm định
+      
+      const payload = {
+        deviceName: `${typeLabel}: ${modelName}`,
+        condition: `Sử dụng: ${usageTime}. Mô tả: ${notes || 'Không có mô tả thêm'}. Nâng cấp lên: ${formData.targetDevice}. Lịch hẹn: ${formData.appointmentDate} tại ${formData.storeLocation}.`
       };
+      
+      // Call backend API
+      const response = await api.post('/trade-in', payload);
+      
+      const tradeInRecord = response.data;
+      setBookingCode(tradeInRecord.id.substring(0, 8).toUpperCase()); // Show short UUID
+      setBookingDone(true);
 
       if (onAddTradeIn) {
-        onAddTradeIn(newTradeIn);
+        onAddTradeIn(tradeInRecord);
       }
-    }, 1500);
+    } catch (error) {
+      console.error('Error submitting trade-in:', error);
+      alert(error.response?.data?.message || 'Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại!');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -473,25 +470,42 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
               4. Khách hàng mang linh kiện đến cửa hàng đối chiếu và cấn trừ thanh toán nâng cấp.
             </div>
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="btn btn-secondary"
-              style={{
+            {currentUser?.role === 'ADMIN' ? (
+              <div style={{
                 width: '100%',
                 padding: '14px',
                 fontSize: '14px',
                 fontWeight: '700',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
+                textAlign: 'center',
+                borderRadius: 'var(--rounded-md)',
+                background: 'rgba(255, 0, 0, 0.1)',
+                border: '1px solid rgba(255, 0, 0, 0.3)',
+                color: '#ffb4ab',
                 marginTop: '12px'
-              }}
-            >
-              {submitting ? 'ĐANG GỬI YÊU CẦU...' : 'GỬI YÊU CẦU THẨM ĐỊNH ONLINE'}
-              <ArrowRight size={16} />
-            </button>
+              }}>
+                Tài khoản quản trị không thể tạo yêu cầu thu cũ đổi mới.
+              </div>
+            ) : (
+              <button
+                type="submit"
+                disabled={submitting}
+                className="btn btn-secondary"
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  fontSize: '14px',
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  marginTop: '12px'
+                }}
+              >
+                {submitting ? 'ĐANG GỬI YÊU CẦU...' : 'GỬI YÊU CẦU THẨM ĐỊNH ONLINE'}
+                <ArrowRight size={16} />
+              </button>
+            )}
           </div>
 
         </form>

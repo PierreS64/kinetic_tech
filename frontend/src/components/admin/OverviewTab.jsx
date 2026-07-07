@@ -41,11 +41,11 @@ export default function OverviewTab(props) {
                             <span style={{ fontWeight: '800', fontSize: '13px', display: 'block', color: 'var(--color-secondary-dim)' }}>{formatVND(order.total)}</span>
                             <span className="status-badge" style={{
                               fontSize: '9px',
-                              background: order.status === 'completed' ? 'rgba(76,175,80,0.15)' : order.status === 'pending' ? 'rgba(253,139,0,0.15)' : 'rgba(0,123,255,0.15)',
-                              color: order.status === 'completed' ? '#81c784' : order.status === 'pending' ? '#ffb77d' : '#adc7ff',
+                              background: order.status === 'DELIVERED' ? 'rgba(76,175,80,0.15)' : order.status === 'PENDING' ? 'rgba(253,139,0,0.15)' : 'rgba(0,123,255,0.15)',
+                              color: order.status === 'DELIVERED' ? '#81c784' : order.status === 'PENDING' ? '#ffb77d' : '#adc7ff',
                               padding: '2px 6px'
                             }}>
-                              {order.status === 'completed' ? 'Đã Giao' : order.status === 'pending' ? 'Chờ duyệt' : 'Đang xử lý'}
+                              {order.status === 'DELIVERED' ? 'Đã Giao' : order.status === 'PENDING' ? 'Chờ duyệt' : 'Đang xử lý'}
                             </span>
                           </div>
                         </div>
@@ -77,11 +77,11 @@ export default function OverviewTab(props) {
                             <span style={{ fontWeight: '700', fontSize: '12px', color: theme === 'light' ? '#0f172a' : 'white' }}>#{ticket.id} - {ticket.customerName}</span>
                             <span className="status-badge" style={{
                               fontSize: '9px',
-                              background: ticket.status === 'pending' ? 'rgba(255,76,76,0.15)' : 'rgba(76,175,80,0.15)',
-                              color: ticket.status === 'pending' ? '#ffb4ab' : '#81c784',
+                              background: ticket.status === 'OPEN' ? 'rgba(255,76,76,0.15)' : 'rgba(76,175,80,0.15)',
+                              color: ticket.status === 'OPEN' ? '#ffb4ab' : '#81c784',
                               padding: '1px 6px'
                             }}>
-                              {ticket.status === 'pending' ? 'Chờ trả lời' : 'Đã phản hồi'}
+                              {ticket.status === 'OPEN' ? 'Chờ trả lời' : 'Đã phản hồi'}
                             </span>
                           </div>
                           <p style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

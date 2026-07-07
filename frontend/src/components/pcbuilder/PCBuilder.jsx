@@ -3,10 +3,9 @@ import PCBuilderModal from './PCBuilderModal';
 import '../../styles/base/modal.css';
 import './pcBuilder.css';
 import { createPortal } from 'react-dom';
-import { Check, AlertTriangle, Cpu, Wrench, ShoppingCart, RefreshCw, Layers, Search, X, Filter } from 'lucide-react';
-import { builderParts } from '../../utils/mockData.js';
+import { ChevronRight, Settings, Cpu, Layers, HardDrive, Fan, Plus, Info, CheckCircle, Trash2, ArrowRight, Check, AlertTriangle, Wrench, ShoppingCart, RefreshCw, Search, X, Filter } from 'lucide-react';
 
-export default function PCBuilder({ onAddPartsToCart }) {
+export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
   const [selectedParts, setSelectedParts] = useState({
     cpu: null,
     motherboard: null,
@@ -73,6 +72,41 @@ export default function PCBuilder({ onAddPartsToCart }) {
       setFilterRamType('all');
     }
   };
+
+  // Derive builderParts from storeProducts
+  const builderParts = React.useMemo(() => {
+    const parts = { cpu: [], motherboard: [], ram: [], gpu: [], ssd: [], psu: [], cooler: [], pcCase: [] };
+    
+    const enrichPart = (prod) => {
+      let parsedSpecs = {};
+      if (typeof prod.specs === 'object' && prod.specs !== null) {
+        parsedSpecs = prod.specs;
+      } else if (typeof prod.description === 'string' && prod.description.startsWith('{')) {
+        try {
+          parsedSpecs = JSON.parse(prod.description);
+        } catch(e) {}
+      } else if (typeof prod.specs === 'string' && prod.specs.startsWith('{')) {
+        try {
+          parsedSpecs = JSON.parse(prod.specs);
+        } catch(e) {}
+      }
+      return { ...prod, ...parsedSpecs };
+    };
+
+    storeProducts.forEach(prod => {
+      const p = enrichPart(prod);
+      const n = p.name.toLowerCase();
+      if (n.includes('cpu') || n.includes('core i') || n.includes('ryzen')) parts.cpu.push(p);
+      else if (n.includes('mainboard') || n.includes('z790') || n.includes('b760') || n.includes('b650')) parts.motherboard.push(p);
+      else if (n.includes('ram') || n.includes('corsair vengeance') || n.includes('fury')) parts.ram.push(p);
+      else if (n.includes('card màn hình') || n.includes('rtx ') || n.includes('rx ') || n.includes('geforce')) parts.gpu.push(p);
+      else if (n.includes('ssd') || n.includes('nvme')) parts.ssd.push(p);
+      else if (n.includes('nguồn') || n.includes('psu') || n.includes(' 850w') || n.includes(' 750w') || n.includes(' 1000w') || n.includes('mwe')) parts.psu.push(p);
+      else if (n.includes('tản nhiệt')) parts.cooler.push(p);
+      else if (n.includes('vỏ máy tính') || n.includes('case') || n.includes('lian li') || n.includes('sama') || n.includes('montech')) parts.pcCase.push(p);
+    });
+    return parts;
+  }, [storeProducts]);
 
   const categories = [
     { id: 'cpu', name: 'Bộ Vi Xử Lý (CPU)', icon: Cpu, db: builderParts.cpu },
@@ -304,8 +338,10 @@ export default function PCBuilder({ onAddPartsToCart }) {
   const filteredModalParts = activeCatDetails
     ? activeCatDetails.db.filter(part => {
       // 1. Text Search
-      const matchesSearch = part.name.toLowerCase().includes(modalSearchQuery.toLowerCase()) ||
-        part.specs.toLowerCase().includes(modalSearchQuery.toLowerCase());
+      const specsStr = typeof part.specs === 'object' ? JSON.stringify(part.specs) : (part.specs || '');
+      const searchQ = String(modalSearchQuery || '').toLowerCase();
+      const matchesSearch = String(part.name || '').toLowerCase().includes(searchQ) ||
+        String(specsStr).toLowerCase().includes(searchQ);
 
       // 2. Price Range Filter [min, max]
       const price = part.price || 0;
@@ -313,26 +349,26 @@ export default function PCBuilder({ onAddPartsToCart }) {
 
       // 3. Brand Filter
       let matchesBrand = true;
-      if (filterSelectedBrand !== 'all') {
-        matchesBrand = part.brand?.toLowerCase() === filterSelectedBrand.toLowerCase();
+      if (filterSelectedBrand && filterSelectedBrand !== 'all') {
+        matchesBrand = String(part.brand || '').toLowerCase() === String(filterSelectedBrand).toLowerCase();
       }
 
       // 4. Color Filter
       let matchesColor = true;
-      if (filterSelectedColor !== 'all') {
-        matchesColor = part.color?.toLowerCase() === filterSelectedColor.toLowerCase();
+      if (filterSelectedColor && filterSelectedColor !== 'all') {
+        matchesColor = String(part.color || '').toLowerCase() === String(filterSelectedColor).toLowerCase();
       }
 
       // 5. Socket Filter (Tương thích)
       let matchesSocket = true;
-      if (filterSocket !== 'all' && part.socket) {
-        matchesSocket = part.socket.toLowerCase() === filterSocket.toLowerCase();
+      if (filterSocket && filterSocket !== 'all' && part.socket) {
+        matchesSocket = String(part.socket).toLowerCase() === String(filterSocket).toLowerCase();
       }
 
       // 6. RAM Type Filter (Tương thích)
       let matchesRam = true;
-      if (filterRamType !== 'all' && part.ramType) {
-        matchesRam = part.ramType.toLowerCase() === filterRamType.toLowerCase();
+      if (filterRamType && filterRamType !== 'all' && part.ramType) {
+        matchesRam = String(part.ramType).toLowerCase() === String(filterRamType).toLowerCase();
       }
 
       return matchesSearch && matchesPrice && matchesBrand && matchesColor && matchesSocket && matchesRam;
@@ -460,7 +496,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                     borderLeft: '2px solid rgba(255,255,255,0.1)',
                     lineHeight: '1.5'
                   }}>
-                    <strong>Thông số:</strong> {selected.specs}
+                    <strong>Thông số:</strong> {typeof selected.specs === 'object' && selected.specs !== null ? Object.entries(selected.specs).map(([k, v]) => `${k}: ${v}`).join(' | ') : String(selected.specs || '')}
                     {selected.socket && ` | Socket: ${selected.socket}`}
                     {selected.ramType && ` | Loại RAM: ${selected.ramType}`}
                     {selected.length && ` | Chiều dài: ${selected.length}mm`}

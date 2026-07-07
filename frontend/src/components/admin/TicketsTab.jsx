@@ -30,12 +30,12 @@ export default function TicketsTab(props) {
                           <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-primary-dim)' }}>#{ticket.id}</span>
                           <span className="status-badge" style={{
                             fontSize: '9px',
-                            background: ticket.status === 'pending' ? 'rgba(255,76,76,0.15)' : ticket.status === 'replied' ? 'rgba(0,123,255,0.15)' : 'rgba(76,175,80,0.15)',
-                            color: ticket.status === 'pending' ? '#ffb4ab' : ticket.status === 'replied' ? '#adc7ff' : '#81c784'
+                            background: ticket.status === 'OPEN' ? 'rgba(255,76,76,0.15)' : ticket.status === 'IN_PROGRESS' ? 'rgba(0,123,255,0.15)' : 'rgba(76,175,80,0.15)',
+                            color: ticket.status === 'OPEN' ? '#ffb4ab' : ticket.status === 'IN_PROGRESS' ? '#adc7ff' : '#81c784'
                           }}>
-                            {ticket.status === 'pending' && 'Chờ phản hồi'}
-                            {ticket.status === 'replied' && 'Đã phản hồi'}
-                            {ticket.status === 'closed' && 'Đã đóng'}
+                            {ticket.status === 'OPEN' && 'Chờ phản hồi'}
+                            {ticket.status === 'IN_PROGRESS' && 'Đã phản hồi'}
+                            {ticket.status === 'CLOSED' && 'Đã đóng'}
                           </span>
                         </div>
                         <h4 style={{ fontSize: '13px', fontWeight: '700', color: textColor, marginBottom: '4px' }}>{ticket.subject}</h4>

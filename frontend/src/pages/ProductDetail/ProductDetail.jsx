@@ -1,8 +1,54 @@
-import React from 'react';
-import { ArrowLeft, ShoppingCart, Shield, Truck, RotateCcw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, ShoppingCart, Shield, Truck, RotateCcw, Star, MessageCircle, Heart } from 'lucide-react';
+import api from '../../utils/api';
 
-export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, theme }) {
+export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, theme, isLiked, onToggleLike }) {
   if (!product) return null;
+
+  const [reviews, setReviews] = useState([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
+  const [submittingReview, setSubmittingReview] = useState(false);
+
+  useEffect(() => {
+    if (product && product.id) {
+      fetchReviews();
+    }
+  }, [product]);
+
+  const fetchReviews = async () => {
+    setLoadingReviews(true);
+    api.get(`/reviews/product/${product.id}`)
+      .then(res => setReviews(res.data))
+      .catch(err => console.error('Error fetching reviews:', err))
+      .finally(() => setLoadingReviews(false));
+  };
+
+  const handleCreateReview = async (e) => {
+    e.preventDefault();
+    if (!newReview.comment) {
+      alert('Vui lòng nhập nội dung đánh giá!');
+      return;
+    }
+    setSubmittingReview(true);
+    try {
+      const formData = new FormData();
+      formData.append('productId', product.id);
+      formData.append('rating', newReview.rating);
+      formData.append('comment', newReview.comment);
+
+      await api.post('/reviews', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      alert('Đã gửi đánh giá thành công!');
+      setNewReview({ rating: 5, comment: '' });
+      fetchReviews();
+    } catch (err) {
+      alert(err.response?.data?.message || 'Bạn cần mua hàng thành công để được đánh giá!');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
   const discount = product.oldPrice 
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
@@ -25,7 +71,14 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', background: 'var(--color-surface-container)', padding: '32px', borderRadius: 'var(--rounded-lg)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }}>
         {/* Left: Image */}
         <div style={{ background: 'var(--color-surface-container-low)', borderRadius: 'var(--rounded)', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img src={product.image} alt={product.name} style={{ width: '100%', maxHeight: '400px', objectFit: 'contain' }} />
+          <img 
+            src={product.image} 
+            alt={product.name} 
+            style={{ width: '100%', maxHeight: '400px', objectFit: 'contain' }} 
+            onError={(e) => {
+              e.target.src = 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&q=80&w=400';
+            }}
+          />
         </div>
 
         {/* Right: Info */}
@@ -93,6 +146,27 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
             >
               Mua Ngay
             </button>
+            <button 
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onToggleLike) onToggleLike(product.id);
+              }}
+              className="btn"
+              style={{ 
+                padding: '0 20px', 
+                border: isLiked ? '1px solid rgba(255, 90, 58, 0.4)' : '1px solid var(--color-outline)', 
+                background: isLiked ? 'rgba(255, 90, 58, 0.1)' : 'transparent',
+                borderRadius: 'var(--rounded-md)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer'
+              }}
+              title={isLiked ? "Bỏ yêu thích" : "Yêu thích"}
+            >
+              <Heart style={{ pointerEvents: 'none' }} size={24} fill={isLiked ? "#ff5a3a" : "none"} color={isLiked ? "#ff5a3a" : "var(--color-outline)"} />
+            </button>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px' }}>
@@ -109,6 +183,79 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
               <span>Đổi trả 1-1 trong 15 ngày đầu</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Reviews Section */}
+      <div style={{ marginTop: '48px', background: 'var(--color-surface-container)', padding: '32px', borderRadius: 'var(--rounded-lg)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }}>
+        <h3 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px', color: theme === 'light' ? '#0f172a' : 'white' }}>
+          <MessageCircle size={24} color="var(--color-primary-dim)" /> 
+          Đánh giá từ người dùng
+        </h3>
+
+        {loadingReviews ? (
+          <p style={{ color: 'var(--color-outline)' }}>Đang tải đánh giá...</p>
+        ) : reviews.length === 0 ? (
+          <div style={{ padding: '32px', textAlign: 'center', background: 'var(--color-surface-container-low)', borderRadius: 'var(--rounded-md)', color: 'var(--color-on-surface-variant)' }}>
+            Chưa có đánh giá nào cho sản phẩm này.
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {reviews.map(rev => (
+              <div key={rev.id} style={{ padding: '16px', background: 'var(--color-surface-container-low)', borderRadius: 'var(--rounded-md)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ fontWeight: '700', color: theme === 'light' ? '#1e293b' : 'white' }}>{rev.User?.fullName || 'Khách hàng'}</span>
+                  <span style={{ fontSize: '12px', color: 'var(--color-outline)' }}>{new Date(rev.createdAt).toLocaleDateString('vi-VN')}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={14} fill={i < rev.rating ? '#ffb77d' : 'transparent'} color={i < rev.rating ? '#ffb77d' : 'var(--color-outline)'} />
+                  ))}
+                </div>
+                <p style={{ fontSize: '14px', color: 'var(--color-on-surface-variant)', lineHeight: '1.5' }}>{rev.comment}</p>
+                {rev.imageUrls && rev.imageUrls.length > 0 && (
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                    {rev.imageUrls.map((img, i) => (
+                      <img key={i} src={img} alt="review" style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div style={{ marginTop: '32px', borderTop: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)', paddingTop: '32px' }}>
+          <h4 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px', color: theme === 'light' ? '#0f172a' : 'white' }}>Viết Đánh Giá Của Bạn</h4>
+          <form onSubmit={handleCreateReview} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--color-on-surface-variant)' }}>Chất lượng sản phẩm:</label>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {[1, 2, 3, 4, 5].map(star => (
+                  <Star 
+                    key={star} 
+                    size={24} 
+                    fill={star <= newReview.rating ? '#ffb77d' : 'transparent'} 
+                    color={star <= newReview.rating ? '#ffb77d' : 'var(--color-outline)'}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setNewReview({ ...newReview, rating: star })}
+                  />
+                ))}
+              </div>
+            </div>
+            <div>
+              <textarea 
+                className="kinetic-input"
+                rows="4" 
+                placeholder="Chia sẻ cảm nhận của bạn về sản phẩm này..."
+                value={newReview.comment}
+                onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary" disabled={submittingReview} style={{ alignSelf: 'flex-start', padding: '12px 24px' }}>
+              {submittingReview ? 'Đang gửi...' : 'Gửi Đánh Giá'}
+            </button>
+          </form>
         </div>
       </div>
     </div>
