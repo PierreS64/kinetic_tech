@@ -29,7 +29,22 @@ import CategoryFeaturedRow from './components/Common/CategoryFeaturedRow';
 import api from './utils/api';
 
 export default function App() {
-  const [activeView, setActiveView] = useState('deals');
+  const [activeView, setActiveView] = useState(() => {
+    try {
+      return localStorage.getItem('kinetic_active_view') || 'deals';
+    } catch {
+      return 'deals';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('kinetic_active_view', activeView);
+    } catch (e) {
+      console.error('Failed to save activeView', e);
+    }
+  }, [activeView]);
+
   const [cartOpen, setCartOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const relatedScrollRef = useRef(null);
@@ -42,143 +57,15 @@ export default function App() {
   const [storeProducts, setStoreProducts] = useState(products);
 
   // Synchronized States
-  const [feedbacks, setFeedbacks] = useState([
-    {
-      id: 'FB-001',
-      title: 'Ý kiến đóng góp về độ tương phản giao diện',
-      content: 'Giao diện tối (Dark mode) của Kinetic Tech rất đẹp mắt và hiện đại. Tuy nhiên chữ màu xám trên nền xanh đậm ở một số mục thông tin chi tiết hơi mờ, mong shop điều chỉnh độ sáng hoặc tăng tương phản chữ lên một chút cho dễ đọc.',
-      email: 'nguyenvana@gmail.com',
-      fullName: 'Nguyễn Văn A',
-      date: '03/06/2026 14:22',
-      status: 'pending'
-    },
-    {
-      id: 'FB-002',
-      title: 'Đề xuất thêm danh mục linh kiện tản nước custom',
-      content: 'Mình thấy Kinetic rất mạnh về các dòng máy tính Hi-End, mong shop nhập thêm các linh kiện tản nhiệt nước Custom như Block CPU, fitting, ống cứng của hãng Barrow hoặc Bykski để anh em lắp ráp tiện lợi hơn.',
-      email: 'hoangviet@gmail.com',
-      fullName: 'Hoàng Quốc Việt',
-      date: '04/06/2026 09:15',
-      status: 'processed'
-    }
-  ]);
+  const [feedbacks, setFeedbacks] = useState([]);
 
-  const [orders, setOrders] = useState([
-    {
-      id: 'ORD-9842',
-      customerName: 'Nguyễn Văn A',
-      email: 'nguyenvana@gmail.com',
-      phone: '0912345678',
-      date: '2026-06-03 10:15',
-      total: 36990000,
-      paymentMethod: 'Chuyển khoản VietQR',
-      status: 'processing',
-      items: [
-        { id: '5bf5a4d1-a49c-4b9d-b95a-f036619fc401', name: 'Laptop ASUS ROG Strix G16 (2024)', price: 36990000, quantity: 1 }
-      ]
-    },
-    {
-      id: 'ORD-4395',
-      customerName: 'Nguyễn Văn A',
-      email: 'nguyenvana@gmail.com',
-      phone: '0912345678',
-      date: '2026-06-02 18:30',
-      total: 65900000,
-      paymentMethod: 'Thẻ tín dụng',
-      status: 'completed',
-      items: [
-        { id: 'c2acdbd0-5eaa-45be-8112-ee3cd1317af3', name: 'iPhone 15 Pro Max 256GB', price: 29890000, quantity: 2 },
-        { id: 'ad234ddf-5357-430e-ad3b-47487f59388f', name: 'Bàn phím cơ ASUS ROG Azoth Wireless', price: 6190000, quantity: 1 }
-      ]
-    },
-    {
-      id: 'ORD-2104',
-      customerName: 'Nguyễn Văn A',
-      email: 'nguyenvana@gmail.com',
-      phone: '0912345678',
-      date: '2026-06-03 08:00',
-      total: 10490000,
-      paymentMethod: 'Thanh toán COD',
-      status: 'pending',
-      items: [
-        { id: '1bcd28ff-e2dd-4c96-acf5-0e8f47849e26', name: 'CPU Intel Core i7-14700K', price: 10490000, quantity: 1 }
-      ]
-    },
-    {
-      id: 'ORD-8451',
-      customerName: 'Trần Thị B',
-      email: 'thib@gmail.com',
-      phone: '0987654321',
-      date: '2026-05-28 14:20',
-      total: 9890000,
-      paymentMethod: 'Chuyển khoản VietQR',
-      status: 'cancelled',
-      items: [
-        { id: '38c9ae9f-b795-4eb9-b514-b39742838c68', name: 'CPU AMD Ryzen 7 7800X3D', price: 9890000, quantity: 1 }
-      ]
-    }
-  ]);
+  const [orders, setOrders] = useState([]);
 
-  const [tradeins, setTradeins] = useState([
-    {
-      id: 'TI-8839',
-      customerName: 'Nguyễn Văn A',
-      email: 'nguyenvana@gmail.com',
-      phone: '0912345678',
-      oldDevice: 'Điện thoại: iPhone 13 Pro Max 128GB',
-      conditionDesc: 'Tình trạng: Loại B (Mới - 95% -> 98%)',
-      targetDevice: 'iPhone 15 Pro Max 256GB',
-      dateCreated: '2026-06-03',
-      selfValuation: 12500000,
-      offeredPrice: 12000000,
-      status: 'valued'
-    },
-    {
-      id: 'TI-2940',
-      customerName: 'Nguyễn Văn A',
-      email: 'nguyenvana@gmail.com',
-      phone: '0912345678',
-      oldDevice: 'Laptop: MacBook Air M1 2020 8GB/256GB',
-      conditionDesc: 'Tình trạng: Loại A (Likenew - 99%)',
-      targetDevice: 'MacBook Pro 14 inch M3 (2024)',
-      dateCreated: '2026-06-01',
-      selfValuation: 9000000,
-      offeredPrice: 10500000,
-      status: 'completed'
-    }
-  ]);
+  const [tradeins, setTradeins] = useState([]);
 
-  const [warranties, setWarranties] = useState([
-    {
-      id: 'WR-4720',
-      customerName: 'Nguyễn Văn A',
-      phone: '0912345678',
-      productName: 'Card Màn Hình ASUS ROG Strix RTX 4080 Super OC 16GB',
-      serialNumber: 'SN-4080S-ROG-897482',
-      dateCreated: '2026-06-01',
-      issue: 'Quạt tản nhiệt số 3 phát ra tiếng kêu to lạ thường và thỉnh thoảng ngừng quay.',
-      status: 'checking'
-    }
-  ]);
+  const [warranties, setWarranties] = useState([]);
 
-  const [tickets, setTickets] = useState([
-    {
-      id: 'TK-5039',
-      customerName: 'Nguyễn Văn A',
-      subject: 'Máy tính bị sập nguồn khi chạy phần mềm dựng phim DaVinci Resolve',
-      category: 'Lỗi Kỹ Thuật Phần Cứng',
-      urgency: 'Gấp',
-      status: 'pending',
-      date: '2026-06-02',
-      messages: [
-        {
-          sender: 'user',
-          text: 'Mình vừa mua bộ máy PC build bên cửa hàng được 1 tháng. Dạo này cứ bật render video trong DaVinci Resolve hoặc chơi game Cyberpunk 2077 khoảng 15 phút là máy bị sập nguồn đột ngột, đèn trên mainboard báo đỏ LED CPU. Nhờ kỹ thuật hỗ trợ kiểm tra giúp.',
-          time: '02/06/2026 14:00'
-        }
-      ]
-    }
-  ]);
+  const [tickets, setTickets] = useState([]);
 
   const [likedProductIds, setLikedProductIds] = useState(() => {
     try {
@@ -303,10 +190,28 @@ export default function App() {
     }
   };
 
+  const loadUserData = async () => {
+    if (!currentUser) return;
+    try {
+      const [ordersRes, tradeinsRes, ticketsRes, feedbacksRes] = await Promise.all([
+        api.get('/orders').catch(() => ({ data: [] })),
+        api.get('/trade-in/my-requests').catch(() => ({ data: [] })),
+        api.get('/tickets/my-tickets').catch(() => ({ data: [] })),
+        api.get('/feedback/my-feedbacks').catch(() => ({ data: [] }))
+      ]);
+      setOrders(ordersRes.data || []);
+      setTradeins(tradeinsRes.data || []);
+      setTickets(ticketsRes.data || []);
+      setFeedbacks(feedbacksRes.data || []);
+    } catch (err) {
+      console.error('Failed to load user data', err);
+    }
+  };
+
   useEffect(() => {
     loadCart();
+    loadUserData();
   }, [currentUser]);
-
 
   // Parse OAuth data from URL
   useEffect(() => {
@@ -585,13 +490,15 @@ export default function App() {
         activeView={activeView} 
         setActiveView={setActiveView} 
         cartItemsCount={cartItems.reduce((acc, curr) => acc + curr.quantity, 0)}
-        toggleCart={() => setCartOpen(true)}
+        toggleCart={() => setCartOpen(!cartOpen)}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         currentUser={currentUser}
         onLogout={handleLogout}
         theme={theme}
         toggleTheme={toggleTheme}
+        storeProducts={storeProducts}
+        onSelectProduct={setSelectedProduct}
       />
 
       {/* Hero Carousel: Full Width - Rendered outside main container */}
@@ -765,7 +672,7 @@ export default function App() {
         {activeView === 'pc-builder' && (
           <div className="container" style={{ paddingTop: '40px' }}>
             <div className="animate-fade-in-up">
-              <PCBuilder onAddPartsToCart={handleAddPartsToCart} />
+              <PCBuilder storeProducts={storeProducts} onAddPartsToCart={handleAddPartsToCart} />
             </div>
           </div>
         )}
@@ -789,16 +696,6 @@ export default function App() {
             storeProducts={storeProducts} 
             setStoreProducts={setStoreProducts} 
             theme={theme} 
-            orders={orders}
-            setOrders={setOrders}
-            tickets={tickets}
-            setTickets={setTickets}
-            warranties={warranties}
-            setWarranties={setWarranties}
-            tradeins={tradeins}
-            setTradeins={setTradeins}
-            feedbacks={feedbacks}
-            setFeedbacks={setFeedbacks}
           />
         )}
 
@@ -837,7 +734,7 @@ export default function App() {
         {/* VIEW 8: Warranty Lookup View */}
         {activeView === 'warranty' && (
           <div className="container" style={{ paddingTop: '40px' }}>
-            <Warranty />
+            <Warranty currentUser={currentUser} />
           </div>
         )}
 
@@ -851,7 +748,7 @@ export default function App() {
         {/* VIEW 9: Support Ticket View */}
         {activeView === 'support-ticket' && (
           <div className="container" style={{ paddingTop: '40px' }}>
-            <SupportTicket theme={theme} />
+            <SupportTicket theme={theme} currentUser={currentUser} />
           </div>
         )}
 
@@ -865,13 +762,13 @@ export default function App() {
             onToggleLike={handleToggleLike}
             products={storeProducts}
             orders={orders}
-            onAddOrder={(o) => setOrders(prev => [o, ...prev])}
+            onAddOrder={() => loadUserData()}
             tradeins={tradeins}
-            onAddTradeIn={(t) => setTradeins(prev => [t, ...prev])}
+            onAddTradeIn={() => loadUserData()}
             feedbacks={feedbacks}
-            onAddFeedback={(f) => setFeedbacks(prev => [f, ...prev])}
+            onAddFeedback={() => loadUserData()}
             onUpdateProfile={handleUpdateProfile}
-            onAddSupportTicket={(tk) => setTickets(prev => [tk, ...prev])}
+            onAddSupportTicket={() => loadUserData()}
           />
         )}
 
@@ -1434,6 +1331,8 @@ export default function App() {
           onAddToCart={(p) => handleAddToCart(p)}
           onBuyNow={handleBuyNow}
           theme={theme}
+          isLiked={selectedDetailProduct ? likedProductIds.includes(selectedDetailProduct.id) : false}
+          onToggleLike={handleToggleLike}
         />
       )}
 

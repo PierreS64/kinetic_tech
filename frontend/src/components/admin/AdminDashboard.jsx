@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminModals from './AdminModals';
 import OverviewTab from './OverviewTab';
 import OrdersTab from './OrdersTab';
@@ -8,6 +8,7 @@ import WarrantiesTab from './WarrantiesTab';
 import TradeInTab from './TradeInTab';
 import FeedbacksTab from './FeedbacksTab';
 import PromotionsTab from './PromotionsTab';
+import VouchersTab from './VouchersTab';
 import {
   TrendingUp,
   ShoppingBag,
@@ -32,130 +33,315 @@ import {
   Edit2,
   Tag
 } from 'lucide-react';
+import api from '../../utils/api';
 
 export default function AdminDashboard({
   storeProducts,
   setStoreProducts,
   theme,
-  orders = [],
-  setOrders,
-  tickets = [],
-  setTickets,
-  warranties = [],
-  setWarranties,
-  tradeins = [],
-  setTradeins,
-  feedbacks = [],
-  setFeedbacks
 }) {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'orders', 'products', 'tickets', 'warranties', 'tradein', 'feedbacks', 'promotions'
+  const [orders, setOrders] = useState([]);
+  const [tickets, setTickets] = useState([]);
+  const [warranties, setWarranties] = useState([]);
+  const [tradeins, setTradeins] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]);
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const [ordersRes, ticketsRes, tradeInsRes, feedbacksRes, couponsRes] = await Promise.all([
+          api.get('/orders/all').catch(() => ({ data: [] })),
+          api.get('/tickets').catch(() => ({ data: [] })),
+          api.get('/trade-in').catch(() => ({ data: [] })),
+          api.get('/feedback').catch(() => ({ data: [] })),
+          api.get('/coupons').catch(() => ({ data: [] }))
+        ]);
+        setOrders(ordersRes.data || []);
+
+        // Map tickets
+        const mappedTickets = (ticketsRes.data || []).map(t => {
+          const descMatch = t.description ? t.description.match(/^\[(.*?)\] - \[(.*?)\] - (.*)$/) : null;
+          let subject = 'Hỗ trợ kỹ thuật #' + t.id.substring(0, 6).toUpperCase();
+          let category = 'Khác';
+          let pureDesc = t.description || '';
+
+          if (descMatch) {
+            subject = descMatch[1];
+            category = descMatch[2];
+            pureDesc = descMatch[3];
+          }
+
+          return {
+            id: t.id,
+            subject,
+            category,
+            status: t.status === 'OPEN' ? 'OPEN' : (t.status === 'CLOSED' || t.status === 'RESOLVED' ? 'CLOSED' : 'IN_PROGRESS'),
+            urgency: t.severity === 'HIGH' ? 'Rất gấp' : (t.severity === 'MEDIUM' ? 'Gấp' : 'Thường'),
+            customerName: t.User_Ticket_customerIdToUser?.fullName || 'Khách hàng',
+            messages: [
+              { sender: 'user', text: pureDesc, time: new Date(t.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) }
+            ]
+          };
+        });
+        setTickets(mappedTickets);
+
+        // Map trade-ins
+        const mappedTradeIns = (tradeInsRes.data || []).map(t => ({
+          ...t,
+          customerName: t.User?.fullName || 'Khách hàng',
+          phone: t.User?.phoneNumber || 'N/A',
+          oldDevice: t.deviceName,
+          targetDevice: 'Sản phẩm Kinetic',
+          conditionDesc: t.condition,
+          selfValuation: t.estimatedValue || 0,
+          offeredPrice: t.estimatedValue || 0,
+          status: t.status === 'PENDING' ? 'PENDING' : (t.status === 'APPROVED' ? 'VALUED' : 'COMPLETED'),
+        }));
+        setTradeins(mappedTradeIns);
+
+        // Map feedbacks
+        const mappedFeedbacks = (feedbacksRes.data || []).map(f => ({
+          ...f,
+          fullName: f.User?.fullName || 'Khách hàng',
+          email: f.User?.email || 'N/A',
+          date: new Date(f.createdAt).toLocaleDateString('vi-VN')
+        }));
+        setFeedbacks(mappedFeedbacks);
+        
+        // Map coupons
+        const mappedCoupons = (couponsRes.data || []).map(c => ({
+          id: c.id,
+          name: c.code,
+          type: c.type,
+          discountPercent: c.discountPercentage || 0,
+          discountAmount: c.discountAmount || 0,
+          startDate: new Date(c.validFrom).toISOString().split('T')[0],
+          endDate: new Date(c.validUntil).toISOString().split('T')[0],
+          salesCount: 0,
+          revenue: 0,
+          productIds: c.CouponProduct ? c.CouponProduct.map(cp => cp.productId) : []
+        }));
+        setPromotions(mappedCoupons.filter(c => c.type === 'PRODUCT_DISCOUNT'));
+        setVouchers(mappedCoupons.filter(c => c.type === 'ORDER_DISCOUNT'));
+      } catch (err) {
+        console.error('Failed to fetch admin data', err);
+      }
+    };
+    fetchAdminData();
+  }, []);
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      return localStorage.getItem('kinetic_admin_tab') || 'overview';
+    } catch {
+      return 'overview';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('kinetic_admin_tab', activeTab);
+    } catch (e) {
+      console.error('Failed to save admin tab', e);
+    }
+  }, [activeTab]);
 
   // Modal & Selection States
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   // Promotions States
-  const [promotions, setPromotions] = useState([
-    {
-      id: 'PROM-001',
-      name: 'Mừng hè rực rỡ 2026',
-      discountPercent: 10,
-      startDate: '2026-06-01',
-      endDate: '2026-06-30',
-      salesCount: 15,
-      revenue: 45000000,
-      productIds: ['lap-01', 'phone-01']
-    },
-    {
-      id: 'PROM-002',
-      name: 'Bão Deal Hi-End PC',
-      discountPercent: 15,
-      startDate: '2026-06-10',
-      endDate: '2026-06-20',
-      salesCount: 5,
-      revenue: 120000000,
-      productIds: ['comp-02', 'gear-01']
-    }
-  ]);
+  const [promotions, setPromotions] = useState([]);
+  
+  // Helper to get today's date as YYYY-MM-DD
+  const getTodayStr = () => new Date().toISOString().split('T')[0];
+
+  // Vouchers States
+  const [vouchers, setVouchers] = useState([]);
+  const [isAddingVoucher, setIsAddingVoucher] = useState(false);
+  const [newVoucher, setNewVoucher] = useState({
+    name: '',
+    discountType: 'percent',
+    discountValue: 10,
+    startDate: getTodayStr(),
+    endDate: getTodayStr()
+  });
 
   const [isAddingPromo, setIsAddingPromo] = useState(false);
   const [newPromo, setNewPromo] = useState({
     name: '',
     discountPercent: 10,
-    startDate: '2026-06-15',
-    endDate: '2026-06-30'
+    startDate: getTodayStr(),
+    endDate: getTodayStr()
   });
 
   const [selectedPromoForEdit, setSelectedPromoForEdit] = useState(null);
   const [productToAddToPromo, setProductToAddToPromo] = useState('');
 
-  const handleAddPromo = (e) => {
+  const handleAddPromo = async (e) => {
     e.preventDefault();
     if (!newPromo.name) return;
-    const promoToAdd = {
-      id: 'PROM-' + Date.now().toString().slice(-3),
-      name: newPromo.name,
-      discountPercent: Number(newPromo.discountPercent) || 0,
-      startDate: newPromo.startDate,
-      endDate: newPromo.endDate,
-      salesCount: 0,
-      revenue: 0,
-      productIds: []
-    };
-    setPromotions(prev => [...prev, promoToAdd]);
-    setIsAddingPromo(false);
-    setNewPromo({
-      name: '',
-      discountPercent: 10,
-      startDate: '2026-06-15',
-      endDate: '2026-06-30'
-    });
-  };
-
-  const handleDeletePromo = (id) => {
-    setPromotions(prev => prev.filter(p => p.id !== id));
-    if (selectedPromoForEdit && selectedPromoForEdit.id === id) {
-      setSelectedPromoForEdit(null);
-    }
-  };
-
-  const handleAddProductToPromo = (promoId, prodId) => {
-    if (!prodId) return;
-    setPromotions(prev => prev.map(promo => {
-      if (promo.id === promoId) {
-        if (promo.productIds.includes(prodId)) return promo;
-        return {
-          ...promo,
-          productIds: [...promo.productIds, prodId]
-        };
-      }
-      return promo;
-    }));
-    if (selectedPromoForEdit && selectedPromoForEdit.id === promoId) {
-      setSelectedPromoForEdit(prev => {
-        if (prev.productIds.includes(prodId)) return prev;
-        return {
-          ...prev,
-          productIds: [...prev.productIds, prodId]
-        };
+    try {
+      const res = await api.post('/coupons', {
+        code: newPromo.name,
+        type: 'PRODUCT_DISCOUNT',
+        discountPercentage: Number(newPromo.discountPercent) || 0,
+        validFrom: new Date(newPromo.startDate).toISOString(),
+        validUntil: new Date(newPromo.endDate).toISOString(),
+        productIds: []
       });
+      const c = res.data;
+      const promoToAdd = {
+        id: c.id,
+        name: c.code,
+        type: c.type,
+        discountPercent: c.discountPercentage || 0,
+        startDate: new Date(c.validFrom).toISOString().split('T')[0],
+        endDate: new Date(c.validUntil).toISOString().split('T')[0],
+        salesCount: 0,
+        revenue: 0,
+        productIds: []
+      };
+      setPromotions(prev => [...prev, promoToAdd]);
+      setIsAddingPromo(false);
+      setNewPromo({
+        name: '',
+        discountPercent: 10,
+        startDate: getTodayStr(),
+        endDate: getTodayStr()
+      });
+    } catch (error) {
+      console.error(error);
+      alert('Lỗi tạo khuyến mãi');
     }
   };
 
-  const handleRemoveProductFromPromo = (promoId, prodId) => {
-    setPromotions(prev => prev.map(promo => {
-      if (promo.id === promoId) {
-        return {
-          ...promo,
-          productIds: promo.productIds.filter(id => id !== prodId)
-        };
-      }
-      return promo;
-    }));
-    if (selectedPromoForEdit && selectedPromoForEdit.id === promoId) {
-      setSelectedPromoForEdit(prev => ({
-        ...prev,
-        productIds: prev.productIds.filter(id => id !== prodId)
+  const handleDeletePromo = async (id) => {
+    try {
+      await api.delete(`/coupons/${id}`);
+      setPromotions(prev => prev.filter(p => p.id !== id));
+      if (selectedPromoForEdit?.id === id) setSelectedPromoForEdit(null);
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi xoá khuyến mãi');
+    }
+  };
+
+  const handleAddVoucher = async (e) => {
+    e.preventDefault();
+    if (!newVoucher.name) return;
+    try {
+      const res = await api.post('/coupons', {
+        code: newVoucher.name,
+        type: 'ORDER_DISCOUNT',
+        discountPercentage: newVoucher.discountType === 'percent' ? Number(newVoucher.discountValue) : null,
+        discountAmount: newVoucher.discountType === 'cash' ? Number(newVoucher.discountValue) : null,
+        validFrom: new Date(newVoucher.startDate).toISOString(),
+        validUntil: new Date(newVoucher.endDate).toISOString(),
+        productIds: []
+      });
+      const c = res.data;
+      const voucherToAdd = {
+        id: c.id,
+        name: c.code,
+        type: c.type,
+        discountPercent: c.discountPercentage || 0,
+        discountAmount: c.discountAmount || 0,
+        startDate: new Date(c.validFrom).toISOString().split('T')[0],
+        endDate: new Date(c.validUntil).toISOString().split('T')[0]
+      };
+      setVouchers(prev => [...prev, voucherToAdd]);
+      setIsAddingVoucher(false);
+      setNewVoucher({
+        name: '',
+        discountType: 'percent',
+        discountValue: 10,
+        startDate: getTodayStr(),
+        endDate: getTodayStr()
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteVoucher = async (id) => {
+    try {
+      await api.delete(`/coupons/${id}`);
+      setVouchers(prev => prev.filter(p => p.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAddProductToPromo = async (promoId, prodId) => {
+    if (!prodId) return;
+    try {
+      await api.post(`/coupons/${promoId}/products`, { productId: prodId });
+      setPromotions(prev => prev.map(promo => {
+        if (promo.id === promoId) {
+          if (promo.productIds.includes(prodId)) return promo;
+          return {
+            ...promo,
+            productIds: [...promo.productIds, prodId]
+          };
+        }
+        return promo;
       }));
+      if (selectedPromoForEdit && selectedPromoForEdit.id === promoId) {
+        setSelectedPromoForEdit(prev => {
+          if (prev.productIds.includes(prodId)) return prev;
+          return {
+            ...prev,
+            productIds: [...prev.productIds, prodId]
+          };
+        });
+      }
+    } catch (err) {
+      console.error('Failed to add product to promo', err);
+    }
+  };
+
+  const handleRemoveProductFromPromo = async (promoId, prodId) => {
+    try {
+      await api.delete(`/coupons/${promoId}/products/${prodId}`);
+      setPromotions(prev => prev.map(promo => {
+        if (promo.id === promoId) {
+          return {
+            ...promo,
+            productIds: promo.productIds.filter(id => id !== prodId)
+          };
+        }
+        return promo;
+      }));
+      if (selectedPromoForEdit && selectedPromoForEdit.id === promoId) {
+        setSelectedPromoForEdit(prev => ({
+          ...prev,
+          productIds: prev.productIds.filter(id => id !== prodId)
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to remove product from promo', err);
+    }
+  };
+
+  const handleRemoveAllProductsFromPromo = async (promoId) => {
+    try {
+      await api.delete(`/coupons/${promoId}/products`);
+      setPromotions(prev => prev.map(promo => {
+        if (promo.id === promoId) {
+          return {
+            ...promo,
+            productIds: []
+          };
+        }
+        return promo;
+      }));
+      if (selectedPromoForEdit && selectedPromoForEdit.id === promoId) {
+        setSelectedPromoForEdit(prev => ({
+          ...prev,
+          productIds: []
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to remove all products from promo', err);
     }
   };
 
@@ -182,7 +368,7 @@ export default function AdminDashboard({
     gpu: '',
     inStock: true,
     tags: '',
-    image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&q=80&w=400'
+    file: null
   });
 
   // Search & Filter
@@ -215,10 +401,16 @@ export default function AdminDashboard({
   };
 
   // 1. Order handlers
-  const updateOrderStatus = (orderId, newStatus) => {
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
-    if (selectedOrder && selectedOrder.id === orderId) {
-      setSelectedOrder(prev => ({ ...prev, status: newStatus }));
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      await api.patch(`/orders/${orderId}/status`, { status: newStatus });
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder(prev => ({ ...prev, status: newStatus }));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi cập nhật trạng thái đơn hàng');
     }
   };
 
@@ -242,48 +434,68 @@ export default function AdminDashboard({
     setStoreProducts(prev => prev.map(p => p.id === prodId ? { ...p, price: numeric } : p));
   };
 
-  const handleAddProduct = (e) => {
+  const handleAddProduct = async (e) => {
     e.preventDefault();
     if (!newProduct.name || !newProduct.price) return;
 
-    const priceNum = parseFloat(newProduct.price) || 0;
-    const oldPriceNum = parseFloat(newProduct.oldPrice) || priceNum * 1.1;
+    try {
+      const formData = new FormData();
+      formData.append('name', newProduct.name);
+      formData.append('category', newProduct.category);
+      formData.append('price', newProduct.price);
+      if (newProduct.oldPrice) formData.append('oldPrice', newProduct.oldPrice);
+      if (newProduct.cpu) formData.append('cpu', newProduct.cpu);
+      if (newProduct.ram) formData.append('ram', newProduct.ram);
+      if (newProduct.storage) formData.append('storage', newProduct.storage);
+      if (newProduct.gpu) formData.append('gpu', newProduct.gpu);
+      if (newProduct.tags) formData.append('tags', newProduct.tags);
+      formData.append('inStock', newProduct.inStock ? 'true' : 'false');
 
-    const productToAdd = {
-      id: 'prod-' + Date.now().toString().slice(-4),
-      name: newProduct.name,
-      category: newProduct.category,
-      price: priceNum,
-      oldPrice: oldPriceNum,
-      image: newProduct.image || 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&q=80&w=400',
-      specs: {
-        cpu: newProduct.cpu || 'N/A',
-        ram: newProduct.ram || 'N/A',
-        storage: newProduct.storage || 'N/A',
-        gpu: newProduct.gpu || 'N/A'
-      },
-      rating: 5.0,
-      reviews: 0,
-      tags: newProduct.tags ? newProduct.tags.split(',').map(t => t.trim()) : [newProduct.category],
-      featured: false,
-      inStock: newProduct.inStock
-    };
+      if (newProduct.file) {
+        formData.append('image', newProduct.file);
+      }
 
-    setStoreProducts(prev => [productToAdd, ...prev]);
-    setIsAddingProduct(false);
-    setNewProduct({
-      name: '',
-      category: 'laptop',
-      price: '',
-      oldPrice: '',
-      cpu: '',
-      ram: '',
-      storage: '',
-      gpu: '',
-      inStock: true,
-      tags: '',
-      image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&q=80&w=400'
-    });
+      const res = await api.post('/products', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      const p = res.data;
+
+      // Map API product to UI format
+      let specs = {};
+      try { specs = JSON.parse(p.description); } catch { specs = { Brand: p.brand }; }
+      const image = p.ProductImage?.find(img => img.isThumbnail)?.imageUrl ||
+        p.ProductImage?.[0]?.imageUrl || 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&q=80&w=400';
+      const variant = p.ProductVariant?.[0] || {};
+
+      const productToAdd = {
+        id: p.id,
+        name: p.name,
+        category: p.Category?.name || newProduct.category,
+        price: variant.price || parseFloat(newProduct.price),
+        oldPrice: (variant.price || parseFloat(newProduct.price)) * 1.1,
+        image: image,
+        specs: specs,
+        ...specs,
+        rating: 5.0,
+        reviews: 0,
+        tags: newProduct.tags ? newProduct.tags.split(',').map(t => t.trim()) : [newProduct.category],
+        featured: false,
+        inStock: newProduct.inStock
+      };
+
+      setStoreProducts(prev => [productToAdd, ...prev]);
+      setIsAddingProduct(false);
+      setNewProduct({
+        name: '', category: 'laptop', price: '', oldPrice: '',
+        cpu: '', ram: '', storage: '', gpu: '', inStock: true, tags: '', file: null
+      });
+    } catch (error) {
+      console.error(error);
+      alert('Lỗi khi thêm sản phẩm: ' + (error.response?.data?.message || error.message));
+    }
   };
 
   // 3. Support Ticket handlers
@@ -318,10 +530,16 @@ export default function AdminDashboard({
     setTicketReplyText('');
   };
 
-  const closeTicket = (ticketId) => {
-    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status: 'closed' } : t));
-    if (selectedTicket && selectedTicket.id === ticketId) {
-      setSelectedTicket(prev => ({ ...prev, status: 'closed' }));
+  const closeTicket = async (ticketId) => {
+    try {
+      await api.patch(`/tickets/${ticketId}/status`, { status: 'CLOSED' });
+      setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status: 'CLOSED' } : t));
+      if (selectedTicket && selectedTicket.id === ticketId) {
+        setSelectedTicket(prev => ({ ...prev, status: 'CLOSED' }));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi đóng yêu cầu hỗ trợ');
     }
   };
 
@@ -333,15 +551,23 @@ export default function AdminDashboard({
     }
   };
 
-  // 5. Trade-in valuation handlers
-  const submitTradeInValuation = (e) => {
+  const submitTradeInValuation = async (e) => {
     e.preventDefault();
     if (!offeredTradeInValuation || !selectedTradeIn) return;
 
     const value = parseInt(offeredTradeInValuation) || 0;
-    setTradeins(prev => prev.map(t => t.id === selectedTradeIn.id ? { ...t, offeredPrice: value, status: 'valued' } : t));
-    setSelectedTradeIn(prev => ({ ...prev, offeredPrice: value, status: 'valued' }));
-    setOfferedTradeInValuation('');
+    try {
+      await api.patch(`/trade-in/${selectedTradeIn.id}/status`, {
+        status: 'APPROVED',
+        estimatedValue: value
+      });
+      setTradeins(prev => prev.map(t => t.id === selectedTradeIn.id ? { ...t, offeredPrice: value, status: 'VALUED' } : t));
+      setSelectedTradeIn(prev => ({ ...prev, offeredPrice: value, status: 'VALUED' }));
+      setOfferedTradeInValuation('');
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi cập nhật thẩm định giá');
+    }
   };
 
   // Detailed Modal Helpers
@@ -397,7 +623,9 @@ export default function AdminDashboard({
     selectedOrder, setSelectedOrder,
     promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo,
     selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo,
-    handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handlePromoProductPriceChange,
+    handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handleRemoveAllProductsFromPromo, handlePromoProductPriceChange,
+    vouchers, setVouchers, isAddingVoucher, setIsAddingVoucher, newVoucher, setNewVoucher,
+    handleAddVoucher, handleDeleteVoucher,
     selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText,
     selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation,
     isAddingProduct, setIsAddingProduct, newProduct, setNewProduct,
@@ -604,20 +832,32 @@ export default function AdminDashboard({
               Ý kiến & Góp ý ({feedbacks.length})
             </button>
 
-            <button
-              onClick={() => { setActiveTab('promotions'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); setSelectedPromoForEdit(null); }}
-              className="btn"
-              style={{
-                justifyContent: 'flex-start',
-                padding: '10px 14px',
-                fontSize: '13px',
-                background: activeTab === 'promotions' ? 'var(--color-primary)' : 'transparent',
-                color: activeTab === 'promotions' ? 'white' : 'var(--color-on-surface)'
-              }}
-            >
-              <Tag size={16} />
-              Khuyến mãi ({promotions.length})
-            </button>
+              <button 
+                className="btn"
+                style={{
+                  justifyContent: 'flex-start',
+                  padding: '10px 14px',
+                  fontSize: '13px',
+                  background: activeTab === 'promotions' ? 'var(--color-primary)' : 'transparent',
+                  color: activeTab === 'promotions' ? 'white' : 'var(--color-on-surface)'
+                }}
+                onClick={() => setActiveTab('promotions')}
+              >
+                <Tag size={16} /> Chương trình khuyến mãi ({promotions.length})
+              </button>
+              <button 
+                className="btn"
+                style={{
+                  justifyContent: 'flex-start',
+                  padding: '10px 14px',
+                  fontSize: '13px',
+                  background: activeTab === 'vouchers' ? 'var(--color-primary)' : 'transparent',
+                  color: activeTab === 'vouchers' ? 'white' : 'var(--color-on-surface)'
+                }}
+                onClick={() => setActiveTab('vouchers')}
+              >
+                <Tag size={16} /> Mã giảm giá Voucher ({vouchers.length})
+              </button>
           </div>
 
           {/* Right Work Area */}
@@ -630,6 +870,7 @@ export default function AdminDashboard({
             {activeTab === 'tradein' && <TradeInTab {...tabProps} />}
             {activeTab === 'feedbacks' && <FeedbacksTab {...tabProps} />}
             {activeTab === 'promotions' && <PromotionsTab {...tabProps} />}
+            {activeTab === 'vouchers' && <VouchersTab {...tabProps} />}
 
             {/* TAB 1: OVERVIEW COMPONENT */}
 
@@ -652,6 +893,7 @@ export default function AdminDashboard({
       </div>
 
       {/* Detailed Item Modal */}
+      <AdminModals {...tabProps} />
 
       {/* Detail Modal overlay moved to root layout to avoid stacking context with glass-panel */}
 

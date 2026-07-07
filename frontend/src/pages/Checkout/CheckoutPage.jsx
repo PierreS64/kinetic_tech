@@ -77,36 +77,23 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
     return subtotal + vatTax + shippingCost - discountAmount;
   }, [subtotal, vatTax, shippingCost, discountAmount]);
 
-  const handleApplyPromo = (e) => {
-    e.preventDefault();
+  const handleApplyPromo = async (e) => {
+    if (e) e.preventDefault();
+    if (!promoCode.trim()) return;
     setPromoError('');
-    const code = promoCode.trim().toUpperCase();
-    
-    if (code === 'KINETIC5') {
+    try {
+      const res = await api.get(`/coupons/apply/${promoCode}`);
+      const coupon = res.data;
       setAppliedPromo({
-        code: 'KINETIC5',
-        discountPercent: 5,
-        label: 'Giảm giá 5% hóa đơn'
+        id: coupon.id,
+        code: coupon.code,
+        discountPercent: coupon.discountPercentage || 0,
+        discountCash: coupon.discountAmount || 0,
+        label: coupon.discountPercentage ? `Giảm ${coupon.discountPercentage}%` : `Giảm ${formatVND(coupon.discountAmount)}`
       });
       setPromoCode('');
-    } else if (code === 'FREESHIP') {
-      setAppliedPromo({
-        code: 'FREESHIP',
-        discountPercent: 0,
-        discountCash: 0,
-        label: 'Miễn phí vận chuyển toàn quốc'
-      });
-      setPromoCode('');
-    } else if (code === 'HELLO') {
-      setAppliedPromo({
-        code: 'HELLO',
-        discountPercent: 0,
-        discountCash: 500000,
-        label: 'Giảm trực tiếp 500.000đ'
-      });
-      setPromoCode('');
-    } else {
-      setPromoError('Mã giảm giá không tồn tại hoặc đã hết hạn.');
+    } catch (err) {
+      setPromoError(err.response?.data?.message || 'Mã giảm giá không hợp lệ hoặc đã hết hạn.');
     }
   };
 
@@ -151,7 +138,8 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
       
       const payload = {
         shippingAddress: fullAddress,
-        paymentMethod: paymentMethod === 'cod' ? 'COD' : 'PAYOS'
+        paymentMethod: paymentMethod === 'cod' ? 'COD' : 'PAYOS',
+        ...(appliedPromo?.id && { couponId: appliedPromo.id })
       };
       
       const res = await api.post('/orders', payload);
@@ -169,11 +157,11 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
         });
 
         if (onAddOrder) {
-          onAddOrder(data.order);
+          onAddOrder(data);
         }
 
         setOrderReceipt({
-          orderId: data.order.id,
+          orderId: data.id,
           date: today,
           customerName: formData.fullName,
           phone: formData.phone,
@@ -590,7 +578,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
           promoError={promoError} setPromoError={setPromoError} handleApplyPromo={handleApplyPromo} 
           appliedPromo={appliedPromo} handleRemovePromo={handleRemovePromo} subtotal={subtotal} 
           shippingCost={shippingCost} vatTax={vatTax} discountAmount={discountAmount} 
-          total={total} handleSubmitOrder={handleSubmitOrder} isProcessing={isProcessing} 
+          total={total} handleSubmitOrder={handleSubmitOrder} isProcessing={isProcessing} currentUser={currentUser}
         />
 
       </div>

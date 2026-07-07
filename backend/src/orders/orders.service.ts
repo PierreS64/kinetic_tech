@@ -28,7 +28,7 @@ export class OrdersService {
       throw new BadRequestException('Cart is empty');
     }
 
-    let totalAmount = 0;
+    let subtotal = 0;
     const orderItemsData: any[] = [];
     const payosItems: any[] = [];
 
@@ -38,7 +38,7 @@ export class OrdersService {
           `Not enough stock for variant ${item.ProductVariant.id}`,
         );
       }
-      totalAmount += item.ProductVariant.price * item.quantity;
+      subtotal += item.ProductVariant.price * item.quantity;
       orderItemsData.push({
         productVariantId: item.productVariantId,
         quantity: item.quantity,
@@ -50,6 +50,28 @@ export class OrdersService {
         price: item.ProductVariant.price,
       });
     }
+
+    let shippingCost = 45000;
+    let discountAmount = 0;
+
+    if (dto.couponId) {
+      const coupon = await this.prisma.coupon.findUnique({ where: { id: dto.couponId } });
+      if (coupon) {
+        if (coupon.code === 'FREESHIP') {
+          shippingCost = 0;
+        } else if (coupon.discountPercentage) {
+          discountAmount = (subtotal * coupon.discountPercentage) / 100;
+        } else if (coupon.discountAmount) {
+          discountAmount = coupon.discountAmount;
+        }
+      }
+    }
+    if (subtotal > 15000000) {
+      shippingCost = 0;
+    }
+
+    const vatTax = subtotal * 0.08;
+    const totalAmount = Math.round(subtotal + vatTax + shippingCost - discountAmount);
 
     // Wrap in transaction: create order, create items, reduce stock, clear cart
     const order = await this.prisma.$transaction(async (prisma) => {
@@ -140,5 +162,32 @@ export class OrdersService {
       throw new NotFoundException('Order not found');
     }
     return order;
+  }
+
+  async getAllOrders() {
+    return this.prisma.order.findMany({
+      orderBy: { createdAt: 'desc' },
+      include: {
+        User: { select: { fullName: true, email: true, phone: true } },
+        OrderItem: {
+          include: {
+            ProductVariant: {
+              include: {
+                Product: {
+                  include: { ProductImage: { where: { isThumbnail: true } } },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async updateOrderStatus(id: string, status: string) {
+    return this.prisma.order.update({
+      where: { id },
+      data: { status: status as any }
+    });
   }
 }

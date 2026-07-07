@@ -68,14 +68,20 @@ export default function FeedbackTab(props) {
                       />
                     </div>
 
-                    <button 
-                      type="submit" 
-                      className="btn btn-primary" 
-                      style={{ padding: '10px 24px', alignSelf: 'flex-end', display: 'flex', alignItems: 'center', gap: '8px' }}
-                    >
-                      <Send size={14} />
-                      Gửi Góp Ý
-                    </button>
+                    {currentUser?.role === 'ADMIN' ? (
+                      <div style={{ padding: '10px 24px', alignSelf: 'flex-end', background: 'rgba(255, 0, 0, 0.1)', border: '1px solid rgba(255, 0, 0, 0.3)', color: '#ffb4ab', borderRadius: '4px', fontSize: '13px' }}>
+                        Tài khoản quản trị không thể gửi góp ý.
+                      </div>
+                    ) : (
+                      <button 
+                        type="submit" 
+                        className="btn btn-primary" 
+                        style={{ padding: '10px 24px', alignSelf: 'flex-end', display: 'flex', alignItems: 'center', gap: '8px' }}
+                      >
+                        <Send size={14} />
+                        Gửi Góp Ý
+                      </button>
+                    )}
                   </form>
                 )}
               </div>

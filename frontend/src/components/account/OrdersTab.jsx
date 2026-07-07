@@ -42,19 +42,19 @@ export default function OrdersTab(props) {
                               <span className="status-badge" style={{
                                 fontSize: '10px',
                                 background: 
-                                  order.status === 'completed' ? 'rgba(76,175,80,0.15)' : 
-                                  order.status === 'cancelled' ? 'rgba(255,76,76,0.15)' :
-                                  order.status === 'processing' ? 'rgba(0,123,255,0.15)' : 'rgba(253,139,0,0.15)',
+                                  order.status === 'DELIVERED' ? 'rgba(76,175,80,0.15)' : 
+                                  order.status === 'CANCELLED' ? 'rgba(255,76,76,0.15)' :
+                                  order.status === 'PROCESSING' ? 'rgba(0,123,255,0.15)' : 'rgba(253,139,0,0.15)',
                                 color: 
-                                  order.status === 'completed' ? '#81c784' : 
-                                  order.status === 'cancelled' ? '#ffb4ab' :
-                                  order.status === 'processing' ? '#adc7ff' : '#ffb77d',
+                                  order.status === 'DELIVERED' ? '#81c784' : 
+                                  order.status === 'CANCELLED' ? '#ffb4ab' :
+                                  order.status === 'PROCESSING' ? '#adc7ff' : '#ffb77d',
                                 padding: '2px 8px'
                               }}>
-                                {order.status === 'completed' && 'Đã hoàn thành'}
-                                {order.status === 'cancelled' && 'Đã hủy'}
-                                {order.status === 'processing' && 'Đang xử lý'}
-                                {order.status === 'pending' && 'Chờ duyệt'}
+                                {order.status === 'DELIVERED' && 'Đã hoàn thành'}
+                                {order.status === 'CANCELLED' && 'Đã hủy'}
+                                {order.status === 'PROCESSING' && 'Đang xử lý'}
+                                {order.status === 'PENDING' && 'Chờ duyệt'}
                               </span>
                             </td>
                             <td style={{ padding: '12px 16px', textAlign: 'center' }}>
@@ -123,7 +123,7 @@ export default function OrdersTab(props) {
                             <span style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--color-outline)', fontWeight: '800', display: 'block', marginBottom: '4px' }}>Thanh toán</span>
                             <span style={{ fontSize: '12px', color: 'white', lineHeight: '1.5' }}>
                               Phương thức: {selectedOrder.paymentMethod}<br />
-                              Trạng thái: <strong>{selectedOrder.status === 'completed' ? 'Đã thanh toán' : 'Chờ xác thực'}</strong>
+                              Trạng thái: <strong>{selectedOrder.status === 'DELIVERED' ? 'Đã thanh toán' : 'Chờ xác thực'}</strong>
                             </span>
                           </div>
                         </div>
@@ -133,7 +133,7 @@ export default function OrdersTab(props) {
                           <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase', marginBottom: '20px', letterSpacing: '0.5px' }}>
                             HÀNH TRÌNH ĐƠN HÀNG
                           </h5>
-                          {selectedOrder.status === 'cancelled' ? (
+                          {selectedOrder.status === 'CANCELLED' ? (
                             <div style={{ padding: '12px', background: 'rgba(255,76,76,0.1)', border: '1px solid rgba(255,76,76,0.2)', borderRadius: '4px', color: '#ffb4ab', fontSize: '12px', display: 'flex', gap: '8px', alignItems: 'center' }}>
                               <span>✖</span>
                               <span>Đơn hàng này đã bị hủy. Vui lòng liên hệ hotline để biết thêm chi tiết.</span>
@@ -147,7 +147,7 @@ export default function OrdersTab(props) {
                                 position: 'absolute', 
                                 top: '15px', 
                                 left: '8%', 
-                                width: selectedOrder.status === 'completed' ? '84%' : selectedOrder.status === 'processing' ? '42%' : '0%', 
+                                width: selectedOrder.status === 'DELIVERED' ? '84%' : selectedOrder.status === 'PROCESSING' ? '42%' : '0%', 
                                 height: '2px', 
                                 background: 'var(--color-primary)', 
                                 zIndex: 0,
@@ -169,38 +169,38 @@ export default function OrdersTab(props) {
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, width: '20%' }}>
                                 <div style={{
                                   width: '32px', height: '32px', borderRadius: '50%',
-                                  background: ['processing', 'completed'].includes(selectedOrder.status) ? 'var(--color-primary)' : 'var(--color-surface-container-highest)',
-                                  color: ['processing', 'completed'].includes(selectedOrder.status) ? 'white' : 'var(--color-outline)',
+                                  background: ['PROCESSING', 'DELIVERED'].includes(selectedOrder.status) ? 'var(--color-primary)' : 'var(--color-surface-container-highest)',
+                                  color: ['PROCESSING', 'DELIVERED'].includes(selectedOrder.status) ? 'white' : 'var(--color-outline)',
                                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold',
-                                  boxShadow: ['processing', 'completed'].includes(selectedOrder.status) ? '0 0 10px rgba(0, 123, 255, 0.4)' : 'none'
+                                  boxShadow: ['PROCESSING', 'DELIVERED'].includes(selectedOrder.status) ? '0 0 10px rgba(0, 123, 255, 0.4)' : 'none'
                                 }}>2</div>
-                                <span style={{ fontSize: '11px', fontWeight: '700', color: ['processing', 'completed'].includes(selectedOrder.status) ? 'white' : 'var(--color-outline)', marginTop: '6px' }}>Đã xác nhận</span>
+                                <span style={{ fontSize: '11px', fontWeight: '700', color: ['PROCESSING', 'DELIVERED'].includes(selectedOrder.status) ? 'white' : 'var(--color-outline)', marginTop: '6px' }}>Đã xác nhận</span>
                               </div>
 
                               {/* Step 3 */}
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, width: '20%' }}>
                                 <div style={{
                                   width: '32px', height: '32px', borderRadius: '50%',
-                                  background: selectedOrder.status === 'completed' ? 'var(--color-primary)' : selectedOrder.status === 'processing' ? 'var(--color-surface-bright)' : 'var(--color-surface-container-highest)',
-                                  color: selectedOrder.status === 'completed' ? 'white' : selectedOrder.status === 'processing' ? 'var(--color-secondary)' : 'var(--color-outline)',
-                                  border: selectedOrder.status === 'processing' ? '1px dashed var(--color-secondary)' : 'none',
+                                  background: selectedOrder.status === 'DELIVERED' ? 'var(--color-primary)' : selectedOrder.status === 'PROCESSING' ? 'var(--color-surface-bright)' : 'var(--color-surface-container-highest)',
+                                  color: selectedOrder.status === 'DELIVERED' ? 'white' : selectedOrder.status === 'PROCESSING' ? 'var(--color-secondary)' : 'var(--color-outline)',
+                                  border: selectedOrder.status === 'PROCESSING' ? '1px dashed var(--color-secondary)' : 'none',
                                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold',
-                                  boxShadow: selectedOrder.status === 'completed' ? '0 0 10px rgba(0, 123, 255, 0.4)' : selectedOrder.status === 'processing' ? '0 0 10px rgba(253, 139, 0, 0.2)' : 'none'
+                                  boxShadow: selectedOrder.status === 'DELIVERED' ? '0 0 10px rgba(0, 123, 255, 0.4)' : selectedOrder.status === 'PROCESSING' ? '0 0 10px rgba(253, 139, 0, 0.2)' : 'none'
                                 }}>3</div>
-                                <span style={{ fontSize: '11px', fontWeight: '700', color: ['processing', 'completed'].includes(selectedOrder.status) ? 'white' : 'var(--color-outline)', marginTop: '6px' }}>Đang giao</span>
+                                <span style={{ fontSize: '11px', fontWeight: '700', color: ['PROCESSING', 'DELIVERED'].includes(selectedOrder.status) ? 'white' : 'var(--color-outline)', marginTop: '6px' }}>Đang giao</span>
                               </div>
 
                               {/* Step 4 */}
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, width: '20%' }}>
                                 <div style={{
                                   width: '32px', height: '32px', borderRadius: '50%',
-                                  background: selectedOrder.status === 'completed' ? 'rgba(76, 175, 80, 0.15)' : 'var(--color-surface-container-highest)',
-                                  color: selectedOrder.status === 'completed' ? '#81c784' : 'var(--color-outline)',
-                                  border: selectedOrder.status === 'completed' ? '1px solid rgba(76, 175, 80, 0.3)' : 'none',
+                                  background: selectedOrder.status === 'DELIVERED' ? 'rgba(76, 175, 80, 0.15)' : 'var(--color-surface-container-highest)',
+                                  color: selectedOrder.status === 'DELIVERED' ? '#81c784' : 'var(--color-outline)',
+                                  border: selectedOrder.status === 'DELIVERED' ? '1px solid rgba(76, 175, 80, 0.3)' : 'none',
                                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold',
-                                  boxShadow: selectedOrder.status === 'completed' ? '0 0 10px rgba(76, 175, 80, 0.3)' : 'none'
+                                  boxShadow: selectedOrder.status === 'DELIVERED' ? '0 0 10px rgba(76, 175, 80, 0.3)' : 'none'
                                 }}>4</div>
-                                <span style={{ fontSize: '11px', fontWeight: '700', color: selectedOrder.status === 'completed' ? '#81c784' : 'var(--color-outline)', marginTop: '6px' }}>Thành công</span>
+                                <span style={{ fontSize: '11px', fontWeight: '700', color: selectedOrder.status === 'DELIVERED' ? '#81c784' : 'var(--color-outline)', marginTop: '6px' }}>Thành công</span>
                               </div>
                             </div>
                           )}

@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TrendingUp, ShoppingBag, Package, MessageSquare, Shield, Search, Plus, Trash2, CheckCircle2, XCircle, AlertCircle, ArrowRight, DollarSign, Wrench, RefreshCw, FileText, ChevronRight, Filter, Check, X, Edit2, Tag } from 'lucide-react';
 
 export default function PromotionsTab(props) {
-  const { theme, orders, tickets, warranties, tradeins, feedbacks, storeProducts, setStoreProducts, setOrders, setTickets, setWarranties, setTradeins, setFeedbacks, selectedOrder, setSelectedOrder, promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo, selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo, handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handlePromoProductPriceChange, selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText, selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation, isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort, priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput, detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal, textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts, totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount } = props;
+  const { theme, orders, tickets, warranties, tradeins, feedbacks, storeProducts, setStoreProducts, setOrders, setTickets, setWarranties, setTradeins, setFeedbacks, selectedOrder, setSelectedOrder, promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo, selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo, handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handleRemoveAllProductsFromPromo, handlePromoProductPriceChange, selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText, selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation, isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort, priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput, detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal, textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts, totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount } = props;
+
+  const [promoSearchTerm, setPromoSearchTerm] = useState('');
+
+  const handleApplyToAll = () => {
+    const missingProducts = storeProducts.filter(p => !selectedPromoForEdit.productIds.includes(p.id));
+    missingProducts.forEach(p => {
+      handleAddProductToPromo(selectedPromoForEdit.id, p.id);
+    });
+  };
 
   return (
 
@@ -161,19 +170,42 @@ export default function PromotionsTab(props) {
 
                         <div>
                           <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase', marginBottom: '8px' }}>Thêm sản phẩm vào chương trình</h5>
+                          
+                          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                            <div style={{ position: 'relative', flex: 1 }}>
+                              <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)' }} />
+                              <input 
+                                type="text"
+                                placeholder="Tìm theo tên sản phẩm..."
+                                value={promoSearchTerm}
+                                onChange={(e) => setPromoSearchTerm(e.target.value)}
+                                className="form-input"
+                                style={{ fontSize: '12px', padding: '8px 10px 8px 30px', width: '100%' }}
+                              />
+                            </div>
+                            <button
+                              onClick={handleApplyToAll}
+                              className="btn btn-secondary"
+                              style={{ padding: '8px 16px', fontSize: '12px', whiteSpace: 'nowrap' }}
+                            >
+                              Áp dụng cho tất cả
+                            </button>
+                          </div>
+
                           <div style={{ display: 'flex', gap: '8px' }}>
                             <select
                               value={productToAddToPromo}
                               onChange={(e) => setProductToAddToPromo(e.target.value)}
                               className="form-input"
-                              style={{ fontSize: '12px', padding: '8px' }}
+                              style={{ fontSize: '12px', padding: '8px', flex: 1 }}
                             >
                               <option value="">-- Chọn sản phẩm để áp dụng --</option>
                               {storeProducts
                                 .filter(p => !selectedPromoForEdit.productIds.includes(p.id))
+                                .filter(p => p.name.toLowerCase().includes(promoSearchTerm.toLowerCase()))
                                 .map(p => (
                                   <option key={p.id} value={p.id}>
-                                    [{p.id}] {p.name} - {formatVND(p.price)}
+                                    {p.name} - {formatVND(p.price)}
                                   </option>
                                 ))}
                             </select>
@@ -184,7 +216,7 @@ export default function PromotionsTab(props) {
                               }}
                               disabled={!productToAddToPromo}
                               className="btn btn-primary"
-                              style={{ padding: '8px 16px', fontSize: '12px' }}
+                              style={{ padding: '8px 16px', fontSize: '12px', whiteSpace: 'nowrap' }}
                             >
                               Thêm sản phẩm
                             </button>
@@ -192,7 +224,18 @@ export default function PromotionsTab(props) {
                         </div>
 
                         <div>
-                          <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase', marginBottom: '8px' }}>Danh sách sản phẩm áp dụng</h5>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase' }}>Danh sách sản phẩm áp dụng</h5>
+                            {selectedPromoForEdit.productIds.length > 0 && (
+                              <button
+                                onClick={() => handleRemoveAllProductsFromPromo(selectedPromoForEdit.id)}
+                                className="btn btn-outline"
+                                style={{ padding: '4px 10px', fontSize: '11px', color: 'var(--color-error)', borderColor: 'var(--color-error)' }}
+                              >
+                                Xóa tất cả
+                              </button>
+                            )}
+                          </div>
                           {selectedPromoForEdit.productIds.length === 0 ? (
                             <div style={{ textAlign: 'center', padding: '20px', color: 'var(--color-outline)', fontSize: '12px', border: '1px dashed rgba(255,255,255,0.05)', borderRadius: '4px' }}>
                               Chưa có sản phẩm nào thuộc chương trình này. Chọn sản phẩm ở trên để thêm.

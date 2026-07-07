@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Upl
 import { ProductsService } from './products.service';
 import { Prisma } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateAdminProductDto } from './dto/product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -9,8 +10,8 @@ export class ProductsController {
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  create(@Body() createProductDto: Prisma.ProductCreateInput, @UploadedFile() file?: Express.Multer.File) {
-    return this.productsService.create(createProductDto, file);
+  create(@Body() createProductDto: CreateAdminProductDto, @UploadedFile() file?: Express.Multer.File) {
+    return this.productsService.createAdminProduct(createProductDto, file);
   }
 
   @Get()

@@ -1,5 +1,6 @@
 import React from 'react';
 import { TrendingUp, ShoppingBag, Package, MessageSquare, Shield, Search, Plus, Trash2, CheckCircle2, XCircle, AlertCircle, ArrowRight, DollarSign, Wrench, RefreshCw, FileText, ChevronRight, Filter, Check, X, Edit2, Tag } from 'lucide-react';
+import api from '../../utils/api';
 
 export default function FeedbacksTab(props) {
   const { theme, orders, tickets, warranties, tradeins, feedbacks, storeProducts, setStoreProducts, setOrders, setTickets, setWarranties, setTradeins, setFeedbacks, selectedOrder, setSelectedOrder, promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo, selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo, handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handlePromoProductPriceChange, selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText, selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation, isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort, priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput, detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal, textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts, totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount } = props;
@@ -69,7 +70,18 @@ export default function FeedbacksTab(props) {
                                   </button>
                                 )}
                                 <button
-                                  onClick={() => setFeedbacks(prev => prev.filter(f => f.id !== fb.id))}
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if (window.confirm('Bạn có chắc chắn muốn xóa phản hồi này?')) {
+                                      try {
+                                        await api.delete(`/feedback/${fb.id}`);
+                                        setFeedbacks(prev => prev.filter(f => f.id !== fb.id));
+                                      } catch (err) {
+                                        console.error(err);
+                                        alert('Lỗi khi xóa ý kiến đóng góp');
+                                      }
+                                    }
+                                  }}
                                   className="btn"
                                   style={{ padding: '4px 8px', fontSize: '10px', width: '70px', background: '#d32f2f', color: 'white' }}
                                   title="Xóa"

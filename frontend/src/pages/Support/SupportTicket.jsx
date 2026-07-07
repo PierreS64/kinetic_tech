@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import api from '../../utils/api';
 import { 
   MessageSquare, 
   Send, 
@@ -15,46 +16,9 @@ import {
   Info
 } from 'lucide-react';
 
-const INITIAL_TICKETS = [
-  {
-    id: 'TK-8947',
-    subject: 'Tư vấn nâng cấp RAM và SSD cho Asus TUF A15',
-    category: 'Cấu hình PC & Laptop',
-    status: 'replied', // 'pending', 'replied', 'closed'
-    urgency: 'Thường',
-    date: '10/05/2026',
-    messages: [
-      {
-        sender: 'user',
-        text: 'Chào Kinetic, mình đang dùng Asus TUF Gaming A15 (2022) có RAM 8GB và SSD 512GB. Máy dạo này chạy mấy game AAA hơi giật và hết dung lượng. Mình muốn nâng cấp thêm RAM lên 16GB và lắp thêm 1 ổ SSD 1TB nữa. Bên mình có linh kiện phù hợp và hỗ trợ lắp ráp luôn không?',
-        time: '10/05/2026 09:30'
-      },
-      {
-        sender: 'agent',
-        agentName: 'Đức Minh (Kỹ thuật viên Laptop)',
-        text: 'Chào bạn, Laptop Asus TUF Gaming A15 (2022) của bạn hỗ trợ tối đa 32GB RAM DDR5 (hoặc DDR4 tuỳ phiên bản máy cụ thể của bạn) và có sẵn 2 khe M.2 PCIe Gen 4 để nâng cấp SSD. Bên mình đang có sẵn RAM Corsair Vengeance DDR5 Bus 4800MHz giá 1.290.000đ và SSD Crucial P3 Plus 1TB giá 1.890.000đ rất phù hợp với máy bạn. Khi mua linh kiện bên mình hỗ trợ lắp đặt vệ sinh máy miễn phí tại chỗ luôn bạn nhé. Bạn có thể mang máy qua bất cứ chi nhánh nào của Kinetic Tech!',
-        time: '10/05/2026 10:15'
-      }
-    ]
-  },
-  {
-    id: 'TK-5039',
-    subject: 'Máy tính bị sập nguồn khi chạy phần mềm dựng phim DaVinci Resolve',
-    category: 'Lỗi Kỹ Thuật Phần Cứng',
-    status: 'pending',
-    urgency: 'Gấp',
-    date: '02/06/2026',
-    messages: [
-      {
-        sender: 'user',
-        text: 'Mình vừa mua bộ máy PC build bên cửa hàng được 1 tháng. Dạo này cứ bật render video trong DaVinci Resolve hoặc chơi game Cyberpunk 2077 khoảng 15 phút là máy bị sập nguồn đột ngột, đèn trên mainboard báo đỏ LED CPU. Mình nghi là do tản nhiệt hoặc nguồn công suất không đủ. Nhờ kỹ thuật hỗ trợ kiểm tra giúp.',
-        time: '02/06/2026 14:00'
-      }
-    ]
-  }
-];
+const INITIAL_TICKETS = [];
 
-export default function SupportTicket({ theme }) {
+export default function SupportTicket({ theme, currentUser }) {
   const isLight = theme === 'light';
   const [tickets, setTickets] = useState(INITIAL_TICKETS);
   const [activeTicketId, setActiveTicketId] = useState(null); // ID of expanded ticket
@@ -68,44 +32,95 @@ export default function SupportTicket({ theme }) {
   const [replyText, setReplyText] = useState('');
   const [simulatingReply, setSimulatingReply] = useState(false);
 
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  const fetchTickets = async () => {
+    try {
+      const res = await api.get('/tickets/my-tickets');
+      const mapped = res.data.map(t => {
+        const parts = t.description ? t.description.split('\n||REPLY||\n') : [];
+        const mainDesc = parts[0] || '';
+        
+        const descMatch = mainDesc.match(/^\[(.*?)\] - \[(.*?)\] - (.*)$/);
+        let subject = 'Hỗ trợ kỹ thuật #' + t.id.substring(0,6).toUpperCase();
+        let category = 'Khác';
+        let pureDesc = mainDesc;
+        
+        if (descMatch) {
+          subject = descMatch[1];
+          category = descMatch[2];
+          pureDesc = descMatch[3];
+        }
+
+        const messages = [
+          { sender: 'user', text: pureDesc, time: new Date(t.createdAt).toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit'}) }
+        ];
+
+        for (let i = 1; i < parts.length; i++) {
+          const replyPart = parts[i];
+          const [senderName, text, time] = replyPart.split('::');
+          if (senderName && text) {
+            const isAgent = senderName.includes('Quản Trị') || senderName.includes('Kỹ thuật') || senderName.includes('Kinetic');
+            messages.push({
+              sender: isAgent ? 'agent' : 'user',
+              agentName: isAgent ? senderName : undefined,
+              text,
+              time: time || ''
+            });
+          }
+        }
+
+        return {
+          id: t.id,
+          displayId: t.id.substring(0,8).toUpperCase(),
+          subject,
+          category,
+          status: t.status === 'OPEN' ? 'pending' : (t.status === 'RESOLVED' ? 'closed' : 'replied'),
+          urgency: t.severity === 'HIGH' ? 'Rất gấp' : (t.severity === 'MEDIUM' ? 'Gấp' : 'Thường'),
+          date: new Date(t.createdAt).toLocaleDateString('vi-VN'),
+          messages,
+          description: t.description
+        };
+      });
+      setTickets(mapped);
+    } catch (err) {
+      console.error('Failed to fetch tickets', err);
+    }
+  };
+
   const activeTicket = tickets.find(t => t.id === activeTicketId) || null;
 
-  const handleCreateTicket = (e) => {
+  const handleCreateTicket = async (e) => {
     e.preventDefault();
     if (!newTicket.subject || !newTicket.description) {
       alert('Vui lòng điền tiêu đề và nội dung chi tiết.');
       return;
     }
 
-    const ticketId = 'TK-' + Math.floor(1000 + Math.random() * 9000);
-    const dateToday = new Date().toLocaleDateString('vi-VN');
-    const timeToday = dateToday + ' ' + new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-
-    const created = {
-      id: ticketId,
-      subject: newTicket.subject,
-      category: newTicket.category,
-      status: 'pending',
-      urgency: newTicket.urgency,
-      date: dateToday,
-      messages: [
-        {
-          sender: 'user',
-          text: newTicket.description,
-          time: timeToday
-        }
-      ]
-    };
-
-    setTickets(prev => [created, ...prev]);
-    setNewTicket({
-      subject: '',
-      category: 'Lỗi Kỹ Thuật Phần Cứng',
-      urgency: 'Thường',
-      description: ''
-    });
-    setIsCreating(false);
-    setActiveTicketId(ticketId); // open the newly created ticket
+    try {
+      const formData = new FormData();
+      formData.append('description', `[${newTicket.subject}] - [${newTicket.category}] - ${newTicket.description}`);
+      formData.append('severity', newTicket.urgency === 'Rất gấp' ? 'HIGH' : (newTicket.urgency === 'Gấp' ? 'MEDIUM' : 'LOW'));
+      
+      await api.post('/tickets', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      setNewTicket({
+        subject: '',
+        category: 'Lỗi Kỹ Thuật Phần Cứng',
+        urgency: 'Thường',
+        description: ''
+      });
+      setIsCreating(false);
+      fetchTickets();
+      alert('Tạo ticket thành công!');
+    } catch (err) {
+      console.error(err);
+      alert('Có lỗi xảy ra khi tạo ticket.');
+    }
   };
 
   const handleSendReply = (e) => {
@@ -288,7 +303,13 @@ export default function SupportTicket({ theme }) {
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
               <button type="button" onClick={() => setIsCreating(false)} className="btn btn-outline" style={{ flex: 1 }}>Hủy bỏ</button>
-              <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Gửi Ticket Yêu Cầu</button>
+              {currentUser?.role === 'ADMIN' ? (
+                <div style={{ flex: 1, padding: '10px', fontSize: '14px', fontWeight: '700', textAlign: 'center', borderRadius: 'var(--rounded-md)', background: 'rgba(255, 0, 0, 0.1)', border: '1px solid rgba(255, 0, 0, 0.3)', color: '#ffb4ab' }}>
+                  Tài khoản quản trị không thể gửi yêu cầu hỗ trợ.
+                </div>
+              ) : (
+                <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Gửi Ticket Yêu Cầu</button>
+              )}
             </div>
           </form>
         </div>

@@ -7,6 +7,7 @@ import ProfileTab from './ProfileTab';
 import PolicyTab from './PolicyTab';
 import FeedbackTab from './FeedbackTab';
 import { createPortal } from 'react-dom';
+import api from '../../utils/api';
 import { 
   User, 
   ShoppingBag, 
@@ -46,7 +47,21 @@ export default function AccountPortal({
   onUpdateProfile,
   onAddSupportTicket
 }) {
-  const [activeTab, setActiveTab] = useState('overview'); // overview, orders, warranty, tradein, profile, policy, feedback
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      return localStorage.getItem('kinetic_account_tab') || 'overview';
+    } catch {
+      return 'overview';
+    }
+  });
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('kinetic_account_tab', activeTab);
+    } catch (e) {
+      console.error('Failed to save account tab', e);
+    }
+  }, [activeTab]);
   
   // Selected order details modal state
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -84,13 +99,23 @@ export default function AccountPortal({
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
   };
 
-  // 1. Filter orders for current logged in user
+  // 1. Map API orders to the format expected by the frontend
   const userOrders = useMemo(() => {
     if (!currentUser) return [];
-    return orders.filter(o => 
-      o.customerName === currentUser.fullName || 
-      o.email === currentUser.email
-    );
+    return orders.map(o => ({
+      ...o,
+      id: o.id,
+      date: o.date || new Date(o.createdAt).toLocaleString('vi-VN'),
+      total: o.total || o.totalAmount || 0,
+      status: (o.status || 'pending').toLowerCase(),
+      items: o.items || (o.OrderItem ? o.OrderItem.map(oi => ({
+        id: oi.productVariantId || oi.id,
+        name: oi.ProductVariant?.Product?.name || 'Linh kiện PC',
+        quantity: oi.quantity,
+        price: oi.price,
+        image: oi.ProductVariant?.Product?.ProductImage?.[0]?.url || ''
+      })) : [])
+    }));
   }, [orders, currentUser]);
 
   // Get 3 most recent orders
@@ -101,10 +126,7 @@ export default function AccountPortal({
   // 2. Filter trade-ins for current logged in user
   const userTradeins = useMemo(() => {
     if (!currentUser) return [];
-    return tradeins.filter(t => 
-      t.customerName === currentUser.fullName || 
-      t.email === currentUser.email
-    );
+    return tradeins;
   }, [tradeins, currentUser]);
 
   // 3. Get liked products list
@@ -115,7 +137,7 @@ export default function AccountPortal({
   // 4. Warranty lookup: Automatically syncs and lists tech products successfully purchased
   // Tech products are from orders with status 'completed'
   const warrantyProducts = useMemo(() => {
-    const completedOrders = userOrders.filter(o => o.status === 'completed');
+    const completedOrders = userOrders.filter(o => o.status === 'DELIVERED');
     const items = [];
     
     completedOrders.forEach(order => {
@@ -172,112 +194,116 @@ export default function AccountPortal({
   };
 
   // Submit Feedback
-  const handleFeedbackSubmit = (e) => {
+  const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
     if (!feedbackTitle.trim() || !feedbackContent.trim()) {
-      alert('Vui lòng nhập đầy đủ Tiêu đề và Nội dung.');
+      alert('Vui lòng nhập đầy đủ tiêu đề và nội dung góp ý.');
       return;
     }
 
-    const newFeedback = {
-      id: 'FB-' + Math.floor(1000 + Math.random() * 9000),
-      title: feedbackTitle,
-      content: feedbackContent,
-      email: currentUser?.email || 'guest@kinetic.vn',
-      fullName: currentUser?.fullName || 'Khách Hàng KINETIC',
-      date: new Date().toLocaleString('vi-VN'),
-      status: 'pending'
-    };
-
-    onAddFeedback(newFeedback);
-    setFeedbackSuccess(true);
-    setFeedbackTitle('');
-    setFeedbackContent('');
-
-    setTimeout(() => {
-      setFeedbackSuccess(false);
-    }, 4000);
+    try {
+      await api.post('/feedback', {
+        title: feedbackTitle,
+        content: feedbackContent
+      });
+      if (onAddFeedback) onAddFeedback();
+      setFeedbackSuccess(true);
+      setFeedbackTitle('');
+      setFeedbackContent('');
+      setTimeout(() => {
+        setFeedbackSuccess(false);
+      }, 4000);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.');
+    }
   };
 
   // Submit Support Ticket from Purchase History detail
-  const handleSupportRequestSubmit = (e) => {
+  const handleSupportRequestSubmit = async (e) => {
     e.preventDefault();
     if (!supportMessage.trim()) {
       alert('Vui lòng nhập nội dung mô tả sự cố.');
       return;
     }
 
-    const newTicket = {
-      id: 'TK-' + Math.floor(1000 + Math.random() * 9000),
-      customerName: currentUser?.fullName || 'Khách Hàng KINETIC',
-      subject: `Yêu cầu hỗ trợ: ${supportProduct.name} (Đơn hàng: ${supportOrderId})`,
-      category: 'Lỗi Kỹ Thuật Phần Cứng',
-      urgency: supportUrgency,
-      status: 'pending',
-      date: new Date().toISOString().split('T')[0],
-      messages: [
-        {
-          sender: 'user',
-          text: `Thiết bị gặp sự cố: ${supportProduct.name}. Đơn mua hàng: ${supportOrderId}.\nChi tiết sự cố: ${supportMessage}`,
-          time: new Date().toLocaleString('vi-VN')
-        }
-      ]
-    };
+    try {
+      const response = await api.post('/tickets', {
+        description: `Thiết bị: ${supportProduct?.name || 'Không xác định'} (Đơn hàng: ${supportOrderId || 'N/A'})\nChi tiết sự cố: ${supportMessage}`,
+        severity: supportUrgency === 'high' ? 'HIGH' : supportUrgency === 'medium' ? 'MEDIUM' : 'LOW'
+      });
+      
+      // Update global tickets state
+      onAddSupportTicket(response.data);
+      
+      setSupportSuccess(true);
+      setSupportMessage('');
 
-    onAddSupportTicket(newTicket);
-    setSupportSuccess(true);
-    setSupportMessage('');
-
-    setTimeout(() => {
-      setSupportSuccess(false);
-      setSupportProduct(null);
-    }, 3000);
+      setTimeout(() => {
+        setSupportSuccess(false);
+        setSupportProduct(null);
+      }, 3000);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.');
+    }
   };
 
   // Submit Profile update
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
     if (!profileForm.fullName || !profileForm.phone) {
       alert('Vui lòng điền đầy đủ Họ tên và Số điện thoại.');
       return;
     }
 
-    onUpdateProfile({
-      ...currentUser,
-      fullName: profileForm.fullName,
-      phone: profileForm.phone,
-      address: profileForm.address
-    });
+    try {
+      const response = await api.patch(`/users/${currentUser.id}`, {
+        fullName: profileForm.fullName,
+        phone: profileForm.phone,
+        address: profileForm.address
+      });
 
-    setProfileSuccess(true);
-    setTimeout(() => setProfileSuccess(false), 3000);
+      // Update global user state
+      onUpdateProfile({
+        ...currentUser,
+        ...response.data
+      });
+
+      setProfileSuccess(true);
+      setTimeout(() => setProfileSuccess(false), 3000);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Lỗi khi cập nhật hồ sơ.');
+    }
   };
 
   // Submit Password update
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
     setPasswordError('');
-    setPasswordSuccess(false);
-
     if (!passwordForm.oldPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
-      setPasswordError('Vui lòng nhập đầy đủ các trường mật khẩu.');
+      setPasswordError('Vui lòng điền đầy đủ các trường.');
       return;
     }
-
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      setPasswordError('Mật khẩu mới nhập lại không khớp.');
+      setPasswordError('Mật khẩu mới không khớp.');
       return;
     }
-
     if (passwordForm.newPassword.length < 6) {
-      setPasswordError('Mật khẩu mới phải dài ít nhất 6 ký tự.');
+      setPasswordError('Mật khẩu mới phải có ít nhất 6 ký tự.');
       return;
     }
 
-    setPasswordSuccess(true);
-    setPasswordForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
-    
-    setTimeout(() => setPasswordSuccess(false), 3000);
+    try {
+      await api.patch(`/users/${currentUser.id}/password`, {
+        oldPassword: passwordForm.oldPassword,
+        newPassword: passwordForm.newPassword
+      });
+
+      setPasswordSuccess(true);
+      setPasswordForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
+      setTimeout(() => setPasswordSuccess(false), 3000);
+    } catch (err) {
+      setPasswordError(err.response?.data?.message || 'Có lỗi xảy ra khi đổi mật khẩu.');
+    }
   };
 
   if (!currentUser) {

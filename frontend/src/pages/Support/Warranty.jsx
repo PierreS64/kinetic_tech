@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../../utils/api';
 import { 
   ShieldCheck, 
   Search, 
@@ -99,7 +100,7 @@ export default function Warranty() {
   const [activationSuccess, setActivationSuccess] = useState(false);
   const [activating, setActivating] = useState(false);
 
-  const handleSnSearch = (e) => {
+  const handleSnSearch = async (e) => {
     e.preventDefault();
     setSearchError('');
     setWarrantyResult(null);
@@ -107,13 +108,36 @@ export default function Warranty() {
     const sn = searchSn.trim().toUpperCase();
     if (!sn) return;
 
-    if (MOCK_WARRANTIES[sn]) {
+    try {
+      const response = await api.get(`/user-devices/warranty/${sn}`);
+      const data = response.data;
+      
+      const purchaseDate = new Date(data.purchaseDate);
+      const expiryDate = new Date(data.warrantyExpiryDate);
+      const today = new Date();
+      
+      const isActive = today <= expiryDate;
+      const remainingMonths = isActive ? 
+        (expiryDate.getFullYear() - today.getFullYear()) * 12 + (expiryDate.getMonth() - today.getMonth()) 
+        : 0;
+        
+      const warrantyMonths = (expiryDate.getFullYear() - purchaseDate.getFullYear()) * 12 + (expiryDate.getMonth() - purchaseDate.getMonth());
+
       setWarrantyResult({
-        sn,
-        ...MOCK_WARRANTIES[sn]
+        sn: data.serialNumber,
+        productName: data.Product?.name || 'Sản phẩm Kinetic',
+        purchaseDate: purchaseDate.toLocaleDateString('vi-VN'),
+        warrantyMonths: warrantyMonths || 12,
+        status: isActive ? 'active' : 'expired',
+        remainingMonths: remainingMonths > 0 ? remainingMonths : 0,
+        invoiceId: 'INV-' + data.id.substring(0, 6).toUpperCase(),
+        history: [
+          { date: purchaseDate.toLocaleDateString('vi-VN'), desc: `Khách hàng: ${data.User?.fullName || 'N/A'}. Kích hoạt bảo hành điện tử chính hãng.` }
+        ]
       });
-    } else {
-      setSearchError('Không tìm thấy thông tin bảo hành cho Serial Number này. Vui lòng kiểm tra lại hoặc liên hệ hotline.');
+    } catch (error) {
+      console.error('Warranty search error:', error);
+      setSearchError(error.response?.data?.message || 'Không tìm thấy thông tin bảo hành cho Serial Number này. Vui lòng kiểm tra lại hoặc liên hệ hotline.');
     }
   };
 

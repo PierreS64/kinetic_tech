@@ -1,7 +1,7 @@
 import React from 'react';
 import { Loader2, Truck } from 'lucide-react';
 
-export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity, onRemoveItem, promoCode, setPromoCode, promoError, setPromoError, handleApplyPromo, appliedPromo, handleRemovePromo, subtotal, shippingCost, vatTax, discountAmount, total, handleSubmitOrder, isProcessing }) {
+export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity, onRemoveItem, promoCode, setPromoCode, promoError, setPromoError, handleApplyPromo, appliedPromo, handleRemovePromo, subtotal, shippingCost, vatTax, discountAmount, total, handleSubmitOrder, isProcessing, currentUser }) {
   return (
     <>
       {/* Right Column: Order summary and total checkout price */}
@@ -296,33 +296,48 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
             </div>
 
             {/* Confirm checkout CTA Button */}
-            <button
-              onClick={handleSubmitOrder}
-              disabled={isProcessing || cartItems.length === 0}
-              className="btn btn-secondary"
-              style={{
-                width: '100%',
+            {currentUser?.role === 'ADMIN' ? (
+              <div style={{
                 padding: '14px',
                 fontSize: '13px',
                 fontWeight: '700',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
-            >
-              {isProcessing ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" style={{ animation: 'spin 1s linear infinite' }} />
-                  <span>ĐANG GỬI ĐƠN HÀNG...</span>
-                </>
-              ) : (
-                <>
-                  <Truck size={16} />
-                  <b>XÁC NHẬN ĐẶT HÀNG</b>
-                </>
-              )}
-            </button>
+                textAlign: 'center',
+                borderRadius: 'var(--rounded-md)',
+                background: 'rgba(255, 0, 0, 0.1)',
+                border: '1px solid rgba(255, 0, 0, 0.3)',
+                color: '#ffb4ab'
+              }}>
+                Tài khoản quản trị không thể thực hiện chức năng mua hàng.
+              </div>
+            ) : (
+              <button
+                onClick={handleSubmitOrder}
+                disabled={isProcessing || cartItems.length === 0}
+                className="btn btn-secondary"
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  fontSize: '13px',
+                  fontWeight: '700',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" style={{ animation: 'spin 1s linear infinite' }} />
+                    <span>ĐANG GỬI ĐƠN HÀNG...</span>
+                  </>
+                ) : (
+                  <>
+                    <Truck size={16} />
+                    <b>XÁC NHẬN ĐẶT HÀNG</b>
+                  </>
+                )}
+              </button>
+            )}
 
             {/* Free shipping banner if total is close */}
             {shippingCost > 0 && (

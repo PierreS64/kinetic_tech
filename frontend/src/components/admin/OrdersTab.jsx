@@ -59,41 +59,41 @@ export default function OrdersTab(props) {
                                 fontSize: '10px',
                                 fontWeight: 'bold',
                                 background:
-                                  order.status === 'completed' ? (theme === 'light' ? '#4caf50' : 'rgba(76,175,80,0.15)') :
-                                    order.status === 'cancelled' ? (theme === 'light' ? '#f44336' : 'rgba(255,76,76,0.15)') :
-                                      order.status === 'processing' ? (theme === 'light' ? '#2196f3' : 'rgba(0,123,255,0.15)') : (theme === 'light' ? '#ff9800' : 'rgba(253,139,0,0.15)'),
+                                  order.status === 'DELIVERED' ? (theme === 'light' ? '#4caf50' : 'rgba(76,175,80,0.15)') :
+                                    order.status === 'CANCELLED' ? (theme === 'light' ? '#f44336' : 'rgba(255,76,76,0.15)') :
+                                      order.status === 'PROCESSING' ? (theme === 'light' ? '#2196f3' : 'rgba(0,123,255,0.15)') : (theme === 'light' ? '#ff9800' : 'rgba(253,139,0,0.15)'),
                                 color:
-                                  order.status === 'completed' ? '#ffffff' :
-                                    order.status === 'cancelled' ? '#ffffff' :
-                                      order.status === 'processing' ? '#ffffff' : '#ffffff',
+                                  order.status === 'DELIVERED' ? '#ffffff' :
+                                    order.status === 'CANCELLED' ? '#ffffff' :
+                                      order.status === 'PROCESSING' ? '#ffffff' : '#ffffff',
                                 border: theme === 'light' ? 'none' : '1px solid currentColor',
                                 padding: '4px 8px',
                                 borderRadius: '4px'
                               }}>
-                                {order.status === 'completed' && 'Đã giao'}
-                                {order.status === 'cancelled' && 'Đã hủy'}
-                                {order.status === 'processing' && 'Đang xử lý'}
-                                {order.status === 'pending' && 'Chờ duyệt'}
+                                {order.status === 'DELIVERED' && 'Đã giao'}
+                                {order.status === 'CANCELLED' && 'Đã hủy'}
+                                {order.status === 'PROCESSING' && 'Đang xử lý'}
+                                {order.status === 'PENDING' && 'Chờ duyệt'}
                               </span>
                             </td>
                             <td onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
                               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center', justifyContent: 'center' }}>
-                                {order.status === 'pending' && (
-                                  <button onClick={() => updateOrderStatus(order.id, 'processing')} className="btn btn-primary" style={{ padding: '4px 8px', fontSize: '11px', width: '90px' }} title="Duyệt đơn hàng">
-                                    Duyệt đơn
-                                  </button>
-                                )}
-                                {order.status === 'processing' && (
-                                  <button onClick={() => updateOrderStatus(order.id, 'completed')} className="btn" style={{ padding: '4px 8px', fontSize: '11px', width: '90px', background: '#388e3c', color: 'white' }} title="Hoàn thành đơn hàng">
-                                    Hoàn thành
-                                  </button>
-                                )}
-                                {['pending', 'processing'].includes(order.status) && (
-                                  <button onClick={() => updateOrderStatus(order.id, 'cancelled')} className="btn" style={{ padding: '4px 8px', fontSize: '11px', width: '90px', background: '#d32f2f', color: 'white' }} title="Hủy đơn hàng">
-                                    Hủy
-                                  </button>
-                                )}
-                                {['completed', 'cancelled'].includes(order.status) && (
+                                 {order.status === 'PENDING' && (
+                                   <button onClick={() => updateOrderStatus(order.id, 'PROCESSING')} className="btn btn-primary" style={{ padding: '4px 8px', fontSize: '11px', width: '90px' }} title="Duyệt đơn hàng">
+                                     Duyệt đơn
+                                   </button>
+                                 )}
+                                 {order.status === 'PROCESSING' && (
+                                   <button onClick={() => updateOrderStatus(order.id, 'DELIVERED')} className="btn" style={{ padding: '4px 8px', fontSize: '11px', width: '90px', background: '#388e3c', color: 'white' }} title="Hoàn thành đơn hàng">
+                                     Hoàn thành
+                                   </button>
+                                 )}
+                                 {['PENDING', 'PROCESSING'].includes(order.status) && (
+                                   <button onClick={() => updateOrderStatus(order.id, 'CANCELLED')} className="btn" style={{ padding: '4px 8px', fontSize: '11px', width: '90px', background: '#d32f2f', color: 'white' }} title="Hủy đơn hàng">
+                                     Hủy
+                                   </button>
+                                 )}
+                                 {['DELIVERED', 'CANCELLED'].includes(order.status) && (
                                   <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Khóa</span>
                                 )}
                               </div>

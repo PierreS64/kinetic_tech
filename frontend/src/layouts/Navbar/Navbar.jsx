@@ -21,6 +21,7 @@ import {
   Shield,
   RotateCcw
 } from 'lucide-react';
+import SmartSearch from '../../components/common/SmartSearch';
 
 export default function Navbar({ 
   activeView, 
@@ -32,7 +33,9 @@ export default function Navbar({
   currentUser,
   onLogout,
   theme,
-  toggleTheme
+  toggleTheme,
+  storeProducts,
+  onSelectProduct
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -352,31 +355,17 @@ export default function Navbar({
 
         {/* Search Bar */}
         <div style={{
-          position: 'relative',
           flex: '1',
-          maxWidth: '220px',
+          maxWidth: '280px',
           display: 'none',
-          margin: '0 10px'
+          margin: '0 10px',
+          zIndex: 100
         }} className="desktop-search">
-          <input
-            type="text"
-            placeholder="Tìm kiếm..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="form-input"
-            style={{
-              paddingLeft: '34px',
-              fontSize: '12px',
-              height: '42px'
-            }}
+          <SmartSearch 
+            data={storeProducts} 
+            onSelect={onSelectProduct} 
+            placeholder="Tìm kiếm linh kiện, thiết bị..." 
           />
-          <Search size={14} style={{
-            position: 'absolute',
-            left: '12px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: 'var(--color-outline)'
-          }} />
         </div>
 
         {/* CTA Tools (Theme, PC Builder, AI, User Account, Cart) */}
@@ -514,17 +503,19 @@ export default function Navbar({
                   }}>
                     {currentUser.fullName}
                   </div>
-                  <button
-                    onClick={() => {
-                      setActiveView('account');
-                      setUserDropdownOpen(false);
-                    }}
-                    className="btn btn-ghost global-dropdown-item"
-                  >
-                    <User size={14} />
-                    Tài khoản của tôi
-                  </button>
-                  {currentUser.username === 'admin' && (
+                  {currentUser.role !== 'ADMIN' && (
+                    <button
+                      onClick={() => {
+                        setActiveView('account');
+                        setUserDropdownOpen(false);
+                      }}
+                      className="btn btn-ghost global-dropdown-item"
+                    >
+                      <User size={14} />
+                      Tài khoản của tôi
+                    </button>
+                  )}
+                  {currentUser.role === 'ADMIN' && (
                     <button
                       onClick={() => {
                         setActiveView('admin');
@@ -604,7 +595,7 @@ export default function Navbar({
                     <p style={{ fontSize: '11px', color: 'var(--color-outline)' }}>{currentUser.email}</p>
                   </div>
                 </div>
-                {currentUser.username === 'admin' && (
+                {currentUser.role === 'ADMIN' && (
                   <button
                     onClick={() => {
                       setActiveView('admin');
@@ -617,17 +608,19 @@ export default function Navbar({
                     Trang quản lý (Admin)
                   </button>
                 )}
-                <button
-                  onClick={() => {
-                    setActiveView('account');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="btn btn-primary"
-                  style={{ width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--color-primary)' }}
-                >
-                  <User size={14} />
-                  Tài khoản của tôi
-                </button>
+                {currentUser.role !== 'ADMIN' && (
+                  <button
+                    onClick={() => {
+                      setActiveView('account');
+                      setMobileMenuOpen(false);
+                    }}
+                    className="btn btn-primary"
+                    style={{ width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--color-primary)' }}
+                  >
+                    <User size={14} />
+                    Tài khoản của tôi
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     onLogout();

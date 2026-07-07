@@ -1,6 +1,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { X, Filter, Search, Check, AlertTriangle } from 'lucide-react';
+import SmartSearch from '../common/SmartSearch';
 
 export default function PCBuilderModal(props) {
   const { activeModalCat, setActiveModalCat, categories, selectedParts, handleSelectPart, modalSearchQuery, setModalSearchQuery, filterPriceMin, setFilterPriceMin, filterPriceMax, setFilterPriceMax, filterSelectedBrand, setFilterSelectedBrand, filterSelectedColor, setFilterSelectedColor, filterSocket, filterRamType, formatVND, activeCatDetails, filteredModalParts, checkPartCompatibilityError } = props;
@@ -156,21 +157,11 @@ export default function PCBuilderModal(props) {
                   background: 'rgba(5, 13, 24, 0.2)',
                   position: 'relative'
                 }}>
-                  <input
-                    type="text"
+                  <SmartSearch 
+                    data={filteredModalParts}
+                    onSelect={(part) => handleSelectPart(activeModalCat, part)}
                     placeholder="Gõ tìm nhanh linh kiện..."
-                    value={modalSearchQuery}
-                    onChange={(e) => setModalSearchQuery(e.target.value)}
-                    className="form-input"
-                    style={{ paddingLeft: '38px', fontSize: '13px' }}
                   />
-                  <Search size={16} style={{
-                    position: 'absolute',
-                    left: '32px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--color-outline)'
-                  }} />
                 </div>
 
                 {/* Product List Scroll Container */}
@@ -236,7 +227,7 @@ export default function PCBuilderModal(props) {
                             </div>
 
                             <p style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>
-                              <strong>Thông số:</strong> {part.specs}
+                              <strong>Thông số:</strong> {typeof part.specs === 'object' && part.specs !== null ? Object.entries(part.specs).map(([k, v]) => `${k}: ${v}`).join(' | ') : String(part.specs || '')}
                             </p>
 
                             {/* Technical Specs Tags */}
