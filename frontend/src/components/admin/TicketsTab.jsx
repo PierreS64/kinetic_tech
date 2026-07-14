@@ -32,7 +32,7 @@ export default function TicketsTab(props) {
                             fontSize: '9px',
                             background: ticket.status === 'OPEN' ? 'rgba(255,76,76,0.15)' : ticket.status === 'IN_PROGRESS' ? 'rgba(0,123,255,0.15)' : 'rgba(76,175,80,0.15)',
                             color: ticket.status === 'OPEN' ? '#ffb4ab' : ticket.status === 'IN_PROGRESS' ? '#adc7ff' : '#81c784'
-                          }} className="status-badge">
+                          }}>
                             {ticket.status === 'OPEN' && 'Chờ phản hồi'}
                             {ticket.status === 'IN_PROGRESS' && 'Đã phản hồi'}
                             {ticket.status === 'CLOSED' && 'Đã đóng'}
