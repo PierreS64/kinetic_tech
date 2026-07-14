@@ -16,7 +16,7 @@ export default function VouchersTab(props) {
   } = props;
 
   return (
-    <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+    <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
         <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Quản Lý Mã Giảm Giá (Voucher)</h3>
 
@@ -31,8 +31,8 @@ export default function VouchersTab(props) {
       </div>
 
       {isAddingVoucher && (
-        <div className="modal-overlay" onClick={() => setIsAddingVoucher(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
-          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '440px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+        <div  className="modal-overlay" onClick={() => setIsAddingVoucher(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
+          <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '440px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
             <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
               <h4 style={{ fontSize: '14px', fontWeight: '800', color: textColor }}>Tạo Voucher mới</h4>
               <button onClick={() => setIsAddingVoucher(false)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
@@ -54,7 +54,7 @@ export default function VouchersTab(props) {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                 <div>
                   <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Loại giảm giá</label>
                   <select
@@ -82,7 +82,7 @@ export default function VouchersTab(props) {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                 <div>
                   <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Ngày bắt đầu</label>
                   <input
@@ -105,7 +105,7 @@ export default function VouchersTab(props) {
                 </div>
               </div>
 
-              <button type="submit" className="btn btn-secondary" style={{ width: '100%', padding: '10px', marginTop: '10px', fontWeight: '700' }}>
+              <button type="submit"  style={{ width: '100%', padding: '10px', marginTop: '10px', fontWeight: '700' }} className="btn btn-secondary">
                 TẠO VOUCHER
               </button>
             </form>
@@ -114,7 +114,7 @@ export default function VouchersTab(props) {
       )}
 
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="zebra-table">
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
           <thead>
             <tr style={{ background: 'var(--color-surface-container-high)' }}>
               <th style={{ padding: '12px', fontWeight: '700', color: textColor }}>Mã Voucher</th>

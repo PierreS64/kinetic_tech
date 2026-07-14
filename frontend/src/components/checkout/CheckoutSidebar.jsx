@@ -8,7 +8,7 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
       <aside style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* List of items being purchased */}
-          <div className="glass-panel" style={{ padding: '20px', borderRadius: 'var(--rounded-md)', height: 'fit-content' }}>
+          <div  style={{ padding: '20px', borderRadius: 'var(--rounded-md)', height: 'fit-content' }} className="glass-panel">
             <h3 style={{ fontSize: '14px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px', marginBottom: '16px', color: 'white' }}>
               ĐƠN HÀNG CỦA BẠN ({cartItems.reduce((acc, curr) => acc + curr.quantity, 0)})
             </h3>
@@ -126,9 +126,9 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
                 />
                 <button 
                   type="submit" 
-                  className="btn btn-outline"
+                  
                   style={{ padding: '8px 16px', fontSize: '11px', whiteSpace: 'nowrap' }}
-                >
+                 className="btn btn-outline">
                   Áp dụng
                 </button>
               </form>
@@ -313,7 +313,7 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
               <button
                 onClick={handleSubmitOrder}
                 disabled={isProcessing || cartItems.length === 0}
-                className="btn btn-secondary"
+                
                 style={{
                   width: '100%',
                   padding: '14px',
@@ -324,10 +324,10 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
                   justifyContent: 'center',
                   gap: '8px'
                 }}
-              >
+               className="btn btn-secondary">
                 {isProcessing ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" style={{ animation: 'spin 1s linear infinite' }} />
+                    <Loader2 size={16}  style={{ animation: 'spin 1s linear infinite' }}  className="animate-spin" />
                     <span>ĐANG GỬI ĐƠN HÀNG...</span>
                   </>
                 ) : (

@@ -13,7 +13,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
   const discount = oldPrice ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
 
   return (
-    <div className="product-card" onClick={() => onViewDetails && onViewDetails(product)} style={{ width: '100%', minWidth: '0', boxSizing: 'border-box', height: '100%', cursor: 'pointer' }}>
+    <div  className="product-card" onClick={() => onViewDetails && onViewDetails(product)} style={{ width: '100%', minWidth: '0', boxSizing: 'border-box', height: '100%', cursor: 'pointer' }}>
       {/* Stock Status Badge */}
       <div style={{
         position: 'absolute',
@@ -22,9 +22,9 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
         zIndex: 5
       }}>
         {inStock ? (
-          <span className="status-badge status-badge-stock" style={{ background: '#4caf50', color: '#ffffff', border: 'none', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold' }}>Còn hàng</span>
+          <span  style={{ background: '#4caf50', color: '#ffffff', border: 'none', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold' }} className="status-badge status-badge-stock">Còn hàng</span>
         ) : (
-          <span className="status-badge" style={{ background: '#757575', color: '#ffffff', border: 'none', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold' }}>Hết hàng</span>
+          <span  style={{ background: '#757575', color: '#ffffff', border: 'none', padding: '4px 8px', borderRadius: '4px', fontWeight: 'bold' }} className="status-badge">Hết hàng</span>
         )}
       </div>
 
@@ -59,12 +59,12 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
       </button>
 
       {/* Image Container */}
-      <div className="product-card-image-container" onClick={() => onViewDetails && onViewDetails(product)} style={{ cursor: 'pointer' }}>
+      <div  className="product-card-image-container" onClick={() => onViewDetails && onViewDetails(product)} style={{ cursor: 'pointer' }}>
         <img 
           src={image} 
           alt={name} 
-          className="product-card-image"
-          onError={(e) => {
+          
+          className="product-card-image" onError={(e) => {
             e.target.src = 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&q=80&w=400';
           }}
         />
@@ -75,7 +75,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
         {/* Tags */}
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {tags.map((tag, idx) => (
-            <span key={idx} className="spec-chip">
+            <span key={idx}  className="spec-chip">
               {tag}
             </span>
           ))}
@@ -151,7 +151,7 @@ export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = 
                 {formatVND(oldPrice)}
               </span>
               {discount > 0 && (
-                <span className="status-badge status-badge-sale" style={{ fontSize: '10px', padding: '1px 4px', textTransform: 'none' }}>
+                <span  style={{ fontSize: '10px', padding: '1px 4px', textTransform: 'none' }} className="status-badge status-badge-sale">
                   -{discount}%
                 </span>
               )}

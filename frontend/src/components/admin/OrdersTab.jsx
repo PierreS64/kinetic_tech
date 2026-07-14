@@ -6,7 +6,7 @@ export default function OrdersTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Quản Lý Đơn Hàng</h3>
 
@@ -26,7 +26,7 @@ export default function OrdersTab(props) {
 
                 {/* Orders list table */}
                 <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="zebra-table">
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
                     <thead>
                       <tr style={{ background: 'var(--color-surface-container-high)' }}>
                         <th style={{ padding: '12px 16px', fontWeight: '700' }}>Mã Đơn Hàng</th>
@@ -55,7 +55,7 @@ export default function OrdersTab(props) {
                             <td style={{ fontWeight: '800', color: 'var(--color-secondary-dim)' }}>{formatVND(order.total)}</td>
                             <td style={{ maxWidth: '90px', fontSize: '12px', color: theme === 'light' ? '#0f172a' : 'inherit' }}>{order.paymentMethod}</td>
                             <td>
-                              <span className="status-badge" style={{
+                              <span  style={{
                                 fontSize: '10px',
                                 fontWeight: 'bold',
                                 background:
@@ -69,7 +69,7 @@ export default function OrdersTab(props) {
                                 border: theme === 'light' ? 'none' : '1px solid currentColor',
                                 padding: '4px 8px',
                                 borderRadius: '4px'
-                              }}>
+                              }} className="status-badge">
                                 {order.status === 'DELIVERED' && 'Đã giao'}
                                 {order.status === 'CANCELLED' && 'Đã hủy'}
                                 {order.status === 'PROCESSING' && 'Đang xử lý'}

@@ -7,7 +7,7 @@ export default function FeedbackTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                   Góp Ý - Phản Hồi Về Dịch Vụ
                 </h3>
@@ -75,9 +75,9 @@ export default function FeedbackTab(props) {
                     ) : (
                       <button 
                         type="submit" 
-                        className="btn btn-primary" 
+                         
                         style={{ padding: '10px 24px', alignSelf: 'flex-end', display: 'flex', alignItems: 'center', gap: '8px' }}
-                      >
+                       className="btn btn-primary">
                         <Send size={14} />
                         Gửi Góp Ý
                       </button>

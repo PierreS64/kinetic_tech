@@ -46,7 +46,7 @@ export default function SmartSearch({ data = [], onSelect, placeholder = "Tìm k
   };
 
   return (
-    <div ref={containerRef} style={{ position: 'relative', width, ...style }} className="smart-search-container">
+    <div ref={containerRef} style={{ position: 'relative', width, ...style }}  className="smart-search-container">
       <input
         type="text"
         placeholder={placeholder}
@@ -104,7 +104,7 @@ export default function SmartSearch({ data = [], onSelect, placeholder = "Tìm k
       )}
 
       {isOpen && query.trim() && (
-        <div className="glass-panel" style={{
+        <div  style={{
           position: 'absolute',
           top: '100%',
           left: 0,
@@ -118,7 +118,7 @@ export default function SmartSearch({ data = [], onSelect, placeholder = "Tìm k
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column'
-        }}>
+        }} className="glass-panel">
           {results.length > 0 ? (
             <div style={{ maxHeight: '350px', overflowY: 'auto' }}>
               {results.map((item, idx) => (

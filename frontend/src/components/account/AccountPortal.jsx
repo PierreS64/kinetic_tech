@@ -308,8 +308,8 @@ export default function AccountPortal({
 
   if (!currentUser) {
     return (
-      <div className="container" style={{ padding: '60px 20px', textAlign: 'center' }}>
-        <div className="glass-panel" style={{ maxWidth: '500px', margin: '0 auto', padding: '40px 30px', borderRadius: 'var(--rounded-lg)' }}>
+      <div  style={{ padding: '60px 20px', textAlign: 'center' }} className="container">
+        <div  style={{ maxWidth: '500px', margin: '0 auto', padding: '40px 30px', borderRadius: 'var(--rounded-lg)' }} className="glass-panel">
           <AlertTriangle size={48} color="var(--color-secondary)" style={{ marginBottom: '16px' }} />
           <h3 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '12px' }}>Bạn chưa đăng nhập!</h3>
           <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginBottom: '24px', lineHeight: '1.6' }}>
@@ -337,10 +337,10 @@ export default function AccountPortal({
 
   return (
     <div style={{ padding: '20px 0 60px' }}>
-      <div className="container">
+      <div  className="container">
         
         {/* Welcome Header */}
-        <div style={{ marginBottom: '32px' }} className="animate-fade-in-up">
+        <div style={{ marginBottom: '32px' }}  className="animate-fade-in-up">
           <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-primary-dim)', textTransform: 'uppercase', letterSpacing: '1px' }}>
             Trang cá nhân khách hàng
           </span>
@@ -353,10 +353,10 @@ export default function AccountPortal({
         </div>
 
         {/* Portal Two Column Layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '30px', alignItems: 'start' }} className="catalog-layout">
+        <div style={{ display: 'grid', gap: '30px', alignItems: 'start' }}   className="grid-responsive-sidebar catalog-layout">
           
           {/* Left Navigation Sidebar */}
-          <aside className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <aside  style={{ borderRadius: 'var(--rounded-lg)', padding: '14px', display: 'flex', flexDirection: 'column', gap: '6px' }} className="glass-panel">
             <div style={{ padding: '6px 12px', fontSize: '10px', color: 'var(--color-outline)', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               Bảng Điều Khiển
             </div>
@@ -481,7 +481,7 @@ export default function AccountPortal({
           </aside>
 
           {/* Right Content Work Area */}
-          <main style={{ minHeight: '500px' }} className="animate-fade-in-up">
+          <main style={{ minHeight: '500px' }}  className="animate-fade-in-up">
             {activeTab === 'overview' && <OverviewTab {...tabProps} />}
             {activeTab === 'orders' && <OrdersTab {...tabProps} />}
             {activeTab === 'warranty' && <WarrantyTab {...tabProps} />}

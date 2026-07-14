@@ -520,7 +520,7 @@ export default function App() {
         
         {/* VIEW 1: Showcase & Benefits */}
         {activeView === 'deals' && (
-          <div className="container" style={{ marginTop: '40px' }}>
+          <div  style={{ marginTop: '40px' }} className="container">
             {/* Showcase Grid header */}
             <div style={{ marginBottom: '24px' }}>
               <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -569,7 +569,7 @@ export default function App() {
 
             {/* Brand benefits section */}
             <div 
-              className="reveal-on-scroll brand-benefits-section"
+              
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
@@ -578,7 +578,7 @@ export default function App() {
                 padding: '30px 20px',
                 borderRadius: 'var(--rounded-lg)',
               }}
-            >
+             className="reveal-on-scroll brand-benefits-section">
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <Shield size={24} color="var(--color-primary-dim)" />
                 <div>
@@ -606,8 +606,8 @@ export default function App() {
 
         {/* VIEW 2: Standard Catalogs (Laptops, Phones, Gear, Components) */}
         {['laptop', 'điện thoại', 'gaming gear', 'linh kiện'].includes(activeView) && (
-          <div className="container" style={{ paddingTop: '40px' }}>
-            <div className="animate-fade-in-up">
+          <div  style={{ paddingTop: '40px' }} className="container">
+            <div  className="animate-fade-in-up">
               <div style={{ marginBottom: '30px' }}>
                 <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat', textTransform: 'capitalize' }}>
                   DANH MỤC: {activeView}
@@ -618,7 +618,7 @@ export default function App() {
               </div>
 
               {/* Desktop Two-Column Layout with filters */}
-              <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', gap: '30px' }} className="catalog-layout">
+              <div style={{ display: 'grid', gap: '30px' }}   className="grid-responsive-sidebar catalog-layout">
                 {/* Sidebar Filters */}
                 <FilterSidebar 
                   theme={theme}
@@ -648,7 +648,7 @@ export default function App() {
                       <p>Không tìm thấy sản phẩm nào phù hợp với bộ lọc hiện tại.</p>
                     </div>
                   ) : (
-                    <div className="product-grid">
+                    <div  className="product-grid">
                       {filteredProducts.map((product) => (
                         <ProductCard 
                           key={product.id} 
@@ -670,8 +670,8 @@ export default function App() {
 
         {/* VIEW 3: Custom PC Builder Dashboard */}
         {activeView === 'pc-builder' && (
-          <div className="container" style={{ paddingTop: '40px' }}>
-            <div className="animate-fade-in-up">
+          <div  style={{ paddingTop: '40px' }} className="container">
+            <div  className="animate-fade-in-up">
               <PCBuilder storeProducts={storeProducts} onAddPartsToCart={handleAddPartsToCart} />
             </div>
           </div>
@@ -679,8 +679,8 @@ export default function App() {
 
         {/* VIEW 4: AI Advisor Chat */}
         {activeView === 'ai-advisor' && (
-          <div className="container" style={{ paddingTop: '40px' }}>
-            <div className="animate-fade-in-up">
+          <div  style={{ paddingTop: '40px' }} className="container">
+            <div  className="animate-fade-in-up">
               <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                 <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat' }}>TRỢ LÝ THÔNG MINH KINETIC</h2>
                 <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>AI tự động cấu hình máy tính cá nhân hóa dựa trên mô tả yêu cầu của bạn.</p>
@@ -723,7 +723,7 @@ export default function App() {
 
         {/* VIEW 7: Trade-In Program View */}
         {activeView === 'trade-in' && (
-          <div className="container" style={{ paddingTop: '40px' }}>
+          <div  style={{ paddingTop: '40px' }} className="container">
             <TradeIn 
               currentUser={currentUser}
               onAddTradeIn={(t) => setTradeins(prev => [t, ...prev])}
@@ -733,21 +733,21 @@ export default function App() {
 
         {/* VIEW 8: Warranty Lookup View */}
         {activeView === 'warranty' && (
-          <div className="container" style={{ paddingTop: '40px' }}>
+          <div  style={{ paddingTop: '40px' }} className="container">
             <Warranty currentUser={currentUser} />
           </div>
         )}
 
         {/* VIEW: Order Tracking View */}
         {activeView === 'order-tracking' && (
-          <div className="container" style={{ paddingTop: '40px' }}>
+          <div  style={{ paddingTop: '40px' }} className="container">
             <OrderTracking orders={orders} />
           </div>
         )}
 
         {/* VIEW 9: Support Ticket View */}
         {activeView === 'support-ticket' && (
-          <div className="container" style={{ paddingTop: '40px' }}>
+          <div  style={{ paddingTop: '40px' }} className="container">
             <SupportTicket theme={theme} currentUser={currentUser} />
           </div>
         )}
@@ -774,7 +774,7 @@ export default function App() {
 
         {/* VIEW 10: About Us View */}
         {activeView === 'about-us' && (
-          <div className="container" style={{ paddingTop: '40px' }}>
+          <div  style={{ paddingTop: '40px' }} className="container">
             <AboutUs theme={theme} setActiveView={setActiveView} />
           </div>
         )}
@@ -788,13 +788,13 @@ export default function App() {
         padding: '40px 0',
         marginTop: 'auto'
       }}>
-        <div className="container" style={{
+        <div  style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: '30px',
           fontSize: '13px',
           color: 'var(--color-on-surface-variant)'
-        }}>
+        }} className="container">
           <div>
             <h4 style={{ color: 'white', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>KINETIC TECH</h4>
             <p style={{ lineHeight: '1.6' }}>Hệ thống cửa hàng bán lẻ linh kiện máy tính, laptop hi-end hàng đầu Việt Nam.</p>
@@ -825,14 +825,14 @@ export default function App() {
             </p>
           </div>
         </div>
-        <div className="container" style={{
+        <div  style={{
           marginTop: '30px',
           borderTop: '1px solid rgba(255, 255, 255, 0.04)',
           paddingTop: '20px',
           textAlign: 'center',
           fontSize: '11px',
           color: 'rgba(255,255,255,0.3)'
-        }}>
+        }} className="container">
           © 2026 Kinetic Tech Store. All Rights Reserved. Built with Premium React & Vanilla CSS.
         </div>
       </footer>
@@ -853,7 +853,7 @@ export default function App() {
       {/* Floating Toast Notification */}
       {toast && toast.visible && (
         <div 
-          className="glass-panel-glow-blue"
+          
           style={{
             position: 'fixed',
             top: '24px',
@@ -869,7 +869,7 @@ export default function App() {
             boxShadow: theme === 'light' ? '0 10px 25px rgba(0,0,0,0.06)' : '0 10px 25px rgba(0,0,0,0.5)',
             animation: 'slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards'
           }}
-        >
+         className="glass-panel-glow-blue">
           <div style={{
             width: '20px',
             height: '20px',
@@ -922,7 +922,7 @@ export default function App() {
         <ShoppingCart size={24} color="var(--color-primary-dim)" style={{ filter: 'drop-shadow(0 0 4px rgba(0, 123, 255, 0.5))' }} />
         {cartItems.reduce((acc, curr) => acc + curr.quantity, 0) > 0 && (
           <span 
-            className="cart-pulse-badge"
+            
             style={{
               position: 'absolute',
               top: '-2px',
@@ -938,7 +938,7 @@ export default function App() {
               boxShadow: '0 0 0 2px var(--color-surface)',
               animation: 'pulseGlow 2s infinite'
             }}
-          >
+           className="cart-pulse-badge">
             {cartItems.reduce((acc, curr) => acc + curr.quantity, 0)}
           </span>
         )}
@@ -976,7 +976,7 @@ export default function App() {
       {/* Floating AI Chat Window Popup/Drawer */}
       {aiOpen && (
         <div 
-          className="glass-panel animate-fade-in-up" 
+           
           style={{
             position: 'fixed',
             bottom: '168px',
@@ -991,7 +991,7 @@ export default function App() {
             display: 'flex',
             flexDirection: 'column'
           }}
-        >
+         className="glass-panel animate-fade-in-up">
           <AIAdvisor onAddToCart={handleAddToCart} theme={theme} onClose={() => setAiOpen(false)} />
         </div>
       )}
@@ -1025,13 +1025,13 @@ export default function App() {
 
         return (
           <div 
-            className="modal-overlay" 
+             
             style={{ zIndex: 102, display: 'flex', alignItems: 'center', justifyContent: 'center' }} 
-            onClick={() => setSelectedProduct(null)}
+            className="modal-overlay" onClick={() => setSelectedProduct(null)}
           >
             <div 
-              className="glass-panel animate-fade-in-up" 
-              onClick={(e) => e.stopPropagation()} 
+               
+              className="glass-panel animate-fade-in-up" onClick={(e) => e.stopPropagation()} 
               style={{ 
                 width: '90%', 
                 maxWidth: '850px', 
@@ -1058,7 +1058,7 @@ export default function App() {
 
               {/* Modal Body */}
               <div style={{ padding: '24px', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) 1.2fr', gap: '28px' }} className="catalog-layout">
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 1fr) 1.2fr', gap: '28px' }}  className="catalog-layout">
                   {/* Left: Product Image */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div style={{ background: theme === 'light' ? '#f1f5f9' : 'var(--color-surface-container-lowest)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)', borderRadius: 'var(--rounded-md)', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '280px' }}>
@@ -1116,7 +1116,7 @@ export default function App() {
                           <span style={{ fontSize: '14px', textDecoration: 'line-through', color: 'var(--color-outline)' }}>
                             {formatVND(selectedProduct.oldPrice)}
                           </span>
-                          <span className="status-badge status-badge-sale" style={{ fontSize: '10px', padding: '1px 6px' }}>
+                          <span  style={{ fontSize: '10px', padding: '1px 6px' }} className="status-badge status-badge-sale">
                             -{discount}%
                           </span>
                         </>
@@ -1164,7 +1164,7 @@ export default function App() {
                     </div>
 
                     {/* Action buttons */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: 'auto', paddingTop: '10px' }}>
+                    <div style={{ display: 'grid', gap: '12px', marginTop: 'auto', paddingTop: '10px' }}  className="grid-responsive-2col">
                       <button 
                         onClick={() => {
                           handleAddToCart(selectedProduct);
@@ -1253,17 +1253,13 @@ export default function App() {
                           scrollbarWidth: 'none',
                           msOverflowStyle: 'none'
                         }}
-                        className="no-scrollbar"
-                      >
+                        
+                       className="no-scrollbar">
                         {related.map((prod) => (
                           <div 
                             key={prod.id}
                             onClick={() => setSelectedProduct(prod)}
                             style={{
-                              flex: '0 0 calc(25% - 12px)',
-                              minWidth: 'calc(25% - 12px)',
-                              maxWidth: 'calc(25% - 12px)',
-                              scrollSnapAlign: 'start',
                               background: 'var(--color-surface-container-low)',
                               border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.06)',
                               borderRadius: 'var(--rounded)',
@@ -1274,7 +1270,7 @@ export default function App() {
                               cursor: 'pointer',
                               transition: 'all 0.2s'
                             }}
-                            className="list-hover-effect"
+                            className="list-hover-effect category-scroll-item"
                           >
                             <div style={{ height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: 'var(--color-surface-container-lowest)', borderRadius: '4px' }}>
                               <img src={prod.image} alt={prod.name} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />

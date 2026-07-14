@@ -6,12 +6,12 @@ export default function OverviewTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                   Tổng Quan Hoạt Động Gần Đây
                 </h3>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }} className="overview-subgrid">
+                <div style={{ display: 'grid', gap: '20px' }}   className="grid-responsive-2col overview-subgrid">
 
                   {/* Left Column: Recent Orders */}
                   <div>
@@ -39,12 +39,12 @@ export default function OverviewTab(props) {
                           </div>
                           <div style={{ textAlign: 'right' }}>
                             <span style={{ fontWeight: '800', fontSize: '13px', display: 'block', color: 'var(--color-secondary-dim)' }}>{formatVND(order.total)}</span>
-                            <span className="status-badge" style={{
+                            <span  style={{
                               fontSize: '9px',
                               background: order.status === 'DELIVERED' ? 'rgba(76,175,80,0.15)' : order.status === 'PENDING' ? 'rgba(253,139,0,0.15)' : 'rgba(0,123,255,0.15)',
                               color: order.status === 'DELIVERED' ? '#81c784' : order.status === 'PENDING' ? '#ffb77d' : '#adc7ff',
                               padding: '2px 6px'
-                            }}>
+                            }} className="status-badge">
                               {order.status === 'DELIVERED' ? 'Đã Giao' : order.status === 'PENDING' ? 'Chờ duyệt' : 'Đang xử lý'}
                             </span>
                           </div>
@@ -75,12 +75,12 @@ export default function OverviewTab(props) {
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <span style={{ fontWeight: '700', fontSize: '12px', color: theme === 'light' ? '#0f172a' : 'white' }}>#{ticket.id} - {ticket.customerName}</span>
-                            <span className="status-badge" style={{
+                            <span  style={{
                               fontSize: '9px',
                               background: ticket.status === 'OPEN' ? 'rgba(255,76,76,0.15)' : 'rgba(76,175,80,0.15)',
                               color: ticket.status === 'OPEN' ? '#ffb4ab' : '#81c784',
                               padding: '1px 6px'
-                            }}>
+                            }} className="status-badge">
                               {ticket.status === 'OPEN' ? 'Chờ trả lời' : 'Đã phản hồi'}
                             </span>
                           </div>

@@ -321,45 +321,45 @@ export default function AboutUs({ theme, setActiveView }) {
   }
 
   return (
-    <div style={{ minHeight: '80vh', padding: '0 0 60px' }} className="animate-fade-in-up">
+    <div style={{ minHeight: '80vh', padding: '0 0 60px' }}  className="animate-fade-in-up">
 
       {/* Cinematic Hero Section */}
       <div
-        className="about-hero"
+        
         style={{
           backgroundImage: isLight
             ? `linear-gradient(to bottom, rgba(0, 51, 62, 0.45), rgba(255, 255, 255, 0.98)), url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80')`
             : `linear-gradient(to bottom, rgba(4, 7, 17, 0.45), rgba(4, 7, 17, 0.98)), url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80')`
         }}
-      >
-        <div className="about-hero-container">
+       className="about-hero">
+        <div  className="about-hero-container">
           <ScrollReveal direction="down">
-            <b className="about-eyebrow">HÀNH TRÌNH KINETIC TECH</b>
-            <h1 className="about-title" style={{ color: isLight ? 'var(--color-on-surface)' : 'white' }}>Kiến tạo <em>cỗ máy</em><br />nâng tầm trải nghiệm</h1>
-            <p className="about-subtitle">Chúng tôi tin rằng mọi cỗ máy đều là một tác phẩm nghệ thuật công nghệ, là người bạn đồng hành chắp cánh ước mơ.</p>
+            <b  className="about-eyebrow">HÀNH TRÌNH KINETIC TECH</b>
+            <h1  style={{ color: isLight ? 'var(--color-on-surface)' : 'white' }} className="about-title">Kiến tạo <em>cỗ máy</em><br />nâng tầm trải nghiệm</h1>
+            <p  className="about-subtitle">Chúng tôi tin rằng mọi cỗ máy đều là một tác phẩm nghệ thuật công nghệ, là người bạn đồng hành chắp cánh ước mơ.</p>
           </ScrollReveal>
 
-          <div className="scroll-indicator">
-            <span className="mouse-icon" style={{ borderColor: isLight ? 'rgba(15, 23, 42, 0.35)' : 'rgba(255, 255, 255, 0.45)' }}>
-              <span className="mouse-wheel"></span>
+          <div  className="scroll-indicator">
+            <span  style={{ borderColor: isLight ? 'rgba(15, 23, 42, 0.35)' : 'rgba(255, 255, 255, 0.45)' }} className="mouse-icon">
+              <span  className="mouse-wheel"></span>
             </span>
-            <span className="scroll-text" style={{ color: isLight ? 'var(--color-outline)' : 'rgba(255, 255, 255, 0.55)' }}>Cuộn để khám phá câu chuyện</span>
+            <span  style={{ color: isLight ? 'var(--color-outline)' : 'rgba(255, 255, 255, 0.55)' }} className="scroll-text">Cuộn để khám phá câu chuyện</span>
           </div>
         </div>
       </div>
 
       {/* About Manifesto Section */}
-      <div className="about-manifesto section-padding">
-        <div className="manifesto-wrap">
+      <div  className="about-manifesto section-padding">
+        <div  className="manifesto-wrap">
           <ScrollReveal direction="up">
-            <h2 className="kinetic-title">
+            <h2  className="kinetic-title">
               <span>Không chỉ là phần cứng.</span>
-              <span className="text-gradient">Đó là bạn đồng hành,</span>
+              <span  className="text-gradient">Đó là bạn đồng hành,</span>
               <span>nơi chắp cánh những ý tưởng lớn.</span>
             </h2>
           </ScrollReveal>
           <ScrollReveal direction="up" delay={200}>
-            <p className="manifesto-desc">
+            <p  className="manifesto-desc">
               Kinetic Tech được thành lập từ tình yêu công nghệ mãnh liệt của những lập trình viên và game thủ chuyên nghiệp. Chúng tôi thấu hiểu cảm giác hào hứng khi khởi động cỗ máy mơ ước đầu tiên, và cả sự bực bội khi hệ thống giật lag. Mỗi cấu hình tại Kinetic đều được thiết kế để mang đến hiệu năng tối thượng cùng dịch vụ an tâm trọn đời.
             </p>
           </ScrollReveal>
@@ -367,21 +367,21 @@ export default function AboutUs({ theme, setActiveView }) {
       </div>
 
       {/* Bento Grid Section (Core Values) */}
-      <div className="about-bento section-padding">
-        <div className="bento-container">
+      <div  className="about-bento section-padding">
+        <div  className="bento-container">
           <ScrollReveal direction="up">
-            <h2 className="section-title text-center" style={{ textTransform: 'uppercase', marginBottom: '3rem' }}>Giá trị cốt lõi</h2>
+            <h2  style={{ textTransform: 'uppercase', marginBottom: '3rem' }} className="section-title text-center">Giá trị cốt lõi</h2>
           </ScrollReveal>
 
-          <div className="bento-grid">
+          <div  className="bento-grid">
             {/* Cell 1: Vision */}
             <ScrollReveal direction="up" delay={100}>
-              <div className="bento-cell cell-large">
-                <div className="bento-icon-header">
-                  <div className="bento-icon"><Sparkles size={22} style={{ color: 'var(--color-primary-dim)' }} /></div>
-                  <span className="bento-tag">TẦM NHÌN</span>
+              <div  className="bento-cell cell-large">
+                <div  className="bento-icon-header">
+                  <div  className="bento-icon"><Sparkles size={22} style={{ color: 'var(--color-primary-dim)' }} /></div>
+                  <span  className="bento-tag">TẦM NHÌN</span>
                 </div>
-                <div className="bento-content">
+                <div  className="bento-content">
                   <h3>Trở thành điểm đến PC High-End số 1</h3>
                   <p>Tiên phong ứng dụng các giải pháp tản nhiệt nước custom nghệ thuật và cá nhân hóa cấu hình hiệu năng cao theo yêu cầu độc bản.</p>
                 </div>
@@ -390,12 +390,12 @@ export default function AboutUs({ theme, setActiveView }) {
 
             {/* Cell 2: Performance */}
             <ScrollReveal direction="up" delay={200}>
-              <div className="bento-cell cell-medium">
-                <div className="bento-icon-header">
-                  <div className="bento-icon"><Cpu size={22} style={{ color: 'var(--color-primary-dim)' }} /></div>
-                  <span className="bento-tag">HIỆU NĂNG</span>
+              <div  className="bento-cell cell-medium">
+                <div  className="bento-icon-header">
+                  <div  className="bento-icon"><Cpu size={22} style={{ color: 'var(--color-primary-dim)' }} /></div>
+                  <span  className="bento-tag">HIỆU NĂNG</span>
                 </div>
-                <div className="bento-content">
+                <div  className="bento-content">
                   <h3>Hiệu Năng Tối Thượng</h3>
                   <p>Không thỏa hiệp về tốc độ. Tuyển chọn linh kiện nghiêm ngặt, tối ưu cấu hình BIOS giúp giải phóng tối đa sức mạnh phần cứng.</p>
                 </div>
@@ -404,12 +404,12 @@ export default function AboutUs({ theme, setActiveView }) {
 
             {/* Cell 3: Trust */}
             <ScrollReveal direction="up" delay={300}>
-              <div className="bento-cell cell-medium">
-                <div className="bento-icon-header">
-                  <div className="bento-icon"><ShieldCheck size={22} style={{ color: 'var(--color-secondary-dim)' }} /></div>
-                  <span className="bento-tag">AN TÂM</span>
+              <div  className="bento-cell cell-medium">
+                <div  className="bento-icon-header">
+                  <div  className="bento-icon"><ShieldCheck size={22} style={{ color: 'var(--color-secondary-dim)' }} /></div>
+                  <span  className="bento-tag">AN TÂM</span>
                 </div>
-                <div className="bento-content">
+                <div  className="bento-content">
                   <h3>An Tâm Tuyệt Đối</h3>
                   <p>100% linh kiện chính hãng. Quy chuẩn lắp ráp nghiêm ngặt đi kèm chính sách bảo hành 1-đổi-1 chủ động siêu tốc trọn đời.</p>
                 </div>
@@ -418,24 +418,24 @@ export default function AboutUs({ theme, setActiveView }) {
 
             {/* Cell 4: Community */}
             <ScrollReveal direction="up" delay={400}>
-              <div className="bento-cell cell-wide">
-                <div className="bento-icon-header">
-                  <div className="bento-icon"><User size={22} style={{ color: 'var(--color-primary-dim)' }} /></div>
-                  <span className="bento-tag">CỘNG ĐỒNG</span>
+              <div  className="bento-cell cell-wide">
+                <div  className="bento-icon-header">
+                  <div  className="bento-icon"><User size={22} style={{ color: 'var(--color-primary-dim)' }} /></div>
+                  <span  className="bento-tag">CỘNG ĐỒNG</span>
                 </div>
-                <div className="bento-content bento-community-content">
-                  <div className="community-text">
+                <div  className="bento-content bento-community-content">
+                  <div  className="community-text">
                     <h3>Sát cánh & Đồng hành</h3>
                     <p>Chúng tôi xây dựng không gian chia sẻ kinh nghiệm ép xung và tối ưu hóa hệ thống máy tính cho anh em công nghệ.</p>
                   </div>
-                  <div className="bento-stats">
-                    <div className="stat-item">
-                      <span className="stat-num stat-blue">10K+</span>
-                      <span className="stat-lbl">Khách hàng</span>
+                  <div  className="bento-stats">
+                    <div  className="stat-item">
+                      <span  className="stat-num stat-blue">10K+</span>
+                      <span  className="stat-lbl">Khách hàng</span>
                     </div>
-                    <div className="stat-item">
-                      <span className="stat-num stat-orange">99%</span>
-                      <span className="stat-lbl">Hài lòng</span>
+                    <div  className="stat-item">
+                      <span  className="stat-num stat-orange">99%</span>
+                      <span  className="stat-lbl">Hài lòng</span>
                     </div>
                   </div>
                 </div>
@@ -446,28 +446,28 @@ export default function AboutUs({ theme, setActiveView }) {
       </div>
 
       {/* Horizontal Scroll Timeline Section */}
-      <div className="about-timeline-section section-padding">
-        <div className="timeline-section-container">
+      <div  className="about-timeline-section section-padding">
+        <div  className="timeline-section-container">
           <ScrollReveal direction="up">
-            <h2 className="section-title text-center" style={{ textTransform: 'uppercase' }}>Hành trình phát triển</h2>
+            <h2  style={{ textTransform: 'uppercase' }} className="section-title text-center">Hành trình phát triển</h2>
           </ScrollReveal>
 
           <div
-            className="timeline-container"
+            
             ref={timelineRef}
             onMouseDown={handleMouseDown}
             onMouseLeave={handleMouseLeave}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
-          >
-            <div className="timeline-track">
+           className="timeline-container">
+            <div  className="timeline-track">
               {milestones.map((item, idx) => (
-                <div className="timeline-item" key={idx}>
-                  <div className="timeline-year">{item.year}</div>
-                  <div className="timeline-dot"></div>
-                  <div className="timeline-card glass-panel">
+                <div  key={idx} className="timeline-item">
+                  <div  className="timeline-year">{item.year}</div>
+                  <div  className="timeline-dot"></div>
+                  <div  className="timeline-card glass-panel">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                      <div className="timeline-card-icon" style={{ color: 'var(--color-primary)' }}>
+                      <div  style={{ color: 'var(--color-primary)' }} className="timeline-card-icon">
                         {item.icon}
                       </div>
                       <h4>{item.title}</h4>
@@ -482,27 +482,27 @@ export default function AboutUs({ theme, setActiveView }) {
       </div>
 
       {/* Team Section */}
-      <div className="about-team section-padding">
-        <div className="team-section-container">
+      <div  className="about-team section-padding">
+        <div  className="team-section-container">
           <ScrollReveal direction="up">
-            <h2 className="section-title text-center" style={{ textTransform: 'uppercase', marginBottom: '3rem' }}>Đội ngũ sáng lập</h2>
+            <h2  style={{ textTransform: 'uppercase', marginBottom: '3rem' }} className="section-title text-center">Đội ngũ sáng lập</h2>
           </ScrollReveal>
 
-          <div className="team-grid">
+          <div  className="team-grid">
             {team.map((member, idx) => (
               <ScrollReveal key={idx} direction="up" delay={idx * 150}>
-                <div className="team-card">
+                <div  className="team-card">
                   {member.img && (
-                    <div className="team-img-wrapper">
+                    <div  className="team-img-wrapper">
                       <img src={member.img} alt={member.name} />
                     </div>
                   )}
-                  <div className="team-info">
+                  <div  className="team-info">
                     <h4>{member.name}</h4>
                     <span>{member.role}</span>
                     {member.desc && <p>{member.desc}</p>}
                     {member.socials && Object.keys(member.socials).length > 0 && (
-                      <div className="team-socials">
+                      <div  className="team-socials">
                         {member.socials.linkedin && (
                           <a href={member.socials.linkedin} target="_blank" rel="noreferrer">
                             <Linkedin size={18} />
@@ -529,28 +529,28 @@ export default function AboutUs({ theme, setActiveView }) {
       </div>
 
       {/* Partners Showcase */}
-      <div className="about-partners section-padding">
-        <div className="partners-section-container" style={{ textAlign: 'center' }}>
+      <div  className="about-partners section-padding">
+        <div  style={{ textAlign: 'center' }} className="partners-section-container">
           <ScrollReveal direction="up">
             <h3 style={{ fontSize: '18px', fontWeight: '800', fontFamily: 'Montserrat', color: 'var(--color-on-background)', marginBottom: '30px', textTransform: 'uppercase' }}>
               Đối tác tin cậy
             </h3>
           </ScrollReveal>
           <ScrollReveal direction="up" delay={150}>
-            <div className="partners-grid-layout">
+            <div  className="partners-grid-layout">
               {partners.map((partner, idx) => (
-                <div key={idx} className="partner-logo-box">
+                <div key={idx}  className="partner-logo-box">
                   <img
                     src={partner.logo}
                     alt={partner.name}
-                    className="partner-logo-pic"
+                    
                     style={{
                       height: '36px',
                       objectFit: 'contain',
                       filter: theme === 'light' ? 'grayscale(0.7) contrast(1.1)' : 'grayscale(1) brightness(0.8)',
                       transition: 'all 0.3s ease'
                     }}
-                  />
+                   className="partner-logo-pic" />
                   <span>{partner.name}</span>
                 </div>
               ))}
@@ -560,17 +560,17 @@ export default function AboutUs({ theme, setActiveView }) {
       </div>
 
       {/* Action CTA Block */}
-      <div className="about-cta-wrapper section-padding">
+      <div  className="about-cta-wrapper section-padding">
         <ScrollReveal direction="up">
           <div
-            className="glass-panel-glow-orange text-center"
+            
             style={{
               borderRadius: 'var(--rounded-lg)',
               padding: '40px 30px',
               border: '1px solid rgba(253, 139, 0, 0.25)',
               background: theme === 'light' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(21, 24, 25, 0.75)'
             }}
-          >
+           className="glass-panel-glow-orange text-center">
             <h3 style={{ fontSize: '20px', fontWeight: '900', color: 'var(--color-on-background)', fontFamily: 'Montserrat' }}>
               Bạn đã sẵn sàng để nâng cấp cấu hình của mình?
             </h3>

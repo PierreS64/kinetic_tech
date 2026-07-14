@@ -3,16 +3,16 @@ import { CheckCircle2, Calendar, MapPin, ShoppingBag, FileText } from 'lucide-re
 
 export default function OrderReceipt({ orderReceipt, formatVND, handleFinish }) {
     return (
-      <div className="container" style={{ paddingTop: '40px', maxWidth: '680px' }}>
+      <div  style={{ paddingTop: '40px', maxWidth: '680px' }} className="container">
         <div 
-          className="glass-panel animate-fade-in-up" 
+           
           style={{
             borderRadius: 'var(--rounded-lg)',
             border: '1px solid rgba(76, 175, 80, 0.25)',
             boxShadow: '0 0 30px rgba(76, 175, 80, 0.1)',
             overflow: 'hidden'
           }}
-        >
+         className="glass-panel animate-fade-in-up">
           {/* Header success */}
           <div style={{
             background: 'linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.02))',
@@ -49,15 +49,13 @@ export default function OrderReceipt({ orderReceipt, formatVND, handleFinish }) 
           <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Info meta */}
             <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '16px',
+              display: 'grid', gap: '16px',
               fontSize: '13px',
               background: 'rgba(0,0,0,0.15)',
               padding: '16px',
               borderRadius: 'var(--rounded-md)',
               border: '1px solid rgba(255,255,255,0.04)'
-            }}>
+            }}  className="grid-responsive-2col">
               <div>
                 <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Thời gian đặt hàng:</span>
                 <span style={{ color: 'white', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -97,7 +95,7 @@ export default function OrderReceipt({ orderReceipt, formatVND, handleFinish }) 
                 borderRadius: 'var(--rounded-md)',
                 overflow: 'hidden'
               }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }} className="zebra-table">
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}  className="zebra-table">
                   <thead>
                     <tr style={{ background: 'rgba(0,0,0,0.2)', textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                       <th style={{ padding: '10px 14px', color: 'var(--color-outline)' }}>Sản phẩm</th>
@@ -174,9 +172,9 @@ export default function OrderReceipt({ orderReceipt, formatVND, handleFinish }) 
               </button>
               <button 
                 onClick={handleFinish}
-                className="btn btn-secondary"
+                
                 style={{ flex: 1, padding: '12px' }}
-              >
+               className="btn btn-secondary">
                 Tiếp tục mua sắm
               </button>
             </div>

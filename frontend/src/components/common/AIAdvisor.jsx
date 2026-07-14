@@ -124,7 +124,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
   };
 
   return (
-    <div className="glass-panel" style={{
+    <div  style={{
       display: 'flex',
       flexDirection: 'column',
       height: onClose ? '100%' : '600px',
@@ -133,7 +133,7 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
       maxWidth: onClose ? '100%' : '800px',
       margin: '0 auto',
       border: theme === 'light' ? '1px solid rgba(0, 123, 255, 0.25)' : '1px solid rgba(0, 123, 255, 0.15)'
-    }}>
+    }} className="glass-panel">
       {/* Header */}
       <div style={{
         background: theme === 'light' ? 'linear-gradient(90deg, var(--color-surface-container-high) 0%, rgba(0, 123, 255, 0.15) 100%)' : 'linear-gradient(90deg, rgba(10, 25, 47, 0.95) 0%, rgba(0, 123, 255, 0.2) 100%)',
@@ -169,10 +169,10 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
           <button
             type="button"
             onClick={onClose}
-            className="btn btn-ghost"
+            
             style={{ padding: '6px', borderRadius: '50%', minWidth: '32px', height: '32px', display: 'flex', alignItems: 'center', justify: 'center' }}
             title="Đóng chat"
-          >
+           className="btn btn-ghost">
             <X size={18} color="white" />
           </button>
         )}
@@ -364,9 +364,9 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
         />
         <button
           type="submit"
-          className="btn btn-primary"
+          
           style={{ padding: '10px 18px' }}
-        >
+         className="btn btn-primary">
           <Send size={16} />
         </button>
       </form>

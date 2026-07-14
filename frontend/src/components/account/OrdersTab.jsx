@@ -7,7 +7,7 @@ export default function OrdersTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                   Lịch Sử Đơn Hàng Của Bạn
                 </h3>
@@ -22,7 +22,7 @@ export default function OrdersTab(props) {
                   </div>
                 ) : (
                   <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }} className="zebra-table">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}  className="zebra-table">
                       <thead>
                         <tr style={{ background: 'var(--color-surface-container-high)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                           <th style={{ padding: '12px 16px', fontWeight: '700' }}>Mã Đơn Hàng</th>
@@ -39,7 +39,7 @@ export default function OrdersTab(props) {
                             <td style={{ padding: '12px 16px' }}>{order.date}</td>
                             <td style={{ fontWeight: '800', color: 'var(--color-secondary-dim)', padding: '12px 16px' }}>{formatVND(order.total)}</td>
                             <td style={{ padding: '12px 16px' }}>
-                              <span className="status-badge" style={{
+                              <span  style={{
                                 fontSize: '10px',
                                 background: 
                                   order.status === 'DELIVERED' ? 'rgba(76,175,80,0.15)' : 
@@ -50,7 +50,7 @@ export default function OrdersTab(props) {
                                   order.status === 'CANCELLED' ? '#ffb4ab' :
                                   order.status === 'PROCESSING' ? '#adc7ff' : '#ffb77d',
                                 padding: '2px 8px'
-                              }}>
+                              }} className="status-badge">
                                 {order.status === 'DELIVERED' && 'Đã hoàn thành'}
                                 {order.status === 'CANCELLED' && 'Đã hủy'}
                                 {order.status === 'PROCESSING' && 'Đang xử lý'}
@@ -76,7 +76,7 @@ export default function OrdersTab(props) {
                 {/* Sub-Modal / Expanding Window for Order details & Request Support */}
                 {selectedOrder && createPortal(
                   <div 
-                    className="modal-overlay" 
+                     
                     style={{ 
                       zIndex: 101,
                       position: 'fixed',
@@ -88,11 +88,11 @@ export default function OrdersTab(props) {
                       alignItems: 'center',       
                       justifyContent: 'center'
                     }} 
-                    onClick={() => setSelectedOrder(null)}
+                    className="modal-overlay" onClick={() => setSelectedOrder(null)}
                   >
                     <div 
-                      className="glass-panel animate-fade-in-up" 
-                      onClick={(e) => e.stopPropagation()} 
+                       
+                      className="glass-panel animate-fade-in-up" onClick={(e) => e.stopPropagation()} 
                       style={{ width: '90%', maxWidth: '650px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden' }}
                     >
                       {/* Modal Header */}
@@ -110,7 +110,7 @@ export default function OrdersTab(props) {
                       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px', maxHeight: '75vh', overflowY: 'auto' }}>
                         
                         {/* Transaction summary */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: 'var(--rounded)' }}>
+                        <div style={{ display: 'grid', gap: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: 'var(--rounded)' }}  className="grid-responsive-2col">
                           <div>
                             <span style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--color-outline)', fontWeight: '800', display: 'block', marginBottom: '4px' }}>Địa chỉ giao hàng</span>
                             <span style={{ fontSize: '12px', color: 'white', lineHeight: '1.5' }}>
@@ -295,7 +295,7 @@ export default function OrdersTab(props) {
                               </div>
                             ) : (
                               <form onSubmit={handleSupportRequestSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                                <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                                   <div>
                                     <label style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Mức độ khẩn cấp</label>
                                     <select 
@@ -311,7 +311,7 @@ export default function OrdersTab(props) {
                                   </div>
                                   <div>
                                     <label style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Loại sự cố</label>
-                                    <input type="text" value="Báo lỗi phần cứng thiết bị" disabled className="form-input" style={{ padding: '8px', fontSize: '12px', opacity: 0.7 }} />
+                                    <input type="text" value="Báo lỗi phần cứng thiết bị" disabled  style={{ padding: '8px', fontSize: '12px', opacity: 0.7 }}  className="form-input" />
                                   </div>
                                 </div>
                                 <div>
@@ -325,7 +325,7 @@ export default function OrdersTab(props) {
                                     style={{ fontSize: '12px', padding: '10px' }}
                                   />
                                 </div>
-                                <button type="submit" className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '12px', alignSelf: 'flex-end' }}>
+                                <button type="submit"  style={{ padding: '8px 16px', fontSize: '12px', alignSelf: 'flex-end' }} className="btn btn-secondary">
                                   Gửi Yêu Cầu Hỗ Trợ
                                 </button>
                               </form>

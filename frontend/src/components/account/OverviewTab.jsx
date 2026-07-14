@@ -19,7 +19,7 @@ export default function OverviewTab(props) {
                       {valuedTradeIns.map(trade => (
                         <div 
                           key={trade.id}
-                          className="glass-panel-glow-orange animate-fade-in-up"
+                          
                           style={{
                             borderRadius: 'var(--rounded-md)',
                             padding: '16px 20px',
@@ -31,7 +31,7 @@ export default function OverviewTab(props) {
                             gap: '12px',
                             position: 'relative'
                           }}
-                        >
+                         className="glass-panel-glow-orange animate-fade-in-up">
                           <div>
                             <span style={{ fontSize: '10px', fontWeight: '800', color: 'var(--color-secondary-dim)', textTransform: 'uppercase', display: 'block', letterSpacing: '0.5px' }}>
                               🔔 BÁO GIÁ THU CŨ MỚI (YÊU CẦU: {trade.id})
@@ -62,7 +62,7 @@ export default function OverviewTab(props) {
                 
                 {/* Promo Banner Section - Rich Custom Design */}
                 <div 
-                  className="glass-panel-glow-orange" 
+                   
                   style={{
                     borderRadius: 'var(--rounded-lg)',
                     padding: '30px',
@@ -75,7 +75,7 @@ export default function OverviewTab(props) {
                     gap: '20px',
                     border: '1px solid rgba(253, 139, 0, 0.25)'
                   }}
-                >
+                 className="glass-panel-glow-orange">
                   {/* Decorative background circle */}
                   <div style={{
                     position: 'absolute',
@@ -128,10 +128,10 @@ export default function OverviewTab(props) {
                 </div>
 
                 {/* Dashboard Sub-grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }} className="overview-subgrid">
+                <div style={{ display: 'grid', gap: '24px' }}   className="grid-responsive-2col overview-subgrid">
                   
                   {/* Left sub-column: Recent 3 Orders */}
-                  <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '20px' }}>
+                  <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '20px' }} className="glass-panel">
                     <h4 style={{ fontSize: '14px', fontWeight: '800', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px' }}>
                       <ShoppingBag size={16} color="var(--color-primary-dim)" />
                       Đơn hàng gần đây nhất
@@ -200,7 +200,7 @@ export default function OverviewTab(props) {
                   </div>
 
                   {/* Right sub-column: Current Vouchers */}
-                  <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '20px' }}>
+                  <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '20px' }} className="glass-panel">
                     <h4 style={{ fontSize: '14px', fontWeight: '800', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px' }}>
                       <Tag size={16} color="var(--color-secondary-dim)" />
                       Mã giảm giá hiện có
@@ -245,7 +245,7 @@ export default function OverviewTab(props) {
                 </div>
 
                 {/* Favorites Row (Loved Products) */}
-                <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '20px' }}>
+                <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '20px' }} className="glass-panel">
                   <h4 style={{ fontSize: '14px', fontWeight: '800', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px' }}>
                     <Heart size={16} color="var(--color-error)" fill="var(--color-error)" />
                     Sản phẩm bạn yêu thích ({favoriteProducts.length})

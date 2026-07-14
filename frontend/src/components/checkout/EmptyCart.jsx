@@ -3,9 +3,9 @@ import { ShoppingBag } from 'lucide-react';
 
 export default function EmptyCart({ setActiveView }) {
     return (
-      <div className="container animate-fade-in-up" style={{ paddingTop: '60px', maxWidth: '480px' }}>
+      <div  style={{ paddingTop: '60px', maxWidth: '480px' }} className="container animate-fade-in-up">
         <div 
-          className="glass-panel" 
+           
           style={{
             padding: '40px 30px',
             borderRadius: 'var(--rounded-lg)',
@@ -15,7 +15,7 @@ export default function EmptyCart({ setActiveView }) {
             alignItems: 'center',
             gap: '16px'
           }}
-        >
+         className="glass-panel">
           <ShoppingBag size={48} color="var(--color-outline)" />
           <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'white' }}>Giỏ hàng của bạn đang trống!</h3>
           <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', lineHeight: '1.5' }}>

@@ -6,7 +6,7 @@ export default function ProductsTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
 
                 {/* Header Controls */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
@@ -66,8 +66,8 @@ export default function ProductsTab(props) {
 
                 {/* Adding Product Form Overlay */}
                 {isAddingProduct && (
-                  <div className="modal-overlay" onClick={() => setIsAddingProduct(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
-                    <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '560px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+                  <div  className="modal-overlay" onClick={() => setIsAddingProduct(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
+                    <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '560px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
                       <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
                         <h4 style={{ fontSize: '15px', fontWeight: '800', color: textColor }}>Tạo sản phẩm mới</h4>
                         <button onClick={() => setIsAddingProduct(false)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
@@ -89,7 +89,7 @@ export default function ProductsTab(props) {
                           />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                           <div>
                             <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Danh Mục *</label>
                             <select
@@ -118,7 +118,7 @@ export default function ProductsTab(props) {
                           </div>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                           <div>
                             <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Giá Bán (VND) *</label>
                             <input
@@ -146,7 +146,7 @@ export default function ProductsTab(props) {
 
                         <div style={{ borderTop: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingTop: '10px' }}>
                           <span style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', marginBottom: '8px' }}>Thông số cấu hình kỹ thuật (Không bắt buộc)</span>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                          <div style={{ display: 'grid', gap: '10px' }}  className="grid-responsive-2col">
                             <input
                               type="text"
                               placeholder="CPU (ví dụ: Intel i7)"
@@ -205,7 +205,7 @@ export default function ProductsTab(props) {
                           />
                         </div>
 
-                        <button type="submit" className="btn btn-secondary" style={{ width: '100%', padding: '12px', fontWeight: '700', marginTop: '10px' }}>
+                        <button type="submit"  style={{ width: '100%', padding: '12px', fontWeight: '700', marginTop: '10px' }} className="btn btn-secondary">
                           HOÀN TẤT THÊM SẢN PHẨM
                         </button>
                       </form>
@@ -215,7 +215,7 @@ export default function ProductsTab(props) {
 
                 {/* Product List Table */}
                 <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="zebra-table">
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
                     <thead>
                       <tr style={{ background: 'var(--color-surface-container-high)' }}>
                         <th style={{ padding: '12px 16px', fontWeight: '700', color: theme === 'light' ? '#0f172a' : 'white' }}>Ảnh</th>
@@ -329,8 +329,8 @@ export default function ProductsTab(props) {
 
                 {/* Price Confirm Modal */}
                 {priceConfirmModal && (
-                  <div className="modal-overlay" onClick={() => setPriceConfirmModal(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
-                    <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '420px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+                  <div  className="modal-overlay" onClick={() => setPriceConfirmModal(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
+                    <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '420px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
                       <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
                         <h4 style={{ fontSize: '14px', fontWeight: '800', color: theme === 'light' ? '#0f172a' : 'white' }}>Xác nhận thay đổi giá</h4>
                         <button onClick={() => setPriceConfirmModal(null)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
@@ -345,9 +345,9 @@ export default function ProductsTab(props) {
                         </p>
                         <div style={{ display: 'flex', gap: '10px' }}>
                           <button
-                            className="btn btn-secondary"
+                            
                             style={{ flex: 1, padding: '10px', fontSize: '13px', fontWeight: '700' }}
-                            onClick={() => {
+                            className="btn btn-secondary" onClick={() => {
                               setStoreProducts(prev => prev.map(p => p.id === priceConfirmModal.prodId ? { ...p, price: priceConfirmModal.pendingPrice } : p));
                               setPriceConfirmModal(null);
                             }}
@@ -355,9 +355,9 @@ export default function ProductsTab(props) {
                             Lưu
                           </button>
                           <button
-                            className="btn btn-outline"
+                            
                             style={{ flex: 1, padding: '10px', fontSize: '13px' }}
-                            onClick={() => setPriceConfirmModal(null)}
+                            className="btn btn-outline" onClick={() => setPriceConfirmModal(null)}
                           >
                             Hoàn tác
                           </button>

@@ -376,7 +376,7 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
     : [];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '30px' }} className="pc-builder-container">
+    <div style={{ display: 'grid', gap: '30px' }}   className="grid-responsive-pcbuilder pc-builder-container">
       {/* Selector List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -387,9 +387,9 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
           {!isConfigEmpty && (
             <button
               onClick={handleReset}
-              className="btn btn-outline"
+              
               style={{ padding: '8px 14px', fontSize: '12px' }}
-            >
+             className="btn btn-outline">
               <RefreshCw size={14} />
               Reset cấu hình
             </button>
@@ -405,13 +405,13 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
             return (
               <div
                 key={cat.id}
-                className="glass-panel"
+                
                 style={{
                   borderRadius: 'var(--rounded-md)',
                   padding: '16px',
                   borderLeft: selected ? '4px solid var(--color-primary)' : '1px solid rgba(255, 255, 255, 0.08)'
                 }}
-              >
+               className="glass-panel">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <div style={{
@@ -515,7 +515,7 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
       {/* Bill & Compatibility Dashboard */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {/* Bill Summary */}
-        <div className="glass-panel" style={{ borderRadius: 'var(--rounded-md)', padding: '24px', position: 'sticky', top: '92px' }}>
+        <div  style={{ borderRadius: 'var(--rounded-md)', padding: '24px', position: 'sticky', top: '92px' }} className="glass-panel">
           <h3 style={{ fontSize: '18px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px', marginBottom: '16px' }}>
             TỔNG QUAN HÓA ĐƠN
           </h3>
@@ -581,7 +581,7 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
 
           <button
             onClick={handleAddAllToCart}
-            className="btn btn-secondary"
+            
             disabled={isConfigEmpty}
             style={{
               width: '100%',
@@ -592,7 +592,7 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
               background: 'linear-gradient(135deg, #d95300, #b33c00)',
               boxShadow: '0 4px 14px 0 rgba(217, 83, 0, 0.3)'
             }}
-          >
+           className="btn btn-secondary">
             <ShoppingCart size={16} />
             <b>Thêm Cấu Hình Vào Giỏ Hàng</b>
           </button>

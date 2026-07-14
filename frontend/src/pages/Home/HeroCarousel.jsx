@@ -139,7 +139,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
   const indicatorInactive = isLight ? 'rgba(15, 23, 42, 0.2)' : 'rgba(255, 255, 255, 0.3)';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', margin: 0, width: '100%' }} className="animate-fade-in-up">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', margin: 0, width: '100%' }}  className="animate-fade-in-up">
       {/* Full-width Dynamic Slide Banner (Decreased height) */}
       <div
         style={{
@@ -165,9 +165,9 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
           flexDirection: 'column',
           justifyContent: 'center',
           color: isLight ? '#0f172a' : 'white'
-        }} className="banner-content">
-          <div className="container" style={{ display: 'flex', flexDirection: 'column' }}>
-            <span className="banner-badge" style={{
+        }}  className="banner-content">
+          <div  style={{ display: 'flex', flexDirection: 'column' }} className="container">
+            <span  style={{
               fontSize: '11px',
               fontWeight: 800,
               textTransform: 'uppercase',
@@ -179,7 +179,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
               borderRadius: 'var(--rounded-full)',
               alignSelf: 'flex-start',
               marginBottom: '12px'
-            }}>
+            }} className="banner-badge">
               {slide.discount}
             </span>
             <h1 style={{
@@ -218,7 +218,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
         {/* Carousel controls */}
         <button
           onClick={handlePrev}
-          className="btn btn-ghost"
+          
           style={{
             position: 'absolute',
             left: '20px',
@@ -232,12 +232,12 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
             border: controlBorder,
             padding: 0
           }}
-        >
+         className="btn btn-ghost">
           <ArrowLeft size={18} color={controlIconColor} />
         </button>
         <button
           onClick={handleNext}
-          className="btn btn-ghost"
+          
           style={{
             position: 'absolute',
             right: '20px',
@@ -251,7 +251,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
             border: controlBorder,
             padding: 0
           }}
-        >
+         className="btn btn-ghost">
           <ArrowRight size={18} color={controlIconColor} />
         </button>
 
@@ -282,10 +282,10 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
       </div>
 
       {/* Countdown Flash Sale Section (Enlarged & Top-centered title) */}
-      <div className="container" style={{ marginTop: '20px' }}>
+      <div  style={{ marginTop: '20px' }} className="container">
         <div
           id="flash-sale-box"
-          className="glass-panel"
+          
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -294,7 +294,7 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
             borderRadius: 'var(--rounded-md)',
             overflow: 'hidden'
           }}
-        >
+         className="glass-panel">
           {/* Header Block: Centered Title & Countdown */}
           <div style={{
             display: 'flex',
@@ -334,11 +334,11 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-on-surface-variant)' }}>Kết thúc sau:</span>
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                <div className="countdown-box">{String(timeLeft.hours).padStart(2, '0')}</div>
-                <span className="countdown-separator">:</span>
-                <div className="countdown-box">{String(timeLeft.minutes).padStart(2, '0')}</div>
-                <span className="countdown-separator">:</span>
-                <div className="countdown-box">{String(timeLeft.seconds).padStart(2, '0')}</div>
+                <div  className="countdown-box">{String(timeLeft.hours).padStart(2, '0')}</div>
+                <span  className="countdown-separator">:</span>
+                <div  className="countdown-box">{String(timeLeft.minutes).padStart(2, '0')}</div>
+                <span  className="countdown-separator">:</span>
+                <div  className="countdown-box">{String(timeLeft.seconds).padStart(2, '0')}</div>
               </div>
             </div>
           </div>
@@ -396,10 +396,10 @@ export default function HeroCarousel({ onCtaClick, theme, products = [], onAddTo
                       scrollbarWidth: 'none',
                       msOverflowStyle: 'none'
                     }}
-                    className="no-scrollbar"
-                  >
+                    
+                   className="no-scrollbar">
                     {saleProducts.map((prod) => (
-                      <div key={prod.id} style={{ flex: '0 0 calc(25% - 15px)', minWidth: 'calc(25% - 15px)', maxWidth: 'calc(25% - 15px)', scrollSnapAlign: 'start' }}>
+                      <div key={prod.id} className="category-scroll-item">
                         <ProductCard
                           product={prod}
                           onAddToCart={onAddToCart}
