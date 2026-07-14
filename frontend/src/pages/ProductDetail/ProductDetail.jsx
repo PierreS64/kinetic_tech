@@ -249,7 +249,7 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
                 rows="4" 
                 placeholder="Chia sẻ cảm nhận của bạn về sản phẩm này..."
                 value={newReview.comment}
-                className="kinetic-input" onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                className="form-input" onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
               />
             </div>
             <button type="submit"  disabled={submittingReview} style={{ alignSelf: 'flex-start', padding: '12px 24px' }} className="btn btn-primary">

@@ -33,7 +33,7 @@ import api from './utils/api';
 export default function App() {
   const [activeView, setActiveView] = useState(() => {
     try {
-      return localStorage.getItem('kinetic_active_view') || 'deals';
+      return sessionStorage.getItem('kinetic_active_view') || 'deals';
     } catch {
       return 'deals';
     }
@@ -41,7 +41,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('kinetic_active_view', activeView);
+      sessionStorage.setItem('kinetic_active_view', activeView);
     } catch (e) {
       console.error('Failed to save activeView', e);
     }
