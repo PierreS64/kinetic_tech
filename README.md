@@ -9,7 +9,7 @@
 **Status:** ![In Development](https://img.shields.io/badge/Status-In_Development-orange)
 
 ## 📌 Tổng Quan Dự Án
-**Kinetic Tech** là một hệ thống nền tảng hiện đại, kết hợp đột phá giữa **Thương mại điện tử (E-commerce)** chuyên biệt cho các sản phẩm công nghệ và **Nền tảng hỗ trợ kỹ thuật trực tuyến (Online Technical Support)** sau mua hàng[cite: 1]. 
+**Kinetic Tech** là một hệ thống nền tảng hiện đại, kết hợp đột phá giữa **Thương mại điện tử (E-commerce)** chuyên biệt cho các sản phẩm công nghệ và **Nền tảng hỗ trợ kỹ thuật trực tuyến (Online Technical Support)** sau mua hàng. 
 
 Điểm nhấn khác biệt của hệ thống là việc ứng dụng **Trí tuệ nhân tạo (AI Chatbot qua LLM API)** đóng vai trò tư vấn viên và giải quyết sự cố tự động cấp độ 1, kết hợp hệ thống **Real-time Live Chat & Ticketing** xử lý bài toán điều phối, kết nối khách hàng với đội ngũ kỹ thuật viên con người một cách tối ưu.
 
@@ -82,5 +82,8 @@ Dự án được triển khai cuốn chiếu theo mô hình Giao diện chạy 
 3.  **Nguyễn Thuận Phong** – Leader / Kiến trúc Backend (NestJS) / Hệ thống Real-time / Tester
 4.  **Nguyễn Tiến Thành** – Thiết kế Cơ sở dữ liệu (PostgreSQL) / Lập trình Backend (NestJS)
 
+---
+## Thiết kế
+1. Link figma: https://www.figma.com/design/HB7INhEccUks4Dzp28JM6S/Untitled?node-id=0-1&t=H7wn0QOertfprDAJ-1
 ---
 *Dự án thuộc học phần Đồ án Chuyên ngành - Bản quyền thiết kế và phát triển bởi đội ngũ Kinetic Tech.*
