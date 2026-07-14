@@ -57,6 +57,7 @@ export default function Navbar({
     { id: 'warranty', label: 'Tra Cứu Bảo Hành', desc: 'Đăng ký & kích hoạt trực tuyến' },
     { id: 'order-tracking', label: 'Theo Dõi Đơn Hàng', desc: 'Tra cứu trạng thái vận chuyển 24/7' },
     { id: 'support-ticket', label: 'Ticket Kỹ Thuật', desc: 'Hỗ trợ kỹ thuật phần cứng 24/7' },
+    { id: 'appointments', label: 'Đặt Lịch Sửa Chữa', desc: 'Sửa chữa tại nhà & cửa hàng' },
     { id: 'about-us', label: 'Về Chúng Tôi', desc: 'Tìm hiểu về Kinetic Tech Store' }
   ], []);
 
@@ -65,7 +66,7 @@ export default function Navbar({
 
   const updateIndicator = useCallback(() => {
     const isCategoryView = ['laptop', 'điện thoại', 'gaming gear', 'linh kiện'].includes(activeView);
-    const isSupportView = ['warranty', 'order-tracking', 'support-ticket', 'about-us'].includes(activeView);
+    const isSupportView = ['warranty', 'order-tracking', 'support-ticket', 'about-us', 'appointments'].includes(activeView);
     const isTradeInView = activeView === 'trade-in';
     const activeIndex = isCategoryView ? 0 : 
                        isTradeInView ? 1 :
@@ -307,12 +308,12 @@ export default function Navbar({
                   gap: '8px',
                   position: 'relative',
                   zIndex: 1,
-                  color: ['warranty', 'order-tracking', 'support-ticket', 'about-us'].includes(activeView) ? 'var(--color-active-nav-text, #ffffff)' : 'var(--color-on-surface-variant)',
+                  color: ['warranty', 'order-tracking', 'support-ticket', 'about-us', 'appointments'].includes(activeView) ? 'var(--color-active-nav-text, #ffffff)' : 'var(--color-on-surface-variant)',
                   background: 'transparent',
                   border: '1px solid transparent'
                 }}
               >
-                <HelpCircle size={16} color={['warranty', 'order-tracking', 'support-ticket', 'about-us'].includes(activeView) ? 'var(--color-primary-dim)' : 'currentColor'} />
+                <HelpCircle size={16} color={['warranty', 'order-tracking', 'support-ticket', 'about-us', 'appointments'].includes(activeView) ? 'var(--color-primary-dim)' : 'currentColor'} />
                 Hỗ Trợ
                 <ChevronDown size={12} style={{ transform: supportDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
               </button>
@@ -503,7 +504,7 @@ export default function Navbar({
                   }}>
                     {currentUser.fullName}
                   </div>
-                  {currentUser.role !== 'ADMIN' && (
+                  {!['ADMIN', 'TECHNICIAN'].includes(currentUser.role) && (
                     <button
                       onClick={() => {
                         setActiveView('account');
@@ -515,16 +516,17 @@ export default function Navbar({
                       Tài khoản của tôi
                     </button>
                   )}
-                  {currentUser.role === 'ADMIN' && (
+                  {['ADMIN', 'TECHNICIAN'].includes(currentUser.role) && (
                     <button
                       onClick={() => {
                         setActiveView('admin');
                         setUserDropdownOpen(false);
                       }}
-                      className="btn btn-ghost global-dropdown-item item-primary"
+                      className="btn btn-ghost global-dropdown-item"
+                      style={{ color: 'var(--color-primary-dim)' }}
                     >
                       <Shield size={14} />
-                      Trang quản lý
+                      {currentUser.role === 'ADMIN' ? 'Trang quản lý (Admin)' : 'Trang quản lý (KTV)'}
                     </button>
                   )}
                   <button
@@ -595,7 +597,7 @@ export default function Navbar({
                     <p style={{ fontSize: '11px', color: 'var(--color-outline)' }}>{currentUser.email}</p>
                   </div>
                 </div>
-                {currentUser.role === 'ADMIN' && (
+                {['ADMIN', 'TECHNICIAN'].includes(currentUser.role) && (
                   <button
                     onClick={() => {
                       setActiveView('admin');
@@ -605,10 +607,10 @@ export default function Navbar({
                     style={{ width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                   >
                     <Shield size={14} />
-                    Trang quản lý (Admin)
+                    {currentUser.role === 'ADMIN' ? 'Trang quản lý (Admin)' : 'Trang quản lý (KTV)'}
                   </button>
                 )}
-                {currentUser.role !== 'ADMIN' && (
+                {!['ADMIN', 'TECHNICIAN'].includes(currentUser.role) && (
                   <button
                     onClick={() => {
                       setActiveView('account');
@@ -759,8 +761,8 @@ export default function Navbar({
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   gap: '12px',
-                  color: ['warranty', 'order-tracking', 'support-ticket', 'about-us'].includes(activeView) ? '#ffffff' : 'var(--color-on-surface-variant)',
-                  background: ['warranty', 'order-tracking', 'support-ticket', 'about-us'].includes(activeView) ? 'rgba(0, 123, 255, 0.05)' : 'transparent',
+                  color: ['warranty', 'order-tracking', 'support-ticket', 'about-us', 'appointments'].includes(activeView) ? '#ffffff' : 'var(--color-on-surface-variant)',
+                  background: ['warranty', 'order-tracking', 'support-ticket', 'about-us', 'appointments'].includes(activeView) ? 'rgba(0, 123, 255, 0.05)' : 'transparent',
                   padding: '12px 16px'
                 }}
               >

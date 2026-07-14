@@ -24,4 +24,20 @@ export class UsersService {
       data,
     });
   }
+
+  async findTechnicians(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      where: { role: 'TECHNICIAN' },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        phone: true,
+        role: true,
+        password: false,
+        createdAt: true,
+        updatedAt: true
+      } as Prisma.UserSelect
+    }) as unknown as User[];
+  }
 }

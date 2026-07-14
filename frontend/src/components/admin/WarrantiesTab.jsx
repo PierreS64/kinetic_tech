@@ -13,7 +13,7 @@ export default function WarrantiesTab(props) {
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="zebra-table">
                     <thead>
                       <tr style={{ background: 'var(--color-surface-container-high)' }}>
-                        <th style={{ padding: '12px 16px', fontWeight: '700', color: textColor }}>Mã yêu cầu</th>
+
                         <th style={{ padding: '12px 16px', fontWeight: '700', color: textColor }}>Khách hàng</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700', color: textColor }}>Sản Phẩm & Serial</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700', color: textColor }}>Mô tả lỗi</th>
@@ -25,7 +25,7 @@ export default function WarrantiesTab(props) {
                     <tbody>
                       {warranties.map(claim => (
                         <tr key={claim.id} onClick={(e) => { if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') setDetailedItem({ ...claim, type: 'warranty' }); }} style={{ cursor: 'pointer' }}>
-                          <td style={{ fontWeight: '700', color: 'var(--color-primary-dim)' }}>{claim.id}</td>
+
                           <td>
                             <strong style={{ color: textColor, display: 'block' }}>{claim.customerName}</strong>
                             <span style={{ fontSize: '10px', color: 'var(--color-outline)' }}>{claim.phone}</span>

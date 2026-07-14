@@ -194,13 +194,13 @@ export default function OrdersTab(props) {
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, width: '20%' }}>
                                 <div style={{
                                   width: '32px', height: '32px', borderRadius: '50%',
-                                  background: selectedOrder.status === 'DELIVERED' ? 'rgba(76, 175, 80, 0.15)' : 'var(--color-surface-container-highest)',
-                                  color: selectedOrder.status === 'DELIVERED' ? '#81c784' : 'var(--color-outline)',
-                                  border: selectedOrder.status === 'DELIVERED' ? '1px solid rgba(76, 175, 80, 0.3)' : 'none',
+                                  background: selectedOrder.status === 'DELIVERED' ? 'var(--color-primary)' : 'var(--color-surface-container-highest)',
+                                  color: selectedOrder.status === 'DELIVERED' ? 'white' : 'var(--color-outline)',
+                                  border: 'none',
                                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold',
-                                  boxShadow: selectedOrder.status === 'DELIVERED' ? '0 0 10px rgba(76, 175, 80, 0.3)' : 'none'
+                                  boxShadow: selectedOrder.status === 'DELIVERED' ? '0 0 10px rgba(0, 123, 255, 0.4)' : 'none'
                                 }}>4</div>
-                                <span style={{ fontSize: '11px', fontWeight: '700', color: selectedOrder.status === 'DELIVERED' ? '#81c784' : 'var(--color-outline)', marginTop: '6px' }}>Thành công</span>
+                                <span style={{ fontSize: '11px', fontWeight: '700', color: selectedOrder.status === 'DELIVERED' ? 'white' : 'var(--color-outline)', marginTop: '6px' }}>Đã hoàn thành</span>
                               </div>
                             </div>
                           )}

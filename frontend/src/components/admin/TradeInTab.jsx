@@ -14,7 +14,7 @@ export default function TradeInTab(props) {
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }} className="zebra-table">
                     <thead>
                       <tr style={{ background: 'var(--color-surface-container-high)' }}>
-                        <th style={{ padding: '10px 12px', fontWeight: '700', color: textColor, whiteSpace: 'nowrap' }}>Mã YC</th>
+
                         <th style={{ padding: '10px 12px', fontWeight: '700', color: textColor, whiteSpace: 'nowrap' }}>Khách Hàng</th>
                         <th style={{ padding: '10px 12px', fontWeight: '700', width: '22%', color: textColor }}>Thiết Bị Cũ</th>
                         <th style={{ padding: '10px 12px', fontWeight: '700', width: '22%', color: textColor }}>Sản Phẩm Đổi</th>
@@ -27,7 +27,7 @@ export default function TradeInTab(props) {
                     <tbody>
                       {tradeins.map(req => (
                         <tr key={req.id} onClick={(e) => { if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') setDetailedItem({ ...req, type: 'tradein' }); }} style={{ cursor: 'pointer' }}>
-                          <td style={{ padding: '10px 12px', fontWeight: '700', color: 'var(--color-primary-dim)' }}>{req.id}</td>
+
                           <td style={{ padding: '10px 12px' }}>
                             <strong style={{ color: textColor, display: 'block', whiteSpace: 'nowrap', fontSize: '12px' }}>{req.customerName}</strong>
                             <span style={{ fontSize: '9px', color: 'var(--color-outline)' }}>{req.phone}</span>

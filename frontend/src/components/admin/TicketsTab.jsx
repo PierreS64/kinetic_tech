@@ -27,7 +27,7 @@ export default function TicketsTab(props) {
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                          <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-primary-dim)' }}>#{ticket.id}</span>
+                          <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-primary-dim)' }}>Yêu cầu hỗ trợ</span>
                           <span className="status-badge" style={{
                             fontSize: '9px',
                             background: ticket.status === 'OPEN' ? 'rgba(255,76,76,0.15)' : ticket.status === 'IN_PROGRESS' ? 'rgba(0,123,255,0.15)' : 'rgba(76,175,80,0.15)',
@@ -54,7 +54,7 @@ export default function TicketsTab(props) {
                         {/* Box Header */}
                         <div style={{ borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingBottom: '12px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <div>
-                            <h4 style={{ fontSize: '13px', fontWeight: '800', color: textColor }}>#{selectedTicket.id} - {selectedTicket.subject}</h4>
+                            <h4 style={{ fontSize: '13px', fontWeight: '800', color: textColor }}>{selectedTicket.subject}</h4>
                             <span style={{ fontSize: '10px', color: 'var(--color-outline)' }}>Danh mục: {selectedTicket.category}</span>
                           </div>
                           {selectedTicket.status !== 'closed' && (

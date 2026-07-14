@@ -1,4 +1,4 @@
-import { Controller, Patch, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Patch, Body, Param, UseGuards, Get } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
@@ -7,6 +7,11 @@ import * as bcrypt from 'bcrypt';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Get('technicians')
+  async getTechnicians() {
+    return this.usersService.findTechnicians();
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Patch(':id')

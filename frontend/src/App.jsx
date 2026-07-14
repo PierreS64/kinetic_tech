@@ -5,6 +5,7 @@ import './styles/base/button.css';
 import './styles/base/badge.css';
 import './styles/base/form.css';
 import './styles/base/table.css';
+import './styles/base/modal.css';
 import Navbar from './layouts/Navbar/Navbar';
 import HeroCarousel from './pages/Home/HeroCarousel';
 import ProductCard from './components/Common/ProductCard';
@@ -18,6 +19,7 @@ import SupportTicket from './pages/Support/SupportTicket';
 import Warranty from './pages/Support/Warranty';
 import OrderTracking from './pages/Support/OrderTracking';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
+import Appointments from './pages/Support/Appointments';
 import { products } from './utils/mockData.js';
 import { getFilteredProducts } from './utils/filterProducts';
 import FilterSidebar from './layouts/FilterSidebar/FilterSidebar';
@@ -49,8 +51,58 @@ export default function App() {
   const [aiOpen, setAiOpen] = useState(false);
   const relatedScrollRef = useRef(null);
   const [showRelatedLeftArrow, setShowRelatedLeftArrow] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedDetailProduct, setSelectedDetailProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const pid = params.get('product');
+      if (pid) {
+        return products.find(p => p.id === pid) || null;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      const url = new URL(window.location);
+      if (selectedProduct) {
+        url.searchParams.set('product', selectedProduct.id);
+      } else {
+        url.searchParams.delete('product');
+      }
+      window.history.replaceState({}, '', url);
+    } catch (e) {
+      console.error('Failed to sync URL', e);
+    }
+  }, [selectedProduct]);
+  const [selectedDetailProduct, setSelectedDetailProduct] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const did = params.get('detail');
+      if (did) {
+        return products.find(p => p.id === did) || null;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      const url = new URL(window.location);
+      if (selectedDetailProduct) {
+        url.searchParams.set('detail', selectedDetailProduct.id);
+      } else {
+        url.searchParams.delete('detail');
+      }
+      window.history.replaceState({}, '', url);
+    } catch (e) {
+      console.error('Failed to sync URL', e);
+    }
+  }, [selectedDetailProduct]);
   const [cartItems, setCartItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [toast, setToast] = useState(null); // { message: '', visible: false }
@@ -227,7 +279,7 @@ export default function App() {
         setCurrentUser(userData);
         window.history.replaceState({}, document.title, window.location.pathname);
         showToast('Đăng nhập thành công!');
-        setActiveView('account');
+        setActiveView('deals');
       } catch (err) {
         console.error('Failed to parse OAuth data', err);
       }
@@ -240,7 +292,7 @@ export default function App() {
     if (token) {
       localStorage.setItem('kinetic_token', token);
     }
-    setActiveView('account');
+    setActiveView('deals');
   };
 
   const handleLogout = () => {
@@ -696,6 +748,7 @@ export default function App() {
             storeProducts={storeProducts} 
             setStoreProducts={setStoreProducts} 
             theme={theme} 
+            currentUser={currentUser}
           />
         )}
 
@@ -752,6 +805,13 @@ export default function App() {
           </div>
         )}
 
+        {/* VIEW: Appointments */}
+        {activeView === 'appointments' && (
+          <div className="container" style={{ paddingTop: '40px' }}>
+            <Appointments theme={theme} currentUser={currentUser} />
+          </div>
+        )}
+
         {/* VIEW: Account Portal */}
         {activeView === 'account' && (
           <AccountPortal 
@@ -779,6 +839,17 @@ export default function App() {
           </div>
         )}
 
+        {activeView === 'product_detail' && (
+          <ProductDetail 
+            product={selectedDetailProduct}
+            onBack={() => setActiveView('deals')}
+            onAddToCart={(p) => handleAddToCart(p)}
+            onBuyNow={handleBuyNow}
+            theme={theme}
+            isLiked={selectedDetailProduct ? likedProductIds.includes(selectedDetailProduct.id) : false}
+            onToggleLike={handleToggleLike}
+          />
+        )}
       </main>
 
       {/* Footer System */}
@@ -1324,17 +1395,7 @@ export default function App() {
           </div>
         );
       })()}
-      {activeView === 'product_detail' && (
-        <ProductDetail 
-          product={selectedDetailProduct}
-          onBack={() => setActiveView('deals')}
-          onAddToCart={(p) => handleAddToCart(p)}
-          onBuyNow={handleBuyNow}
-          theme={theme}
-          isLiked={selectedDetailProduct ? likedProductIds.includes(selectedDetailProduct.id) : false}
-          onToggleLike={handleToggleLike}
-        />
-      )}
+      {/* ProductDetail has been moved inside main */}
 
       {/* Embedded CSS rules for media queries responsive layout inside JS */}
       <style>{`

@@ -9,6 +9,7 @@ import TradeInTab from './TradeInTab';
 import FeedbacksTab from './FeedbacksTab';
 import PromotionsTab from './PromotionsTab';
 import VouchersTab from './VouchersTab';
+import AppointmentsTab from './AppointmentsTab';
 import {
   TrendingUp,
   ShoppingBag,
@@ -39,24 +40,28 @@ export default function AdminDashboard({
   storeProducts,
   setStoreProducts,
   theme,
+  currentUser,
 }) {
   const [orders, setOrders] = useState([]);
   const [tickets, setTickets] = useState([]);
   const [warranties, setWarranties] = useState([]);
   const [tradeins, setTradeins] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     const fetchAdminData = async () => {
       try {
-        const [ordersRes, ticketsRes, tradeInsRes, feedbacksRes, couponsRes] = await Promise.all([
+        const [ordersRes, ticketsRes, tradeInsRes, feedbacksRes, couponsRes, appointmentsRes] = await Promise.all([
           api.get('/orders/all').catch(() => ({ data: [] })),
           api.get('/tickets').catch(() => ({ data: [] })),
           api.get('/trade-in').catch(() => ({ data: [] })),
           api.get('/feedback').catch(() => ({ data: [] })),
-          api.get('/coupons').catch(() => ({ data: [] }))
+          api.get('/coupons').catch(() => ({ data: [] })),
+          api.get('/appointments').catch(() => ({ data: [] }))
         ]);
         setOrders(ordersRes.data || []);
+        setAppointments(appointmentsRes.data || []);
 
         // Map tickets
         const mappedTickets = (ticketsRes.data || []).map(t => {
@@ -641,11 +646,15 @@ export default function AdminDashboard({
       <div className="container">
 
         {/* Dashboard Title & Stats Overview */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '20px', marginBottom: '30px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Shield size={24} color="var(--color-primary-dim)" />
-              <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat' }}>HỆ THỐNG QUẢN TRỊ VIÊN</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat' }}>
+                {currentUser?.role === 'ADMIN' ? 'TRANG QUẢN TRỊ KINETIC' : 'TRANG KỸ THUẬT KINETIC'}
+              </h2>
+              <span className="status-badge" style={{ background: 'rgba(0,123,255,0.1)', color: 'var(--color-primary-dim)', padding: '4px 10px', fontSize: '11px' }}>
+                {currentUser?.role === 'ADMIN' ? 'Admin Mode' : 'Technician Mode'}
+              </span>
             </div>
             <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>
               Bảng điều khiển quản lý sản phẩm, đơn hàng và hỗ trợ khách hàng Kinetic Tech.
@@ -803,6 +812,21 @@ export default function AdminDashboard({
             </button>
 
             <button
+              onClick={() => { setActiveTab('appointments'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
+              className="btn"
+              style={{
+                justifyContent: 'flex-start',
+                padding: '10px 14px',
+                fontSize: '13px',
+                background: activeTab === 'appointments' ? 'var(--color-primary)' : 'transparent',
+                color: activeTab === 'appointments' ? 'white' : 'var(--color-on-surface)'
+              }}
+            >
+              <TrendingUp size={16} />
+              Lịch hẹn sửa chữa ({appointments.length})
+            </button>
+
+            <button
               onClick={() => { setActiveTab('tradein'); setSelectedOrder(null); setSelectedTicket(null); setSelectedWarranty(null); setSelectedTradeIn(null); }}
               className="btn"
               style={{
@@ -832,32 +856,36 @@ export default function AdminDashboard({
               Ý kiến & Góp ý ({feedbacks.length})
             </button>
 
-              <button 
-                className="btn"
-                style={{
-                  justifyContent: 'flex-start',
-                  padding: '10px 14px',
-                  fontSize: '13px',
-                  background: activeTab === 'promotions' ? 'var(--color-primary)' : 'transparent',
-                  color: activeTab === 'promotions' ? 'white' : 'var(--color-on-surface)'
-                }}
-                onClick={() => setActiveTab('promotions')}
-              >
-                <Tag size={16} /> Chương trình khuyến mãi ({promotions.length})
-              </button>
-              <button 
-                className="btn"
-                style={{
-                  justifyContent: 'flex-start',
-                  padding: '10px 14px',
-                  fontSize: '13px',
-                  background: activeTab === 'vouchers' ? 'var(--color-primary)' : 'transparent',
-                  color: activeTab === 'vouchers' ? 'white' : 'var(--color-on-surface)'
-                }}
-                onClick={() => setActiveTab('vouchers')}
-              >
-                <Tag size={16} /> Mã giảm giá Voucher ({vouchers.length})
-              </button>
+            {currentUser?.role === 'ADMIN' && (
+              <>
+                <button 
+                  className="btn"
+                  style={{
+                    justifyContent: 'flex-start',
+                    padding: '10px 14px',
+                    fontSize: '13px',
+                    background: activeTab === 'promotions' ? 'var(--color-primary)' : 'transparent',
+                    color: activeTab === 'promotions' ? 'white' : 'var(--color-on-surface)'
+                  }}
+                  onClick={() => setActiveTab('promotions')}
+                >
+                  <Tag size={16} /> Chương trình khuyến mãi ({promotions.length})
+                </button>
+                <button 
+                  className="btn"
+                  style={{
+                    justifyContent: 'flex-start',
+                    padding: '10px 14px',
+                    fontSize: '13px',
+                    background: activeTab === 'vouchers' ? 'var(--color-primary)' : 'transparent',
+                    color: activeTab === 'vouchers' ? 'white' : 'var(--color-on-surface)'
+                  }}
+                  onClick={() => setActiveTab('vouchers')}
+                >
+                  <Tag size={16} /> Mã giảm giá Voucher ({vouchers.length})
+                </button>
+              </>
+            )}
           </div>
 
           {/* Right Work Area */}
@@ -867,6 +895,7 @@ export default function AdminDashboard({
             {activeTab === 'products' && <ProductsTab {...tabProps} />}
             {activeTab === 'tickets' && <TicketsTab {...tabProps} />}
             {activeTab === 'warranties' && <WarrantiesTab {...tabProps} />}
+            {activeTab === 'appointments' && <AppointmentsTab appointments={appointments} theme={theme} textColor={textColor} />}
             {activeTab === 'tradein' && <TradeInTab {...tabProps} />}
             {activeTab === 'feedbacks' && <FeedbacksTab {...tabProps} />}
             {activeTab === 'promotions' && <PromotionsTab {...tabProps} />}

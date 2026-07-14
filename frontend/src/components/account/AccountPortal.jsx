@@ -107,7 +107,11 @@ export default function AccountPortal({
       id: o.id,
       date: o.date || new Date(o.createdAt).toLocaleString('vi-VN'),
       total: o.total || o.totalAmount || 0,
-      status: (o.status || 'pending').toLowerCase(),
+      status: (o.status || 'pending').toUpperCase(),
+      customerName: o.User?.fullName || currentUser?.fullName || 'Khách hàng',
+      phone: o.User?.phoneNumber || o.User?.phone || currentUser?.phoneNumber || currentUser?.phone || 'Chưa cập nhật',
+      address: o.shippingAddress || o.UserAddress?.address || currentUser?.address || 'Hà Nội',
+      paymentMethod: o.paymentMethod || 'COD',
       items: o.items || (o.OrderItem ? o.OrderItem.map(oi => ({
         id: oi.productVariantId || oi.id,
         name: oi.ProductVariant?.Product?.name || 'Linh kiện PC',
