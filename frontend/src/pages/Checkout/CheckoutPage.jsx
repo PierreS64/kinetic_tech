@@ -197,7 +197,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
 
   // Regular Checkout Form View
   return (
-    <div className="container" style={{ paddingTop: '40px' }}>
+    <div  style={{ paddingTop: '40px' }} className="container">
       
       {/* Return link */}
       <button 
@@ -216,23 +216,21 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
       </div>
 
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 400px',
-        gap: '30px'
-      }} className="catalog-layout">
+        display: 'grid', gap: '30px'
+      }}   className="grid-responsive-checkout catalog-layout">
         
         {/* Left Column: Form details */}
         <form onSubmit={handleSubmitOrder} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Shipping Form Box */}
-          <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--rounded-md)' }}>
+          <div  style={{ padding: '24px', borderRadius: 'var(--rounded-md)' }} className="glass-panel">
             <h3 style={{ fontSize: '15px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px', marginBottom: '20px' }}>
               <MapPin size={18} color="var(--color-primary-dim)" />
               1. THÔNG TIN GIAO HÀNG
             </h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Họ và tên người nhận *</label>
                   <div style={{ position: 'relative' }}>
@@ -243,9 +241,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                       placeholder="Họ tên người nhận..."
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className="form-input"
+                      
                       style={{ paddingLeft: '36px', fontSize: '13px' }}
-                    />
+                     className="form-input" />
                     <User size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)' }} />
                   </div>
                 </div>
@@ -259,9 +257,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                       placeholder="Số điện thoại di động..."
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="form-input"
+                      
                       style={{ paddingLeft: '36px', fontSize: '13px' }}
-                    />
+                     className="form-input" />
                     <Phone size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)' }} />
                   </div>
                 </div>
@@ -277,14 +275,14 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                     placeholder="example@gmail.com..."
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="form-input"
+                    
                     style={{ paddingLeft: '36px', fontSize: '13px' }}
-                  />
+                   className="form-input" />
                   <Mail size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)' }} />
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+              <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-3col">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Tỉnh / Thành phố *</label>
                   <input 
@@ -294,9 +292,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                     placeholder="Ví dụ: Hà Nội..."
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="form-input"
+                    
                     style={{ fontSize: '13px' }}
-                  />
+                   className="form-input" />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Quận / Huyện *</label>
@@ -307,9 +305,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                     placeholder="Quận Cầu Giấy..."
                     value={formData.district}
                     onChange={handleInputChange}
-                    className="form-input"
+                    
                     style={{ fontSize: '13px' }}
-                  />
+                   className="form-input" />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Phường / Xã</label>
@@ -319,9 +317,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                     placeholder="Phường Dịch Vọng..."
                     value={formData.ward}
                     onChange={handleInputChange}
-                    className="form-input"
+                    
                     style={{ fontSize: '13px' }}
-                  />
+                   className="form-input" />
                 </div>
               </div>
 
@@ -334,9 +332,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                   placeholder="Nhập số nhà, ngõ ngách, tên đường..."
                   value={formData.address}
                   onChange={handleInputChange}
-                  className="form-input"
+                  
                   style={{ fontSize: '13px' }}
-                />
+                 className="form-input" />
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -347,15 +345,15 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                   rows="3"
                   value={formData.notes}
                   onChange={handleInputChange}
-                  className="form-input"
+                  
                   style={{ fontSize: '13px', resize: 'vertical' }}
-                />
+                 className="form-input" />
               </div>
             </div>
           </div>
 
           {/* Payment Methods */}
-          <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--rounded-md)' }}>
+          <div  style={{ padding: '24px', borderRadius: 'var(--rounded-md)' }} className="glass-panel">
             <h3 style={{ fontSize: '15px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px', marginBottom: '20px' }}>
               <CreditCard size={18} color="var(--color-primary-dim)" />
               2. PHƯƠNG THỨC THANH TOÁN
@@ -426,7 +424,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                   
                   {paymentMethod === 'bank' && (
                     <div 
-                      className="animate-fade-in-up"
+                      
                       style={{
                         marginTop: '12px',
                         padding: '16px',
@@ -437,7 +435,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                         gap: '20px',
                         alignItems: 'center'
                       }}
-                    >
+                     className="animate-fade-in-up">
                       {/* QR Box mockup */}
                       <div style={{
                         background: 'white',
@@ -502,7 +500,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
 
                   {paymentMethod === 'card' && (
                     <div 
-                      className="animate-fade-in-up"
+                      
                       style={{
                         marginTop: '12px',
                         padding: '16px',
@@ -513,7 +511,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                         flexDirection: 'column',
                         gap: '12px'
                       }}
-                    >
+                     className="animate-fade-in-up">
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <span style={{ fontSize: '11px', color: 'white' }}>Tên in trên thẻ</span>
                         <input 
@@ -522,9 +520,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                           placeholder="NGUYEN VAN A"
                           value={cardData.name}
                           onChange={handleCardChange}
-                          className="form-input"
+                          
                           style={{ textTransform: 'uppercase', fontSize: '12px', padding: '8px 12px' }}
-                        />
+                         className="form-input" />
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         <span style={{ fontSize: '11px', color: 'white' }}>Số thẻ</span>
@@ -534,11 +532,11 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                           placeholder="4129 8837 9928 1084"
                           value={cardData.number}
                           onChange={handleCardChange}
-                          className="form-input"
+                          
                           style={{ fontSize: '12px', padding: '8px 12px' }}
-                        />
+                         className="form-input" />
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <div style={{ display: 'grid', gap: '10px' }}  className="grid-responsive-2col">
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <span style={{ fontSize: '11px', color: 'white' }}>Hạn dùng (MM/YY)</span>
                           <input 
@@ -547,9 +545,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                             placeholder="12/28"
                             value={cardData.expiry}
                             onChange={handleCardChange}
-                            className="form-input"
+                            
                             style={{ fontSize: '12px', padding: '8px 12px' }}
-                          />
+                           className="form-input" />
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <span style={{ fontSize: '11px', color: 'white' }}>Mã bí mật CVV</span>
@@ -560,9 +558,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
                             maxLength="3"
                             value={cardData.cvv}
                             onChange={handleCardChange}
-                            className="form-input"
+                            
                             style={{ fontSize: '12px', padding: '8px 12px' }}
-                          />
+                           className="form-input" />
                         </div>
                       </div>
                     </div>

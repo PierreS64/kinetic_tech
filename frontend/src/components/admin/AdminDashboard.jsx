@@ -643,7 +643,7 @@ export default function AdminDashboard({
 
   return (
     <div style={{ padding: '30px 0', minHeight: '80vh' }}>
-      <div className="container">
+      <div  className="container">
 
         {/* Dashboard Title & Stats Overview */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
@@ -678,7 +678,7 @@ export default function AdminDashboard({
           marginBottom: '30px'
         }}>
           {/* Card 1: Revenue */}
-          <div className="glass-panel-glow-blue" style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div  style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }} className="glass-panel-glow-blue">
             <div style={{ background: 'rgba(0,123,255,0.15)', width: '46px', height: '46px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center' }}>
               <DollarSign size={22} color="var(--color-primary-dim)" />
             </div>
@@ -689,7 +689,7 @@ export default function AdminDashboard({
           </div>
 
           {/* Card 2: Pending Orders */}
-          <div className="glass-panel" style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div  style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }} className="glass-panel">
             <div style={{ background: 'rgba(253,139,0,0.15)', width: '46px', height: '46px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <ShoppingBag size={22} color="var(--color-secondary-dim)" />
             </div>
@@ -700,7 +700,7 @@ export default function AdminDashboard({
           </div>
 
           {/* Card 3: Out of Stock items */}
-          <div className="glass-panel" style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div  style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }} className="glass-panel">
             <div style={{ background: 'rgba(255,76,76,0.15)', width: '46px', height: '46px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Package size={22} color="#ffb4ab" />
             </div>
@@ -711,7 +711,7 @@ export default function AdminDashboard({
           </div>
 
           {/* Card 4: Technical Tickets */}
-          <div className="glass-panel" style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div  style={{ padding: '20px', borderRadius: 'var(--rounded-lg)', display: 'flex', alignItems: 'center', gap: '16px' }} className="glass-panel">
             <div style={{ background: 'rgba(129,199,132,0.15)', width: '46px', height: '46px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <MessageSquare size={22} color="#81c784" />
             </div>
@@ -723,10 +723,10 @@ export default function AdminDashboard({
         </div>
 
         {/* Dashboard Tabs & Work Area */}
-        <div style={{ display: 'grid', gridTemplateColumns: '240px 1fr', gap: '30px', alignItems: 'start' }} className="admin-grid">
+        <div style={{ display: 'grid', gap: '30px', alignItems: 'start' }}   className="grid-responsive-sidebar-narrow admin-grid">
 
           {/* Left Sidebar Navigation */}
-          <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }} className="glass-panel">
             <div style={{ fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--color-outline)', padding: '8px 12px' }}>
               Menu quản lý
             </div>

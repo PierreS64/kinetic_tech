@@ -6,10 +6,10 @@ export default function TicketsTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px' }}>Hỗ Trợ Kỹ Thuật (Hệ thống Ticket)</h3>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }} className="tickets-subgrid">
+                <div style={{ display: 'grid', gap: '20px' }}   className="grid-responsive-2col tickets-subgrid">
 
                   {/* Left Column: List */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '500px', overflowY: 'auto', paddingRight: '4px' }}>
@@ -32,7 +32,7 @@ export default function TicketsTab(props) {
                             fontSize: '9px',
                             background: ticket.status === 'OPEN' ? 'rgba(255,76,76,0.15)' : ticket.status === 'IN_PROGRESS' ? 'rgba(0,123,255,0.15)' : 'rgba(76,175,80,0.15)',
                             color: ticket.status === 'OPEN' ? '#ffb4ab' : ticket.status === 'IN_PROGRESS' ? '#adc7ff' : '#81c784'
-                          }}>
+                          }} className="status-badge">
                             {ticket.status === 'OPEN' && 'Chờ phản hồi'}
                             {ticket.status === 'IN_PROGRESS' && 'Đã phản hồi'}
                             {ticket.status === 'CLOSED' && 'Đã đóng'}
@@ -48,7 +48,7 @@ export default function TicketsTab(props) {
                   </div>
 
                   {/* Right Column: Chat Box Details */}
-                  <div className="glass-panel" style={{ borderRadius: 'var(--rounded)', padding: '16px', display: 'flex', flexDirection: 'column', height: '500px', background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(5, 13, 24, 0.15)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : 'none' }}>
+                  <div  style={{ borderRadius: 'var(--rounded)', padding: '16px', display: 'flex', flexDirection: 'column', height: '500px', background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(5, 13, 24, 0.15)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : 'none' }} className="glass-panel">
                     {selectedTicket ? (
                       <>
                         {/* Box Header */}
@@ -101,7 +101,7 @@ export default function TicketsTab(props) {
                               className="form-input"
                               style={{ fontSize: '12px', padding: '8px 12px' }}
                             />
-                            <button type="submit" className="btn btn-primary" style={{ padding: '8px 14px' }}>
+                            <button type="submit"  style={{ padding: '8px 14px' }} className="btn btn-primary">
                               Gửi
                             </button>
                           </form>

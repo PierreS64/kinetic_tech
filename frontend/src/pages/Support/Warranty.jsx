@@ -180,7 +180,7 @@ export default function Warranty() {
       
       {/* Search Type Tabs */}
       <div 
-        className="glass-panel" 
+         
         style={{
           borderRadius: 'var(--rounded-md)',
           padding: '4px',
@@ -189,7 +189,7 @@ export default function Warranty() {
           maxWidth: '600px',
           margin: '0 auto 32px'
         }}
-      >
+       className="glass-panel">
         <button
           onClick={() => {
             setActiveTab('lookup');
@@ -226,8 +226,8 @@ export default function Warranty() {
 
       {activeTab === 'lookup' && (
         /* WARRANTY LOOKUP TAB */
-        <div style={{ maxWidth: '680px', margin: '0 auto' }} className="animate-fade-in-up">
-          <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--rounded-md)', marginBottom: '24px' }}>
+        <div style={{ maxWidth: '680px', margin: '0 auto' }}  className="animate-fade-in-up">
+          <div  style={{ padding: '24px', borderRadius: 'var(--rounded-md)', marginBottom: '24px' }} className="glass-panel">
             <h3 style={{ fontSize: '15px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <ShieldCheck size={18} color="var(--color-primary-dim)" />
               TRA CỨU BẢO HÀNH ĐIỆN TỬ
@@ -242,7 +242,7 @@ export default function Warranty() {
                 className="form-input"
                 style={{ fontSize: '13px' }}
               />
-              <button type="submit" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+              <button type="submit"  style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }} className="btn btn-secondary">
                 <Search size={15} /> Tìm kiếm
               </button>
             </form>
@@ -253,33 +253,33 @@ export default function Warranty() {
           </div>
 
           {searchError && (
-            <div className="glass-panel animate-fade-in-up" style={{ padding: '20px', borderRadius: 'var(--rounded-md)', border: '1px solid rgba(255, 76, 76, 0.25)', display: 'flex', gap: '10px', color: '#ff8a8a', fontSize: '13px' }}>
+            <div  style={{ padding: '20px', borderRadius: 'var(--rounded-md)', border: '1px solid rgba(255, 76, 76, 0.25)', display: 'flex', gap: '10px', color: '#ff8a8a', fontSize: '13px' }} className="glass-panel animate-fade-in-up">
               <AlertCircle size={18} style={{ flexShrink: 0 }} />
               <p>{searchError}</p>
             </div>
           )}
 
           {warrantyResult && (
-            <div className="glass-panel animate-fade-in-up" style={{ padding: '30px', borderRadius: 'var(--rounded-md)', border: `1px solid ${warrantyResult.status === 'active' ? 'rgba(76, 175, 80, 0.25)' : 'rgba(255, 76, 76, 0.25)'}` }}>
+            <div  style={{ padding: '30px', borderRadius: 'var(--rounded-md)', border: `1px solid ${warrantyResult.status === 'active' ? 'rgba(76, 175, 80, 0.25)' : 'rgba(255, 76, 76, 0.25)'}` }} className="glass-panel animate-fade-in-up">
               {/* Product header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px', marginBottom: '20px' }}>
                 <div>
-                  <span className="spec-chip-primary" style={{ fontSize: '11px' }}>S/N: {warrantyResult.sn}</span>
+                  <span  style={{ fontSize: '11px' }} className="spec-chip-primary">S/N: {warrantyResult.sn}</span>
                   <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'white', marginTop: '6px' }}>{warrantyResult.productName}</h4>
                   <span style={{ fontSize: '12px', color: 'var(--color-outline)', display: 'block', marginTop: '4px' }}>Hóa đơn: {warrantyResult.invoiceId}</span>
                 </div>
 
                 <div>
                   {warrantyResult.status === 'active' ? (
-                    <span className="status-badge status-badge-stock">Còn hạn bảo hành</span>
+                    <span  className="status-badge status-badge-stock">Còn hạn bảo hành</span>
                   ) : (
-                    <span className="status-badge" style={{ background: '#93000a', color: '#ffdad6', border: '1px solid #ffb4ab' }}>Hết hạn bảo hành</span>
+                    <span  style={{ background: '#93000a', color: '#ffdad6', border: '1px solid #ffb4ab' }} className="status-badge">Hết hạn bảo hành</span>
                   )}
                 </div>
               </div>
 
               {/* Specs and dates */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '13px', marginBottom: '24px' }}>
+              <div style={{ display: 'grid', gap: '16px', fontSize: '13px', marginBottom: '24px' }}  className="grid-responsive-2col">
                 <div>
                   <span style={{ color: 'var(--color-outline)' }}>Ngày mua hàng:</span>
                   <p style={{ color: 'white', fontWeight: '600', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -319,9 +319,9 @@ export default function Warranty() {
 
       {activeTab === 'activate' && (
         /* WARRANTY ACTIVATION TAB */
-        <div style={{ maxWidth: '600px', margin: '0 auto' }} className="animate-fade-in-up">
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}  className="animate-fade-in-up">
           {activationSuccess ? (
-            <div className="glass-panel" style={{ padding: '40px 30px', borderRadius: 'var(--rounded-lg)', textAlign: 'center', border: '1px solid rgba(76, 175, 80, 0.3)' }}>
+            <div  style={{ padding: '40px 30px', borderRadius: 'var(--rounded-lg)', textAlign: 'center', border: '1px solid rgba(76, 175, 80, 0.3)' }} className="glass-panel">
               <div style={{ display: 'inline-flex', alignItems: 'center', justifyInters: 'center', width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(76, 175, 80, 0.15)', border: '2px solid #81c784', justifyContent: 'center', marginBottom: '16px' }}>
                 <CheckCircle size={30} color="#81c784" />
               </div>
@@ -329,12 +329,12 @@ export default function Warranty() {
               <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '8px', lineHeight: '1.5' }}>
                 Cảm ơn {activationForm.fullName}. Thiết bị có Serial Number <strong>{activationForm.sn}</strong> đã được kích hoạt bảo hành điện tử chính hãng từ ngày hôm nay. Hóa đơn và thời gian bảo hành đã được đồng bộ lên hệ thống Kinetic Tech.
               </p>
-              <button onClick={handleResetActivation} className="btn btn-outline" style={{ marginTop: '24px', width: '100%', padding: '12px' }}>
+              <button onClick={handleResetActivation}  style={{ marginTop: '24px', width: '100%', padding: '12px' }} className="btn btn-outline">
                 Kích hoạt thiết bị khác
               </button>
             </div>
           ) : (
-            <div className="glass-panel" style={{ padding: '30px', borderRadius: 'var(--rounded-md)' }}>
+            <div  style={{ padding: '30px', borderRadius: 'var(--rounded-md)' }} className="glass-panel">
               <h3 style={{ fontSize: '15px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ShieldCheck size={18} color="var(--color-primary-dim)" />
                 KÍCH HOẠT BẢO HÀNH ĐIỆN TỬ MỚI
@@ -354,7 +354,7 @@ export default function Warranty() {
                   />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Họ và tên chủ sở hữu *</label>
                     <input 
@@ -381,7 +381,7 @@ export default function Warranty() {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Địa chỉ Email (Nhận thông báo)</label>
                     <input 
@@ -406,7 +406,7 @@ export default function Warranty() {
                   </div>
                 </div>
 
-                <button type="submit" disabled={activating} className="btn btn-secondary" style={{ width: '100%', padding: '12px', fontWeight: '700', marginTop: '10px' }}>
+                <button type="submit" disabled={activating}  style={{ width: '100%', padding: '12px', fontWeight: '700', marginTop: '10px' }} className="btn btn-secondary">
                   {activating ? 'Đang kích hoạt...' : 'KÍCH HOẠT BẢO HÀNH ĐIỆN TỬ'}
                 </button>
               </form>
@@ -417,8 +417,8 @@ export default function Warranty() {
 
       {activeTab === 'repair' && (
         /* REPAIR TRACKING TAB */
-        <div style={{ maxWidth: '680px', margin: '0 auto' }} className="animate-fade-in-up">
-          <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--rounded-md)', marginBottom: '24px' }}>
+        <div style={{ maxWidth: '680px', margin: '0 auto' }}  className="animate-fade-in-up">
+          <div  style={{ padding: '24px', borderRadius: 'var(--rounded-md)', marginBottom: '24px' }} className="glass-panel">
             <h3 style={{ fontSize: '15px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Wrench size={18} color="var(--color-primary-dim)" />
               KIỂM TRA TIẾN ĐỘ SỬA CHỮA / BẢO HÀNH
@@ -433,7 +433,7 @@ export default function Warranty() {
                 className="form-input"
                 style={{ fontSize: '13px' }}
               />
-              <button type="submit" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+              <button type="submit"  style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }} className="btn btn-secondary">
                 <Search size={15} /> Kiểm tra
               </button>
             </form>
@@ -444,18 +444,18 @@ export default function Warranty() {
           </div>
 
           {repairError && (
-            <div className="glass-panel animate-fade-in-up" style={{ padding: '20px', borderRadius: 'var(--rounded-md)', border: '1px solid rgba(255, 76, 76, 0.25)', display: 'flex', gap: '10px', color: '#ff8a8a', fontSize: '13px' }}>
+            <div  style={{ padding: '20px', borderRadius: 'var(--rounded-md)', border: '1px solid rgba(255, 76, 76, 0.25)', display: 'flex', gap: '10px', color: '#ff8a8a', fontSize: '13px' }} className="glass-panel animate-fade-in-up">
               <AlertCircle size={18} style={{ flexShrink: 0 }} />
               <p>{repairError}</p>
             </div>
           )}
 
           {repairResult && (
-            <div className="glass-panel animate-fade-in-up" style={{ padding: '30px', borderRadius: 'var(--rounded-md)' }}>
+            <div  style={{ padding: '30px', borderRadius: 'var(--rounded-md)' }} className="glass-panel animate-fade-in-up">
               
               {/* Header card */}
               <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px', marginBottom: '24px' }}>
-                <span className="spec-chip-primary" style={{ fontSize: '11px' }}>Phiếu nhận sửa chữa: {repairResult.id}</span>
+                <span  style={{ fontSize: '11px' }} className="spec-chip-primary">Phiếu nhận sửa chữa: {repairResult.id}</span>
                 <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'white', marginTop: '6px' }}>{repairResult.productName}</h4>
                 <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '6px', lineHeight: '1.4' }}>
                   <strong>Lỗi báo cáo:</strong> {repairResult.reportedIssue}
@@ -464,13 +464,11 @@ export default function Warranty() {
 
               {/* Progress step tracking wizard */}
               <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '8px',
+                display: 'grid', gap: '8px',
                 position: 'relative',
                 marginBottom: '30px',
                 paddingBottom: '10px'
-              }}>
+              }}  className="grid-responsive-4col">
                 {[
                   { step: 1, label: 'Nhận máy', icon: CheckCircle },
                   { step: 2, label: 'Kiểm tra', icon: Activity },
@@ -507,16 +505,14 @@ export default function Warranty() {
 
               {/* Meta information */}
               <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '16px',
+                display: 'grid', gap: '16px',
                 fontSize: '13px',
                 background: 'rgba(0,0,0,0.15)',
                 padding: '16px',
                 borderRadius: 'var(--rounded-md)',
                 marginBottom: '24px',
                 border: '1px solid rgba(255,255,255,0.04)'
-              }}>
+              }}  className="grid-responsive-2col">
                 <div>
                   <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '2px' }}>Kỹ thuật viên phụ trách:</span>
                   <span style={{ color: 'white', fontWeight: '600' }}>{repairResult.technician}</span>

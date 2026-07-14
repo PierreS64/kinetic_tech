@@ -7,12 +7,12 @@ export default function PolicyTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                   Chính Sách & Quy Định Bảo Hành Cửa Hàng
                 </h3>
 
-                <div className="static-policy-content" style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', lineHeight: '1.7', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div  style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', lineHeight: '1.7', display: 'flex', flexDirection: 'column', gap: '16px' }} className="static-policy-content">
                   <div>
                     <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'white', marginBottom: '6px' }}>1. Quy định đổi trả trong 7 ngày đầu</h4>
                     <p>

@@ -15,7 +15,7 @@ export default function PromotionsTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Chương Trình Khuyến Mãi</h3>
 
@@ -30,8 +30,8 @@ export default function PromotionsTab(props) {
                 </div>
 
                 {isAddingPromo && (
-                  <div className="modal-overlay" onClick={() => setIsAddingPromo(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
-                    <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '440px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+                  <div  className="modal-overlay" onClick={() => setIsAddingPromo(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
+                    <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '440px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
                       <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
                         <h4 style={{ fontSize: '14px', fontWeight: '800', color: textColor }}>Tạo khuyến mãi mới</h4>
                         <button onClick={() => setIsAddingPromo(false)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
@@ -68,7 +68,7 @@ export default function PromotionsTab(props) {
                           />
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                           <div>
                             <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Ngày bắt đầu</label>
                             <input
@@ -91,7 +91,7 @@ export default function PromotionsTab(props) {
                           </div>
                         </div>
 
-                        <button type="submit" className="btn btn-secondary" style={{ width: '100%', padding: '10px', marginTop: '10px', fontWeight: '700' }}>
+                        <button type="submit"  style={{ width: '100%', padding: '10px', marginTop: '10px', fontWeight: '700' }} className="btn btn-secondary">
                           TẠO KHUYẾN MÃI
                         </button>
                       </form>
@@ -99,7 +99,7 @@ export default function PromotionsTab(props) {
                   </div>
                 )}
 
-                <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '24px' }} className="promotions-grid">
+                <div style={{ display: 'grid', gap: '24px' }}   className="grid-responsive-sidebar-wide promotions-grid">
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <h4 style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--color-outline)' }}>Danh sách chương trình</h4>
                     {promotions.length === 0 ? (
@@ -122,7 +122,7 @@ export default function PromotionsTab(props) {
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                             <span style={{ fontSize: '10px', fontWeight: '800', color: 'var(--color-primary-dim)' }}>{promo.id}</span>
-                            <span className="status-badge" style={{ fontSize: '9px', background: 'rgba(253,139,0,0.15)', color: '#ffb77d' }}>
+                            <span  style={{ fontSize: '9px', background: 'rgba(253,139,0,0.15)', color: '#ffb77d' }} className="status-badge">
                               Giảm {promo.discountPercent}%
                             </span>
                           </div>
@@ -149,14 +149,14 @@ export default function PromotionsTab(props) {
                     )}
                   </div>
 
-                  <div className="glass-panel" style={{ borderRadius: 'var(--rounded)', padding: '18px', background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(5, 13, 24, 0.15)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : 'none', minHeight: '400px' }}>
+                  <div  style={{ borderRadius: 'var(--rounded)', padding: '18px', background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(5, 13, 24, 0.15)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : 'none', minHeight: '400px' }} className="glass-panel">
                     {selectedPromoForEdit ? (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         <div style={{ borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingBottom: '14px' }}>
                           <h4 style={{ fontSize: '16px', fontWeight: '800', color: textColor }}>{selectedPromoForEdit.name}</h4>
                           <span style={{ fontSize: '12px', color: 'var(--color-outline)' }}>Áp dụng từ: {selectedPromoForEdit.startDate} đến {selectedPromoForEdit.endDate}</span>
 
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginTop: '12px' }}>
+                          <div style={{ display: 'grid', gap: '14px', marginTop: '12px' }}  className="grid-responsive-2col">
                             <div style={{ background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.02)', padding: '10px 14px', borderRadius: '4px', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.04)' }}>
                               <span style={{ fontSize: '10px', color: 'var(--color-outline)', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>Số lượng đã bán</span>
                               <strong style={{ fontSize: '16px', fontWeight: '800', color: textColor, marginTop: '2px', display: 'block' }}>{selectedPromoForEdit.salesCount} sản phẩm</strong>
@@ -185,9 +185,9 @@ export default function PromotionsTab(props) {
                             </div>
                             <button
                               onClick={handleApplyToAll}
-                              className="btn btn-secondary"
+                              
                               style={{ padding: '8px 16px', fontSize: '12px', whiteSpace: 'nowrap' }}
-                            >
+                             className="btn btn-secondary">
                               Áp dụng cho tất cả
                             </button>
                           </div>
@@ -242,7 +242,7 @@ export default function PromotionsTab(props) {
                             </div>
                           ) : (
                             <div style={{ overflowX: 'auto' }}>
-                              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="zebra-table">
+                              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
                                 <thead>
                                   <tr style={{ background: 'var(--color-surface-container-high)' }}>
                                     <th style={{ padding: '8px 12px', fontWeight: '700', color: textColor }}>Sản phẩm</th>

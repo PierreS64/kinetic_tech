@@ -138,7 +138,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
     <div style={{ minHeight: '80vh', paddingBottom: '40px' }}>
       {/* Intro Banner */}
       <div 
-        className="glass-panel-glow-orange animate-fade-in-up" 
+         
         style={{
           borderRadius: 'var(--rounded-lg)',
           padding: '40px 30px',
@@ -147,9 +147,9 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
           position: 'relative',
           overflow: 'hidden'
         }}
-      >
+       className="glass-panel-glow-orange animate-fade-in-up">
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <span className="spec-chip-primary" style={{ padding: '4px 12px', fontSize: '12px', borderRadius: 'var(--rounded-full)', marginBottom: '12px' }}>
+          <span  style={{ padding: '4px 12px', fontSize: '12px', borderRadius: 'var(--rounded-full)', marginBottom: '12px' }} className="spec-chip-primary">
             DỊCH VỤ THU CŨ ĐỔI MỚI HI-END
           </span>
           <h2 style={{ fontSize: '28px', fontWeight: '800', fontFamily: 'Montserrat', marginTop: '12px' }}>
@@ -164,7 +164,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
       {bookingDone ? (
         /* Success Booking State */
         <div 
-          className="glass-panel animate-fade-in-up"
+          
           style={{
             maxWidth: '650px',
             margin: '0 auto',
@@ -173,7 +173,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
             border: '1px solid rgba(253, 139, 0, 0.3)',
             textAlign: 'center'
           }}
-        >
+         className="glass-panel animate-fade-in-up">
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -208,7 +208,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
             <p style={{ marginBottom: '8px' }}><strong>Sản phẩm đăng ký lên đời:</strong> {formData.targetDevice}</p>
             <p style={{ marginBottom: '8px' }}><strong>Thời gian sử dụng:</strong> {usageTime}</p>
             <p style={{ marginBottom: '8px' }}><strong>Địa điểm tiếp nhận thẩm định:</strong> {formData.storeLocation}</p>
-            <p style={{ marginBottom: '8px' }}><strong>Trạng thái yêu cầu:</strong> <span className="status-badge" style={{ background: 'rgba(253,139,0,0.15)', color: '#ffb77d', fontSize: '10px' }}>Chờ thẩm định</span></p>
+            <p style={{ marginBottom: '8px' }}><strong>Trạng thái yêu cầu:</strong> <span  style={{ background: 'rgba(253,139,0,0.15)', color: '#ffb77d', fontSize: '10px' }} className="status-badge">Chờ thẩm định</span></p>
           </div>
           
           <p style={{ fontSize: '12px', color: 'var(--color-outline)', lineHeight: '1.6', marginBottom: '24px' }}>
@@ -216,20 +216,18 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
           </p>
           
           <div style={{ display: 'flex', gap: '12px' }}>
-            <button onClick={handleReset} className="btn btn-outline" style={{ flex: 1 }}>Gửi yêu cầu thiết bị khác</button>
+            <button onClick={handleReset}  style={{ flex: 1 }} className="btn btn-outline">Gửi yêu cầu thiết bị khác</button>
             <button onClick={() => window.print()} className="btn btn-ghost" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>In phiếu biên nhận</button>
           </div>
         </div>
       ) : (
         /* Trade-In Assessment Form View */
         <form onSubmit={handleSubmit} style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '30px'
-        }} className="catalog-layout">
+          display: 'grid', gap: '30px'
+        }}   className="grid-responsive-2col catalog-layout">
           
           {/* Column 1: Equipment Details */}
-          <div className="glass-panel" style={{ padding: '28px', borderRadius: 'var(--rounded-md)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div  style={{ padding: '28px', borderRadius: 'var(--rounded-md)', display: 'flex', flexDirection: 'column', gap: '20px' }} className="glass-panel">
             <h3 style={{ fontSize: '16px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '12px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Calculator size={18} color="var(--color-primary-dim)" />
               1. THÔNG TIN THIẾT BỊ / LINH KIỆN CŨ
@@ -304,9 +302,9 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                 />
                 <label 
                   htmlFor="trade-in-file-upload-new"
-                  className="btn btn-outline"
+                  
                   style={{ fontSize: '12px', padding: '12px 20px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                >
+                 className="btn btn-outline">
                   <Camera size={16} /> Tải ảnh thực tế
                 </label>
                 {attachedImage ? (
@@ -348,7 +346,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
           </div>
 
           {/* Column 2: Upgrade Product & Appointment Contact info */}
-          <div className="glass-panel" style={{ padding: '28px', borderRadius: 'var(--rounded-md)', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div  style={{ padding: '28px', borderRadius: 'var(--rounded-md)', display: 'flex', flexDirection: 'column', gap: '20px' }} className="glass-panel">
             <h3 style={{ fontSize: '16px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '12px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Clock size={18} color="var(--color-primary-dim)" />
               2. THÔNG TIN KHÁCH HÀNG & LỊCH HẸN
@@ -361,9 +359,9 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                 name="targetDevice"
                 value={formData.targetDevice}
                 onChange={handleInputChange}
-                className="form-input"
+                
                 style={{ fontSize: '13px', background: 'var(--color-surface-container-lowest)' }}
-              >
+               className="form-input">
                 <option value="Laptop ASUS ROG Strix G16 (2024)">Laptop ASUS ROG Strix G16 (2024) [RTX 4060]</option>
                 <option value="MacBook Pro 14 inch M3 (2024)">MacBook Pro 14 inch M3 (2024) [M3 Chip]</option>
                 <option value="iPhone 15 Pro Max 256GB">iPhone 15 Pro Max 256GB [Titanium]</option>
@@ -374,7 +372,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
             </div>
 
             {/* Customer Personal Details */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Họ và tên *</label>
                 <input 
@@ -384,9 +382,9 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                   placeholder="Họ tên của bạn..."
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="form-input"
+                  
                   style={{ fontSize: '13px' }}
-                />
+                 className="form-input" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Số điện thoại liên hệ *</label>
@@ -397,14 +395,14 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                   placeholder="Số điện thoại..."
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className="form-input"
+                  
                   style={{ fontSize: '13px' }}
-                />
+                 className="form-input" />
               </div>
             </div>
 
             {/* Receipt Date & Store Address */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-1_2fr">
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Ngày mang máy thẩm định *</label>
                 <input 
@@ -413,9 +411,9 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                   required
                   value={formData.appointmentDate}
                   onChange={handleInputChange}
-                  className="form-input"
+                  
                   style={{ fontSize: '13px' }}
-                />
+                 className="form-input" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Địa điểm tiếp nhận thẩm định *</label>
@@ -423,9 +421,9 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                   name="storeLocation"
                   value={formData.storeLocation}
                   onChange={handleInputChange}
-                  className="form-input"
+                  
                   style={{ fontSize: '13px', background: 'var(--color-surface-container-lowest)' }}
-                >
+                 className="form-input">
                   <option value="Kinetic Cầu Giấy, Hà Nội">Kinetic Cầu Giấy - 12 Chùa Hà, HN</option>
                   <option value="Kinetic Đống Đa, Hà Nội">Kinetic Đống Đa - 85 Thái Hà, HN</option>
                   <option value="Thu mua tận nhà (Nội thành HN)">Thu mua tận nơi (Kỹ thuật tới nhà)</option>
@@ -435,7 +433,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
 
             {/* Address if home collection */}
             {formData.storeLocation.includes('tận nhà') && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }} className="animate-fade-in-up">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}  className="animate-fade-in-up">
                 <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Địa chỉ nhà riêng nhận linh kiện cũ *</label>
                 <input 
                   type="text"
@@ -444,9 +442,9 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                   placeholder="Nhập số nhà, ngõ ngách, tên đường..."
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="form-input"
+                  
                   style={{ fontSize: '13px' }}
-                />
+                 className="form-input" />
               </div>
             )}
 
@@ -489,7 +487,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
               <button
                 type="submit"
                 disabled={submitting}
-                className="btn btn-secondary"
+                
                 style={{
                   width: '100%',
                   padding: '14px',
@@ -501,7 +499,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                   gap: '8px',
                   marginTop: '12px'
                 }}
-              >
+               className="btn btn-secondary">
                 {submitting ? 'ĐANG GỬI YÊU CẦU...' : 'GỬI YÊU CẦU THẨM ĐỊNH ONLINE'}
                 <ArrowRight size={16} />
               </button>

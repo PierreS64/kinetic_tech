@@ -158,7 +158,7 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
     }}>
 
       {/* Split-screen container */}
-      <div className="animate-fade-in-up" style={{
+      <div  style={{
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
@@ -168,7 +168,7 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
         overflow: 'hidden',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
         border: '1px solid rgba(255,255,255,0.05)'
-      }}>
+      }} className="animate-fade-in-up">
 
         {/* Left Side: Form Area */}
         <div style={{
@@ -261,8 +261,8 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                         <input
                           type="text" name="username" placeholder="Nhập tên đăng nhập hoặc email"
                           value={formData.username} onChange={handleInputChange}
-                          className="form-input" style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
-                        />
+                           style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
+                         className="form-input" />
                       </div>
                     </div>
 
@@ -276,8 +276,8 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                         <input
                           type="password" name="password" placeholder="Nhập mật khẩu"
                           value={formData.password} onChange={handleInputChange}
-                          className="form-input" style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
-                        />
+                           style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
+                         className="form-input" />
                       </div>
                     </div>
                   </>
@@ -290,8 +290,8 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                         <input
                           type="text" name="fullName" placeholder="VD: Nguyễn Văn A"
                           value={formData.fullName} onChange={handleInputChange}
-                          className="form-input" style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
-                        />
+                           style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
+                         className="form-input" />
                       </div>
                     </div>
 
@@ -302,8 +302,8 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                         <input
                           type="email" name="email" placeholder="example@gmail.com"
                           value={formData.email} onChange={handleInputChange}
-                          className="form-input" style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
-                        />
+                           style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
+                         className="form-input" />
                       </div>
                     </div>
 
@@ -315,8 +315,8 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                           <input
                             type="password" name="password" placeholder="Tối thiểu 6 ký tự"
                             value={formData.password} onChange={handleInputChange}
-                            className="form-input" style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
-                          />
+                             style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
+                           className="form-input" />
                         </div>
                       </div>
 
@@ -327,8 +327,8 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                           <input
                             type="password" name="confirmPassword" placeholder="Nhập lại"
                             value={formData.confirmPassword} onChange={handleInputChange}
-                            className="form-input" style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
-                          />
+                             style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
+                           className="form-input" />
                         </div>
                       </div>
                     </div>
@@ -340,8 +340,8 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                         <input
                           type="tel" name="phone" placeholder="0987xxxxxx"
                           value={formData.phone} onChange={handleInputChange}
-                          className="form-input" style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
-                        />
+                           style={{ paddingLeft: '44px', height: '48px', width: '100%' }}
+                         className="form-input" />
                       </div>
                     </div>
                   </>

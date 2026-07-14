@@ -7,7 +7,7 @@ export default function TradeInTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                   Lịch Sử Đăng Ký Thu Cũ Đổi Mới
                 </h3>
@@ -26,7 +26,7 @@ export default function TradeInTab(props) {
                   </div>
                 ) : (
                   <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }} className="zebra-table">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}  className="zebra-table">
                       <thead>
                         <tr style={{ background: 'var(--color-surface-container-high)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                           <th style={{ padding: '12px 16px', fontWeight: '700' }}>Tên Máy Cũ</th>
@@ -49,7 +49,7 @@ export default function TradeInTab(props) {
                               {trade.offeredPrice > 0 ? formatVND(trade.offeredPrice) : 'Chờ định giá'}
                             </td>
                             <td style={{ padding: '12px 16px' }}>
-                              <span className="status-badge" style={{
+                              <span  style={{
                                 fontSize: '10px',
                                 background: 
                                   trade.status === 'COMPLETED' || trade.status === 'Đã thu mua' ? 'rgba(76,175,80,0.15)' : 
@@ -60,7 +60,7 @@ export default function TradeInTab(props) {
                                   trade.status === 'CANCELLED' || trade.status === 'Đã hủy' ? '#ffb4ab' :
                                   '#ffb77d',
                                 padding: '2px 8px'
-                              }}>
+                              }} className="status-badge">
                                 {trade.status === 'COMPLETED' && 'Đã thu mua'}
                                 {trade.status === 'VALUED' && 'Đã định giá'}
                                 {trade.status === 'PENDING' && 'Chờ duyệt'}

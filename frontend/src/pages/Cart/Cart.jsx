@@ -41,9 +41,9 @@ export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onR
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button 
               onClick={onClose}
-              className="btn btn-ghost"
+              
               style={{ padding: '6px', borderRadius: '50%' }}
-            >
+             className="btn btn-ghost">
               <X size={20} color="currentColor" style={{ color: 'var(--color-on-surface)' }} />
             </button>
           </div>
@@ -177,14 +177,14 @@ export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onR
 
             <button
               onClick={handleCheckout}
-              className="btn btn-secondary"
+              
               style={{
                 width: '100%',
                 padding: '14px',
                 fontSize: '14px',
                 fontWeight: '700'
               }}
-            >
+             className="btn btn-secondary">
               <CreditCard size={16} />
               <span>TIẾN HÀNH THANH TOÁN</span>
             </button>

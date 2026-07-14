@@ -42,7 +42,7 @@ export default function OrderTracking({ orders = [] }) {
   };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px 0' }} className="animate-fade-in-up">
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px 0' }}  className="animate-fade-in-up">
       {/* Title */}
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat' }}>THEO DÕI TRẠNG THÁI ĐƠN HÀNG</h2>
@@ -52,7 +52,7 @@ export default function OrderTracking({ orders = [] }) {
       </div>
 
       {/* Search Input Box */}
-      <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', marginBottom: '24px' }}>
+      <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', marginBottom: '24px' }} className="glass-panel">
         <form onSubmit={handleSearch} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <div style={{ position: 'relative', flex: 1 }}>
             <input 
@@ -71,7 +71,7 @@ export default function OrderTracking({ orders = [] }) {
               color: 'var(--color-outline)'
             }} />
           </div>
-          <button type="submit" className="btn btn-primary" style={{ height: '48px', padding: '0 24px', whiteSpace: 'nowrap' }}>
+          <button type="submit"  style={{ height: '48px', padding: '0 24px', whiteSpace: 'nowrap' }} className="btn btn-primary">
             Tra Cứu Đơn
           </button>
         </form>
@@ -80,7 +80,7 @@ export default function OrderTracking({ orders = [] }) {
       {/* Result Display */}
       {searched && (
         trackedOrder ? (
-          <div className="glass-panel-glow-blue animate-fade-in-up" style={{ borderRadius: 'var(--rounded-lg)', padding: '30px', border: '1px solid rgba(0, 123, 255, 0.25)' }}>
+          <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '30px', border: '1px solid rgba(0, 123, 255, 0.25)' }} className="glass-panel-glow-blue animate-fade-in-up">
             {/* Header info */}
             <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '16px', marginBottom: '24px' }}>
               <div>
@@ -117,7 +117,7 @@ export default function OrderTracking({ orders = [] }) {
                   </div>
                 </div>
               ) : (
-                <div className="stepper-wrapper" style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', marginTop: '20px' }}>
+                <div  style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', marginTop: '20px' }} className="stepper-wrapper">
                   {/* Background progress bar line */}
                   <div style={{
                     position: 'absolute',
@@ -201,7 +201,7 @@ export default function OrderTracking({ orders = [] }) {
             </div>
 
             {/* Order info details summary */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid rgba(255, 255, 255, 0.04)', padding: '20px', borderRadius: 'var(--rounded)', marginBottom: '24px' }} className="overview-subgrid">
+            <div style={{ display: 'grid', gap: '24px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid rgba(255, 255, 255, 0.04)', padding: '20px', borderRadius: 'var(--rounded)', marginBottom: '24px' }}   className="grid-responsive-overview overview-subgrid">
               <div>
                 <h4 style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--color-primary-dim)', fontWeight: '700', marginBottom: '12px', letterSpacing: '0.5px' }}>
                   Thông tin người nhận
@@ -264,7 +264,7 @@ export default function OrderTracking({ orders = [] }) {
 
           </div>
         ) : (
-          <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '40px 20px', textAlign: 'center', color: 'var(--color-error)' }}>
+          <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '40px 20px', textAlign: 'center', color: 'var(--color-error)' }} className="glass-panel">
             <AlertCircle size={40} style={{ marginBottom: '12px', color: 'var(--color-error)' }} />
             <h3 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '6px' }}>Không tìm thấy đơn hàng</h3>
             <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)' }}>

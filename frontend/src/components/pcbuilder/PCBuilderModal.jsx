@@ -8,9 +8,9 @@ export default function PCBuilderModal(props) {
 
   return (
     <>
-        <div className="modal-overlay">
+        <div  className="modal-overlay">
           {/* Glass Modal Box */}
-          <div className="glass-panel-glow-blue builder-modal" style={{ width: '100%', maxWidth: '850px', height: '85vh' }}>
+          <div  style={{ width: '100%', maxWidth: '850px', height: '85vh' }} className="glass-panel-glow-blue builder-modal">
             {/* Modal Header */}
             <div style={{
               padding: '16px 20px',
@@ -33,7 +33,7 @@ export default function PCBuilderModal(props) {
             </div>
 
             {/* Modal Two-Column Content Layout (Left Filter Sidebar, Right Product List) */}
-            <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', flex: 1, overflow: 'hidden' }} className="builder-modal-grid">
+            <div style={{ display: 'grid', flex: 1, overflow: 'hidden' }}   className="grid-responsive-sidebar-narrow builder-modal-grid">
 
               {/* Left Column: Detailed Filter Sidebar */}
               <aside style={{
@@ -220,7 +220,7 @@ export default function PCBuilderModal(props) {
                                 {part.name}
                               </h4>
                               {part.color && (
-                                <span className="spec-chip" style={{ fontSize: '9px', padding: '1px 5px', textTransform: 'uppercase' }}>
+                                <span  style={{ fontSize: '9px', padding: '1px 5px', textTransform: 'uppercase' }} className="spec-chip">
                                   Màu: {part.color}
                                 </span>
                               )}
@@ -233,25 +233,25 @@ export default function PCBuilderModal(props) {
                             {/* Technical Specs Tags */}
                             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px' }}>
                               {part.socket && (
-                                <span className="spec-chip spec-chip-primary">Socket: {part.socket}</span>
+                                <span  className="spec-chip spec-chip-primary">Socket: {part.socket}</span>
                               )}
                               {part.ramType && (
-                                <span className="spec-chip">Hỗ trợ RAM: {part.ramType}</span>
+                                <span  className="spec-chip">Hỗ trợ RAM: {part.ramType}</span>
                               )}
                               {part.length && (
-                                <span className="spec-chip">Chiều dài: {part.length}mm</span>
+                                <span  className="spec-chip">Chiều dài: {part.length}mm</span>
                               )}
                               {part.height && (
-                                <span className="spec-chip">Chiều cao: {part.height}mm</span>
+                                <span  className="spec-chip">Chiều cao: {part.height}mm</span>
                               )}
                               {part.radiatorSize > 0 && (
-                                <span className="spec-chip" style={{ color: 'var(--color-primary-dim)' }}>Radiator AIO: {part.radiatorSize}mm</span>
+                                <span  style={{ color: 'var(--color-primary-dim)' }} className="spec-chip">Radiator AIO: {part.radiatorSize}mm</span>
                               )}
                               {part.maxGpuLength && (
-                                <span className="spec-chip" style={{ color: '#81c784', borderColor: 'rgba(76,175,80,0.2)' }}>GPU Tối Đa: {part.maxGpuLength}mm</span>
+                                <span  style={{ color: '#81c784', borderColor: 'rgba(76,175,80,0.2)' }} className="spec-chip">GPU Tối Đa: {part.maxGpuLength}mm</span>
                               )}
                               {part.maxCpuCoolerHeight && (
-                                <span className="spec-chip" style={{ color: '#81c784', borderColor: 'rgba(76,175,80,0.2)' }}>Tản Khí Tối Đa: {part.maxCpuCoolerHeight}mm</span>
+                                <span  style={{ color: '#81c784', borderColor: 'rgba(76,175,80,0.2)' }} className="spec-chip">Tản Khí Tối Đa: {part.maxCpuCoolerHeight}mm</span>
                               )}
                             </div>
 

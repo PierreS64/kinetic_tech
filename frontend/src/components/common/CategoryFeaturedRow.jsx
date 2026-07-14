@@ -26,7 +26,7 @@ export default function CategoryFeaturedRow({ categoryName, categoryProducts, on
   }, []);
 
   return (
-    <div style={{ marginBottom: '40px', position: 'relative' }} className="reveal-on-scroll ">
+    <div style={{ marginBottom: '40px', position: 'relative' }}  className="reveal-on-scroll">
       <h3 style={{ fontSize: '16px', fontWeight: '800', fontFamily: 'Montserrat', color: theme === 'light' ? '#0f172a' : '#ffffff', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
         <span style={{ width: '4px', height: '16px', background: 'var(--color-primary)', borderRadius: '2px', display: 'inline-block' }} />
         {categoryName.toUpperCase()} NỔI BẬT & BÁN CHẠY
@@ -75,10 +75,10 @@ export default function CategoryFeaturedRow({ categoryName, categoryProducts, on
             scrollbarWidth: 'none',
             msOverflowStyle: 'none'
           }}
-          className="no-scrollbar"
-        >
+          
+         className="no-scrollbar">
           {categoryProducts.map((product) => (
-            <div key={product.id} style={{ flex: '0 0 calc(25% - 15px)', minWidth: 'calc(25% - 15px)', maxWidth: 'calc(25% - 15px)', scrollSnapAlign: 'start' }} >
+            <div key={product.id} className="category-scroll-item">
               <ProductCard 
                 product={product} 
                 onAddToCart={onAddToCart}

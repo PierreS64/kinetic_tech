@@ -7,11 +7,11 @@ export default function TradeInTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', color: textColor }}>Thu Cũ Đổi Mới (Trade-in)</h3>
 
                 <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }} className="zebra-table">
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}  className="zebra-table">
                     <thead>
                       <tr style={{ background: 'var(--color-surface-container-high)' }}>
 
@@ -45,7 +45,7 @@ export default function TradeInTab(props) {
                             {req.offeredPrice > 0 ? formatVND(req.offeredPrice) : 'Chờ thẩm định'}
                           </td>
                           <td style={{ padding: '10px 12px' }}>
-                            <span className="status-badge" style={{
+                            <span  style={{
                               fontSize: '9px',
                               fontWeight: 'bold',
                               background:
@@ -56,7 +56,7 @@ export default function TradeInTab(props) {
                               padding: '4px 6px',
                               borderRadius: '4px',
                               whiteSpace: 'nowrap'
-                            }}>
+                            }} className="status-badge">
                               {req.status === 'PENDING' && 'Chờ thẩm định'}
                               {req.status === 'VALUED' && 'Đã báo giá'}
                               {req.status === 'COMPLETED' && 'Hoàn thành'}
@@ -100,8 +100,8 @@ export default function TradeInTab(props) {
 
                 {/* Valuation Modal overlay */}
                 {selectedTradeIn && (
-                  <div className="modal-overlay" onClick={() => setSelectedTradeIn(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
-                    <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '440px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+                  <div  className="modal-overlay" onClick={() => setSelectedTradeIn(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
+                    <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '440px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
                       <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
                         <h4 style={{ fontSize: '14px', fontWeight: '800', color: textColor }}>Thẩm định & Báo giá thu cũ cho {selectedTradeIn.customerName}</h4>
                         <button onClick={() => setSelectedTradeIn(null)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
@@ -153,7 +153,7 @@ export default function TradeInTab(props) {
                           />
                         </div>
 
-                        <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '10px', marginTop: '10px' }}>
+                        <button type="submit"  style={{ width: '100%', padding: '10px', marginTop: '10px' }} className="btn btn-primary">
                           Gửi báo giá thẩm định cho khách
                         </button>
                       </form>

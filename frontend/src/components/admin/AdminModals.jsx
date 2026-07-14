@@ -7,8 +7,8 @@ export default function AdminModals(props) {
   return (
     <>
       {detailedItem && (
-        <div className="modal-overlay" onClick={handleCloseDetailedModal} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
-          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '600px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+        <div  onClick={handleCloseDetailedModal} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }} className="modal-overlay">
+          <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '600px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
 
             {/* Header */}
             <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
@@ -18,7 +18,7 @@ export default function AdminModals(props) {
                 {detailedItem.type === 'tradein' && `Chi tiết yêu cầu Trade-in ${detailedItem.id}`}
                 {detailedItem.type === 'feedback' && `Ý kiến đóng góp ${detailedItem.id}`}
               </h4>
-              <button onClick={handleCloseDetailedModal} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
+              <button onClick={handleCloseDetailedModal}  style={{ padding: '4px', borderRadius: '50%' }} className="btn btn-ghost">
                 <X size={18} color={theme === 'light' ? '#334155' : 'white'} />
               </button>
             </div>
@@ -29,7 +29,7 @@ export default function AdminModals(props) {
               {/* 1. WARRANTY DETAILED VIEW */}
               {detailedItem.type === 'warranty' && (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Khách hàng:</span>
                       <strong style={{ display: 'block', color: textColor }}>{detailedItem.customerName}</strong>
@@ -50,14 +50,14 @@ export default function AdminModals(props) {
                       {detailedItem.issue}
                     </p>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Ngày tạo yêu cầu:</span>
                       <strong style={{ display: 'block', color: textColor }}>{detailedItem.dateCreated}</strong>
                     </div>
                     <div>
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Trạng thái hiện tại:</span>
-                      <span className="status-badge" style={{
+                      <span  style={{
                         display: 'inline-block',
                         marginTop: '4px',
                         fontSize: '11px',
@@ -68,7 +68,7 @@ export default function AdminModals(props) {
                         color: '#ffffff',
                         padding: '4px 8px',
                         borderRadius: '4px'
-                      }}>
+                      }} className="status-badge">
                         {detailedItem.status === 'checking' && 'Đang kiểm tra'}
                         {detailedItem.status === 'repairing' && 'Đang sửa chữa'}
                         {detailedItem.status === 'returned' && 'Đã trả máy'}
@@ -81,7 +81,7 @@ export default function AdminModals(props) {
               {/* 2. TRADE-IN DETAILED VIEW */}
               {detailedItem.type === 'tradein' && (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Khách hàng:</span>
                       <strong style={{ display: 'block', color: textColor }}>{detailedItem.customerName}</strong>
@@ -105,7 +105,7 @@ export default function AdminModals(props) {
                       {detailedItem.conditionDesc}
                     </p>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Mức giá tự định giá:</span>
                       <strong style={{ display: 'block', color: 'var(--color-secondary-dim)', fontSize: '15px' }}>{detailedItem.selfValuation > 0 ? formatVND(detailedItem.selfValuation) : 'N/A'}</strong>
@@ -117,7 +117,7 @@ export default function AdminModals(props) {
                   </div>
                   <div>
                     <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Trạng thái:</span>
-                    <span className="status-badge" style={{
+                    <span  style={{
                       display: 'inline-block',
                       marginTop: '4px',
                       fontSize: '11px',
@@ -128,7 +128,7 @@ export default function AdminModals(props) {
                       color: '#ffffff',
                       padding: '4px 8px',
                       borderRadius: '4px'
-                    }}>
+                    }} className="status-badge">
                       {detailedItem.status === 'pending' && 'Chờ thẩm định'}
                       {detailedItem.status === 'valued' && 'Đã báo giá'}
                       {detailedItem.status === 'completed' && 'Hoàn thành đổi'}
@@ -140,7 +140,7 @@ export default function AdminModals(props) {
               {/* 3. FEEDBACK DETAILED VIEW */}
               {detailedItem.type === 'feedback' && (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Khách hàng:</span>
                       <strong style={{ display: 'block', color: textColor }}>{detailedItem.fullName}</strong>
@@ -160,14 +160,14 @@ export default function AdminModals(props) {
                       {detailedItem.content}
                     </p>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Thời gian gửi:</span>
                       <strong style={{ display: 'block', color: textColor }}>{detailedItem.date}</strong>
                     </div>
                     <div>
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Trạng thái:</span>
-                      <span className="status-badge" style={{
+                      <span  style={{
                         display: 'inline-block',
                         marginTop: '4px',
                         fontSize: '11px',
@@ -176,7 +176,7 @@ export default function AdminModals(props) {
                         color: '#ffffff',
                         padding: '4px 8px',
                         borderRadius: '4px'
-                      }}>
+                      }} className="status-badge">
                         {detailedItem.status === 'processed' ? 'Đã xử lý' : 'Chờ xử lý'}
                       </span>
                     </div>
@@ -209,7 +209,7 @@ export default function AdminModals(props) {
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Danh Mục *</label>
                       <select
@@ -261,7 +261,7 @@ export default function AdminModals(props) {
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Giá Bán (VND) *</label>
                       <input
@@ -309,7 +309,7 @@ export default function AdminModals(props) {
 
                   <div>
                     <span style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', marginBottom: '8px' }}>Thông số cấu hình kỹ thuật</span>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                    <div style={{ display: 'grid', gap: '10px' }}  className="grid-responsive-2col">
                       <div>
                         <label style={{ display: 'block', fontSize: '10px', color: 'var(--color-outline)', marginBottom: '2px' }}>CPU</label>
                         <input
@@ -448,8 +448,8 @@ export default function AdminModals(props) {
         </div>
       )}
       {selectedOrder && (
-        <div className="modal-overlay" onClick={() => setSelectedOrder(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
-          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '600px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+        <div  className="modal-overlay" onClick={() => setSelectedOrder(null)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }}>
+          <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '600px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
             {/* Header */}
             <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
               <h4 style={{ fontSize: '16px', fontWeight: '800', color: textColor }}>Chi tiết đơn hàng {selectedOrder.id}</h4>
@@ -513,8 +513,8 @@ export default function AdminModals(props) {
         </div>
       )}
       {productConfirmModal && (
-        <div className="modal-overlay" onClick={() => setProductConfirmModal(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100 }}>
-          <div className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '380px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1101, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+        <div  className="modal-overlay" onClick={() => setProductConfirmModal(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1100 }}>
+          <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '380px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1101, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
             <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
               <h4 style={{ fontSize: '14px', fontWeight: '800', color: textColor }}>Xác nhận thay đổi sản phẩm</h4>
               <button onClick={() => setProductConfirmModal(false)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
@@ -527,9 +527,9 @@ export default function AdminModals(props) {
               </p>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button
-                  className="btn btn-secondary"
+                  
                   style={{ flex: 1, padding: '10px', fontSize: '13px', fontWeight: '700' }}
-                  onClick={() => {
+                  className="btn btn-secondary" onClick={() => {
                     setStoreProducts(prev => prev.map(p => p.id === productEditDraft.id ? productEditDraft : p));
                     setDetailedItem(productEditDraft);
                     setProductConfirmModal(false);
@@ -538,9 +538,9 @@ export default function AdminModals(props) {
                   Lưu
                 </button>
                 <button
-                  className="btn btn-outline"
+                  
                   style={{ flex: 1, padding: '10px', fontSize: '13px' }}
-                  onClick={() => {
+                  className="btn btn-outline" onClick={() => {
                     setProductEditDraft(JSON.parse(JSON.stringify(detailedItem)));
                     setProductConfirmModal(false);
                   }}

@@ -185,20 +185,20 @@ export default function SupportTicket({ theme, currentUser }) {
   const getStatusBadge = (status) => {
     if (status === 'pending') {
       return (
-        <span className="status-badge" style={{ background: 'rgb(253, 139, 0)', color: '#ffffff', border: '1px solid rgba(253, 139, 0, 0.3)', textTransform: 'none' }}>
+        <span  style={{ background: 'rgb(253, 139, 0)', color: '#ffffff', border: '1px solid rgba(253, 139, 0, 0.3)', textTransform: 'none' }} className="status-badge">
           Đang chờ xử lý
         </span>
       );
     }
     if (status === 'replied') {
       return (
-        <span className="status-badge" style={{ background: 'rgb(76, 175, 79)', color: '#ffffff', border: '1px solid rgba(76, 175, 80, 0.3)', textTransform: 'none' }}>
+        <span  style={{ background: 'rgb(76, 175, 79)', color: '#ffffff', border: '1px solid rgba(76, 175, 80, 0.3)', textTransform: 'none' }} className="status-badge">
           Đã trả lời
         </span>
       );
     }
     return (
-      <span className="status-badge" style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--color-outline)', border: '1px solid rgba(255,255,255,0.1)', textTransform: 'none' }}>
+      <span  style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--color-outline)', border: '1px solid rgba(255,255,255,0.1)', textTransform: 'none' }} className="status-badge">
         Đã đóng
       </span>
     );
@@ -235,7 +235,7 @@ export default function SupportTicket({ theme, currentUser }) {
 
       {isCreating ? (
         /* Create Ticket Form */
-        <div className="glass-panel animate-fade-in-up" style={{ padding: '30px', borderRadius: 'var(--rounded-lg)', maxWidth: '700px', margin: '0 auto' }}>
+        <div  style={{ padding: '30px', borderRadius: 'var(--rounded-lg)', maxWidth: '700px', margin: '0 auto' }} className="glass-panel animate-fade-in-up">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255,255,255,0.08)', paddingBottom: '14px', marginBottom: '20px' }}>
             <button onClick={() => setIsCreating(false)} className="btn btn-ghost" style={{ padding: '6px', borderRadius: '50%' }}>
               <ArrowLeft size={18} color={isLight ? 'var(--color-on-surface)' : 'white'} />
@@ -257,7 +257,7 @@ export default function SupportTicket({ theme, currentUser }) {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '12px', fontWeight: '600', color: isLight ? 'var(--color-on-surface)' : 'white' }}>Danh mục hỗ trợ *</label>
                 <select
@@ -308,17 +308,17 @@ export default function SupportTicket({ theme, currentUser }) {
                   Tài khoản quản trị không thể gửi yêu cầu hỗ trợ.
                 </div>
               ) : (
-                <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Gửi Ticket Yêu Cầu</button>
+                <button type="submit"  style={{ flex: 1 }} className="btn btn-primary">Gửi Ticket Yêu Cầu</button>
               )}
             </div>
           </form>
         </div>
       ) : activeTicket ? (
         /* Detailed Ticket Conversation Thread */
-        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '24px' }} className="catalog-layout">
+        <div style={{ display: 'grid', gap: '24px' }}   className="grid-responsive-sidebar-wide catalog-layout">
           
           {/* Ticket Meta Sidebar */}
-          <div className="glass-panel" style={{ padding: '20px', borderRadius: 'var(--rounded-md)', height: 'fit-content' }}>
+          <div  style={{ padding: '20px', borderRadius: 'var(--rounded-md)', height: 'fit-content' }} className="glass-panel">
             <button 
               onClick={() => setActiveTicketId(null)}
               className="btn btn-ghost"
@@ -356,7 +356,7 @@ export default function SupportTicket({ theme, currentUser }) {
           </div>
 
           {/* Ticket Messages Thread */}
-          <div className="glass-panel" style={{ borderRadius: 'var(--rounded-md)', display: 'flex', flexDirection: 'column', height: '620px', overflow: 'hidden' }}>
+          <div  style={{ borderRadius: 'var(--rounded-md)', display: 'flex', flexDirection: 'column', height: '620px', overflow: 'hidden' }} className="glass-panel">
             
             {/* Header info */}
             <div style={{ padding: '16px 20px', borderBottom: isLight ? '1px solid rgba(0, 0, 0, 0.08)' : '1px solid rgba(255,255,255,0.08)', background: isLight ? 'rgba(0,0,0,0.03)' : 'rgba(0,0,0,0.15)' }}>
@@ -426,9 +426,9 @@ export default function SupportTicket({ theme, currentUser }) {
                       alignItems: 'center',
                       width: 'fit-content'
                     }}>
-                      <span className="dot-blink" style={{ animationDelay: '0s' }}>•</span>
-                      <span className="dot-blink" style={{ animationDelay: '0.2s' }}>•</span>
-                      <span className="dot-blink" style={{ animationDelay: '0.4s' }}>•</span>
+                      <span  style={{ animationDelay: '0s' }} className="dot-blink">•</span>
+                      <span  style={{ animationDelay: '0.2s' }} className="dot-blink">•</span>
+                      <span  style={{ animationDelay: '0.4s' }} className="dot-blink">•</span>
                     </div>
                   </div>
                 </div>
@@ -457,9 +457,9 @@ export default function SupportTicket({ theme, currentUser }) {
               <button 
                 type="submit"
                 disabled={!replyText.trim() || simulatingReply}
-                className="btn btn-secondary"
+                
                 style={{ padding: '10px 20px' }}
-              >
+               className="btn btn-secondary">
                 <Send size={15} /> Gửi
               </button>
             </form>
@@ -549,7 +549,7 @@ export default function SupportTicket({ theme, currentUser }) {
                 { q: 'Lắp ráp PC có tính thêm chi phí lắp đặt không?', a: 'Kinetic Tech hỗ trợ cài đặt hệ điều hành bản quyền, kiểm tra tương thích và lắp ráp thùng PC hoàn toàn MIỄN PHÍ khi khách hàng mua đủ linh kiện.' },
                 { q: 'Khi máy tính bị lỗi tôi có phải tự mang ra cửa hàng không?', a: 'Với các bộ máy PC ráp nguyên chiếc tại Kinetic Tech, bên mình hỗ trợ bảo hành tận nhà miễn phí trong 12 tháng đầu khu vực nội thành.' }
               ].map((faq, i) => (
-                <div key={i} className="glass-panel" style={{ padding: '16px', borderRadius: 'var(--rounded)' }}>
+                <div key={i}  style={{ padding: '16px', borderRadius: 'var(--rounded)' }} className="glass-panel">
                   <h4 style={{ fontSize: '13px', fontWeight: '700', color: isLight ? 'var(--color-on-surface)' : 'white', display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
                     <HelpCircle size={15} color="var(--color-primary-dim)" style={{ flexShrink: 0, marginTop: '2px' }} />
                     {faq.q}

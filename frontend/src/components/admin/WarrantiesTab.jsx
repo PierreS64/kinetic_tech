@@ -6,11 +6,11 @@ export default function WarrantiesTab(props) {
 
   return (
 
-              <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', color: textColor }}>Quản Lý Yêu Cầu Bảo Hành</h3>
 
                 <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="zebra-table">
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
                     <thead>
                       <tr style={{ background: 'var(--color-surface-container-high)' }}>
 
@@ -39,7 +39,7 @@ export default function WarrantiesTab(props) {
                           </td>
                           <td style={{ color: textColor }}>{claim.dateCreated}</td>
                           <td>
-                            <span className="status-badge" style={{
+                            <span  style={{
                               fontSize: '10px',
                               fontWeight: 'bold',
                               background:
@@ -49,7 +49,7 @@ export default function WarrantiesTab(props) {
                               border: theme === 'light' ? 'none' : '1px solid currentColor',
                               padding: '4px 8px',
                               borderRadius: '4px'
-                            }}>
+                            }} className="status-badge">
                               {claim.status === 'checking' && 'Đang kiểm tra'}
                               {claim.status === 'repairing' && 'Đang sửa chữa'}
                               {claim.status === 'returned' && 'Đã trả máy'}

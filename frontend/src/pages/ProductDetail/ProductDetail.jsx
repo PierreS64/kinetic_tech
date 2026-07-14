@@ -62,13 +62,13 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px', animation: 'fadeIn 0.3s' }}>
       <button 
         onClick={onBack}
-        className="btn btn-ghost" 
+         
         style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px', color: theme === 'light' ? '#475569' : 'rgba(255,255,255,0.7)' }}
-      >
+       className="btn btn-ghost">
         <ArrowLeft size={16} /> Quay lại
       </button>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', background: 'var(--color-surface-container)', padding: '32px', borderRadius: 'var(--rounded-lg)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }}>
+      <div style={{ display: 'grid', gap: '48px', background: 'var(--color-surface-container)', padding: '32px', borderRadius: 'var(--rounded-lg)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }}  className="grid-responsive-2col">
         {/* Left: Image */}
         <div style={{ background: 'var(--color-surface-container-low)', borderRadius: 'var(--rounded)', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img 
@@ -107,7 +107,7 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
                 <span style={{ fontSize: '18px', textDecoration: 'line-through', color: 'var(--color-outline)' }}>
                   {formatVND(product.oldPrice)}
                 </span>
-                <span className="status-badge status-badge-sale" style={{ fontSize: '12px', padding: '2px 8px' }}>
+                <span  style={{ fontSize: '12px', padding: '2px 8px' }} className="status-badge status-badge-sale">
                   Tiết kiệm {discount}%
                 </span>
               </>
@@ -116,7 +116,7 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <h3 style={{ fontSize: '16px', fontWeight: '700', color: theme === 'light' ? '#1e293b' : '#f8fafc' }}>Thông Số Kỹ Thuật Chi Tiết</h3>
-            <table className="kinetic-table" style={{ fontSize: '14px' }}>
+            <table  style={{ fontSize: '14px' }} className="kinetic-table">
               <tbody>
                 {Object.entries(product.specs || {}).map(([key, val]) => (
                   <tr key={key}>
@@ -169,7 +169,7 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px' }}>
+          <div style={{ display: 'grid', gap: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px' }}  className="grid-responsive-2col">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--color-on-surface-variant)', fontSize: '13px' }}>
               <Shield size={20} color="var(--color-primary-dim)" />
               <span>Bảo hành chính hãng 24-36 tháng</span>
@@ -245,14 +245,14 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
             </div>
             <div>
               <textarea 
-                className="kinetic-input"
+                
                 rows="4" 
                 placeholder="Chia sẻ cảm nhận của bạn về sản phẩm này..."
                 value={newReview.comment}
-                onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                className="kinetic-input" onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
               />
             </div>
-            <button type="submit" className="btn btn-primary" disabled={submittingReview} style={{ alignSelf: 'flex-start', padding: '12px 24px' }}>
+            <button type="submit"  disabled={submittingReview} style={{ alignSelf: 'flex-start', padding: '12px 24px' }} className="btn btn-primary">
               {submittingReview ? 'Đang gửi...' : 'Gửi Đánh Giá'}
             </button>
           </form>

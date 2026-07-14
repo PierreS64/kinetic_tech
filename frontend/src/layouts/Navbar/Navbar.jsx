@@ -118,21 +118,21 @@ export default function Navbar({
   };
 
   return (
-    <header className="glass-panel" style={{
+    <header  style={{
       position: 'sticky',
       top: 0,
       zIndex: 90,
       width: '100%',
       backdropFilter: 'blur(20px)',
       borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
-    }}>
-      <div className="container" style={{
+    }} className="glass-panel">
+      <div  style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         height: '72px',
         gap: '24px'
-      }}>
+      }} className="container">
         {/* Logo */}
         <div 
           onClick={() => handleNavClick('deals')}
@@ -162,7 +162,7 @@ export default function Navbar({
             <Cpu size={22} color="white" />
           </div>
           <div>
-            <span className="brand-logo-text" style={{
+            <span  style={{
               fontFamily: 'Montserrat',
               fontWeight: 800,
               fontSize: '20px',
@@ -170,8 +170,8 @@ export default function Navbar({
               background: theme === 'light' ? 'linear-gradient(90deg, #091e42, #0052cc)' : 'linear-gradient(90deg, #ffffff, #adc7ff)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
-            }}>KINETIC</span>
-            <span className="brand-logo-subtext" style={{
+            }} className="brand-logo-text">KINETIC</span>
+            <span  style={{
               fontFamily: 'Montserrat',
               fontWeight: 700,
               fontSize: '14px',
@@ -179,12 +179,12 @@ export default function Navbar({
               color: 'var(--color-secondary)',
               display: 'block',
               marginTop: '-5px'
-            }}>TECH</span>
+            }} className="brand-logo-subtext">TECH</span>
           </div>
         </div>
 
         {/* Desktop Navigation with Dropdowns */}
-        <nav style={{ display: 'none', position: 'relative' }} className="desktop-nav">
+        <nav style={{ display: 'none', position: 'relative' }}  className="desktop-nav">
           <ul style={{
             display: 'flex',
             listStyle: 'none',
@@ -247,7 +247,7 @@ export default function Navbar({
                     zIndex: 100
                   }}
                 >
-                  <div className="glass-panel animate-fade-in-up global-dropdown-menu">
+                  <div  className="glass-panel animate-fade-in-up global-dropdown-menu">
                     {categories.map((cat) => {
                       const CatIcon = cat.icon;
                       const isCatActive = activeView === cat.id;
@@ -330,7 +330,7 @@ export default function Navbar({
                     zIndex: 100
                   }}
                 >
-                  <div className="glass-panel animate-fade-in-up global-dropdown-menu">
+                  <div  className="glass-panel animate-fade-in-up global-dropdown-menu">
                     {supportItems.map((item) => {
                       const isItemActive = activeView === item.id;
                       return (
@@ -342,8 +342,8 @@ export default function Navbar({
                           }}
                           className={`btn btn-ghost global-dropdown-item multi-line ${isItemActive ? 'active' : ''}`}
                         >
-                          <span className="dropdown-title">{item.label}</span>
-                          <span className="dropdown-desc">{item.desc}</span>
+                          <span  className="dropdown-title">{item.label}</span>
+                          <span  className="dropdown-desc">{item.desc}</span>
                         </button>
                       );
                     })}
@@ -361,7 +361,7 @@ export default function Navbar({
           display: 'none',
           margin: '0 10px',
           zIndex: 100
-        }} className="desktop-search">
+        }}  className="desktop-search">
           <SmartSearch 
             data={storeProducts} 
             onSelect={onSelectProduct} 
@@ -378,7 +378,7 @@ export default function Navbar({
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="btn btn-ghost"
+            
             style={{
               padding: '8px',
               borderRadius: 'var(--rounded-md)',
@@ -393,7 +393,7 @@ export default function Navbar({
               color: 'var(--color-on-surface)'
             }}
             title={theme === 'light' ? 'Chuyển sang Chế độ tối' : 'Chuyển sang Chế độ sáng'}
-          >
+           className="btn btn-ghost">
             {theme === 'light' ? <Moon size={22} color="#fd8b00" /> : <Sun size={22} color="#ffb300" />}
           </button>
 
@@ -414,8 +414,8 @@ export default function Navbar({
             }}
           >
             <Cpu size={15} />
-            <b className="hide-mobile" style={{ whiteSpace: 'nowrap' }}>Tự Build PC</b>
-            <span className="show-mobile">Build PC</span>
+            <b  style={{ whiteSpace: 'nowrap' }} className="hide-mobile">Tự Build PC</b>
+            <span  className="show-mobile">Build PC</span>
           </button>
 
           {/* User Profile dropdown */}
@@ -454,7 +454,7 @@ export default function Navbar({
                 }}>
                   {currentUser.fullName.charAt(0).toUpperCase()}
                 </div>
-                <span className="hide-mobile" style={{ maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span  style={{ maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis' }} className="hide-mobile">
                   {currentUser.fullName.split(' ').pop()}
                 </span>
                 <ChevronDown size={14} />
@@ -475,8 +475,8 @@ export default function Navbar({
                 }}
               >
                 <User size={14} />
-                <b className="hide-mobile">Đăng Nhập</b>
-                <b className="show-mobile">Login</b>
+                <b  className="hide-mobile">Đăng Nhập</b>
+                <b  className="show-mobile">Login</b>
               </button>
             )}
 
@@ -492,7 +492,7 @@ export default function Navbar({
                   zIndex: 100
                 }}
               >
-                <div className="glass-panel animate-fade-in-up global-dropdown-menu">
+                <div  className="glass-panel animate-fade-in-up global-dropdown-menu">
                   <div style={{ 
                     padding: '8px 12px', 
                     fontSize: '11px', 
@@ -561,7 +561,7 @@ export default function Navbar({
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="glass-panel animate-fade-in-up" style={{
+        <div  style={{
           position: 'absolute',
           top: '72px',
           left: 0,
@@ -572,7 +572,7 @@ export default function Navbar({
           flexDirection: 'column',
           gap: '16px',
           zIndex: 89
-        }}>
+        }} className="glass-panel animate-fade-in-up">
           {/* User Account Info on Mobile */}
           <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '16px', marginBottom: '8px' }}>
             {currentUser ? (
@@ -790,8 +790,8 @@ export default function Navbar({
                           onClick={() => handleNavClick(item.id)}
                           className={`btn btn-ghost global-dropdown-item multi-line ${isActive ? 'active' : ''}`}
                         >
-                          <span className="dropdown-title">{item.label}</span>
-                          <span className="dropdown-desc">{item.desc}</span>
+                          <span  className="dropdown-title">{item.label}</span>
+                          <span  className="dropdown-desc">{item.desc}</span>
                         </button>
                       </li>
                     );

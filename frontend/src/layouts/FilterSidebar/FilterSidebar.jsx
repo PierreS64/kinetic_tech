@@ -2,13 +2,13 @@ import React from "react";
 
 export default function FilterSidebar({ theme, activeView, onlyInStock, setOnlyInStock, minPrice, maxPrice, setMinPrice, setMaxPrice, selectedBrands, setSelectedBrands, getCategoryBrands, laptopFilters, setLaptopFilters, phoneFilters, setPhoneFilters, gearFilters, setGearFilters, componentFilters, setComponentFilters }) {
   return (
-                <aside className="filter-sidebar glass-panel" style={{
+                <aside  style={{
                   borderRadius: 'var(--rounded-md)',
                   padding: '20px',
                   height: 'fit-content',
                   position: 'sticky',
                   top: '92px'
-                }}>
+                }} className="filter-sidebar glass-panel">
                   <h3 style={{ fontSize: '14px', fontWeight: '800', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', paddingBottom: '10px', marginBottom: '16px', color: 'var(--color-on-surface)' }}>
                     BỘ LỌC TÌM KIẾM
                   </h3>

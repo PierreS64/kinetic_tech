@@ -8,7 +8,7 @@ export default function ProfileTab(props) {
   return (
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+                <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                   <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
                     Chỉnh Sửa Thông Tin Cá Nhân
                   </h3>
@@ -21,7 +21,7 @@ export default function ProfileTab(props) {
                   )}
 
                   <form onSubmit={handleProfileUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="overview-subgrid">
+                    <div style={{ display: 'grid', gap: '16px' }}   className="grid-responsive-2col overview-subgrid">
                       <div>
                         <label style={{ display: 'block', fontSize: '12px', color: 'var(--color-outline)', marginBottom: '6px', fontWeight: '600' }}>Họ và tên</label>
                         <input
@@ -58,13 +58,13 @@ export default function ProfileTab(props) {
                       />
                     </div>
 
-                    <button type="submit" className="btn btn-primary" style={{ padding: '10px 20px', alignSelf: 'flex-start' }}>
+                    <button type="submit"  style={{ padding: '10px 20px', alignSelf: 'flex-start' }} className="btn btn-primary">
                       Lưu Thay Đổi
                     </button>
                   </form>
                 </div>
 
-                <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+                <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
                   <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Lock size={18} color="var(--color-primary-dim)" />
                     Đổi Mật Khẩu Bảo Mật
@@ -96,7 +96,7 @@ export default function ProfileTab(props) {
                       />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="overview-subgrid">
+                    <div style={{ display: 'grid', gap: '16px' }}   className="grid-responsive-2col overview-subgrid">
                       <div>
                         <label style={{ display: 'block', fontSize: '12px', color: 'var(--color-outline)', marginBottom: '6px', fontWeight: '600' }}>Mật khẩu mới</label>
                         <input
@@ -121,7 +121,7 @@ export default function ProfileTab(props) {
                       </div>
                     </div>
 
-                    <button type="submit" className="btn btn-secondary" style={{ padding: '10px 20px', alignSelf: 'flex-start' }}>
+                    <button type="submit"  style={{ padding: '10px 20px', alignSelf: 'flex-start' }} className="btn btn-secondary">
                       Xác Nhận Đổi Mật Khẩu
                     </button>
                   </form>
