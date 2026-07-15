@@ -12,15 +12,23 @@ const checkMatch = (str1, str2) => {
   return s1.includes(s2) || s2.includes(s1);
 };
 export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
-  const [selectedParts, setSelectedParts] = useState({
-    cpu: null,
-    motherboard: null,
-    ram: null,
-    gpu: null,
-    ssd: null,
-    psu: null,
-    cooler: null,
-    pcCase: null
+  const [selectedParts, setSelectedParts] = useState(() => {
+    try {
+      const saved = localStorage.getItem('kinetic_pcbuilder_parts');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error("Lỗi đọc cấu hình PCBuilder từ localStorage:", e);
+    }
+    return {
+      cpu: null,
+      motherboard: null,
+      ram: null,
+      gpu: null,
+      ssd: null,
+      psu: null,
+      cooler: null,
+      pcCase: null
+    };
   });
 
   const [activeModalCat, setActiveModalCat] = useState(null);
@@ -36,6 +44,15 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
   const [filterSelectedColor, setFilterSelectedColor] = useState('all'); // 'all', 'Đen', 'Trắng'
   const [filterSocket, setFilterSocket] = useState('all');
   const [filterRamType, setFilterRamType] = useState('all');
+
+  // Lưu cấu hình vào localStorage mỗi khi có thay đổi
+  useEffect(() => {
+    try {
+      localStorage.setItem('kinetic_pcbuilder_parts', JSON.stringify(selectedParts));
+    } catch (e) {
+      console.error("Lỗi lưu cấu hình PCBuilder vào localStorage:", e);
+    }
+  }, [selectedParts]);
 
   const handleOpenModal = (catId) => {
     setActiveModalCat(catId);
