@@ -362,13 +362,17 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
       // 5. Socket Filter (Tương thích)
       let matchesSocket = true;
       if (filterSocket && filterSocket !== 'all' && part.socket) {
-        matchesSocket = String(part.socket).toLowerCase() === String(filterSocket).toLowerCase();
+        const sSocket = String(part.socket).toLowerCase().replace(/\s/g, '');
+        const fSocket = String(filterSocket).toLowerCase().replace(/\s/g, '');
+        matchesSocket = sSocket.includes(fSocket) || fSocket.includes(sSocket);
       }
 
       // 6. RAM Type Filter (Tương thích)
       let matchesRam = true;
       if (filterRamType && filterRamType !== 'all' && part.ramType) {
-        matchesRam = String(part.ramType).toLowerCase() === String(filterRamType).toLowerCase();
+        const sRam = String(part.ramType).toLowerCase().replace(/\s/g, '');
+        const fRam = String(filterRamType).toLowerCase().replace(/\s/g, '');
+        matchesRam = sRam.includes(fRam) || fRam.includes(sRam);
       }
 
       return matchesSearch && matchesPrice && matchesBrand && matchesColor && matchesSocket && matchesRam;
