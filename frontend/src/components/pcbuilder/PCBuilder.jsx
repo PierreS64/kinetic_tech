@@ -5,6 +5,12 @@ import './pcBuilder.css';
 import { createPortal } from 'react-dom';
 import { ChevronRight, Settings, Cpu, Layers, HardDrive, Fan, Plus, Info, CheckCircle, Trash2, ArrowRight, Check, AlertTriangle, Wrench, ShoppingCart, RefreshCw, Search, X, Filter } from 'lucide-react';
 
+const checkMatch = (str1, str2) => {
+  if (!str1 || !str2) return false;
+  const s1 = String(str1).toLowerCase().replace(/\s/g, '');
+  const s2 = String(str2).toLowerCase().replace(/\s/g, '');
+  return s1.includes(s2) || s2.includes(s1);
+};
 export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
   const [selectedParts, setSelectedParts] = useState({
     cpu: null,
@@ -139,7 +145,7 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
 
     // 1. CPU & Motherboard Socket match
     if (selectedParts.cpu && selectedParts.motherboard) {
-      if (selectedParts.cpu.socket !== selectedParts.motherboard.socket) {
+      if (!checkMatch(selectedParts.cpu.socket, selectedParts.motherboard.socket)) {
         rules.push({
           type: 'error',
           message: `Lỗi socket: CPU dùng Socket ${selectedParts.cpu.socket} không tương thích với socket ${selectedParts.motherboard.socket} của Mainboard.`
@@ -154,7 +160,7 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
 
     // 2. Motherboard & RAM Type match
     if (selectedParts.motherboard && selectedParts.ram) {
-      if (selectedParts.motherboard.ramType !== selectedParts.ram.ramType) {
+      if (!checkMatch(selectedParts.motherboard.ramType, selectedParts.ram.ramType)) {
         rules.push({
           type: 'error',
           message: `Lỗi RAM: Mainboard hỗ trợ ${selectedParts.motherboard.ramType} nhưng bạn đang chọn RAM ${selectedParts.ram.ramType}.`
@@ -281,22 +287,22 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
   const checkPartCompatibilityError = (catId, part) => {
     // Check against CPU
     if (catId === 'cpu' && selectedParts.motherboard) {
-      if (part.socket !== selectedParts.motherboard.socket) {
+      if (!checkMatch(part.socket, selectedParts.motherboard.socket)) {
         return `Không khớp Socket với Mainboard đang chọn (${selectedParts.motherboard.socket})`;
       }
     }
     // Check against Motherboard
     if (catId === 'motherboard') {
-      if (selectedParts.cpu && part.socket !== selectedParts.cpu.socket) {
+      if (selectedParts.cpu && !checkMatch(part.socket, selectedParts.cpu.socket)) {
         return `Không khớp Socket với CPU đang chọn (${selectedParts.cpu.socket})`;
       }
-      if (selectedParts.ram && part.ramType !== selectedParts.ram.ramType) {
+      if (selectedParts.ram && !checkMatch(part.ramType, selectedParts.ram.ramType)) {
         return `Loại RAM không khớp với RAM đang chọn (${selectedParts.ram.ramType})`;
       }
     }
     // Check against RAM
     if (catId === 'ram' && selectedParts.motherboard) {
-      if (part.ramType !== selectedParts.motherboard.ramType) {
+      if (!checkMatch(part.ramType, selectedParts.motherboard.ramType)) {
         return `Chuẩn RAM không khớp với Mainboard đang chọn (${selectedParts.motherboard.ramType})`;
       }
     }
@@ -362,17 +368,13 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
       // 5. Socket Filter (Tương thích)
       let matchesSocket = true;
       if (filterSocket && filterSocket !== 'all' && part.socket) {
-        const sSocket = String(part.socket).toLowerCase().replace(/\s/g, '');
-        const fSocket = String(filterSocket).toLowerCase().replace(/\s/g, '');
-        matchesSocket = sSocket.includes(fSocket) || fSocket.includes(sSocket);
+        matchesSocket = checkMatch(part.socket, filterSocket);
       }
 
       // 6. RAM Type Filter (Tương thích)
       let matchesRam = true;
       if (filterRamType && filterRamType !== 'all' && part.ramType) {
-        const sRam = String(part.ramType).toLowerCase().replace(/\s/g, '');
-        const fRam = String(filterRamType).toLowerCase().replace(/\s/g, '');
-        matchesRam = sRam.includes(fRam) || fRam.includes(sRam);
+        matchesRam = checkMatch(part.ramType, filterRamType);
       }
 
       return matchesSearch && matchesPrice && matchesBrand && matchesColor && matchesSocket && matchesRam;
