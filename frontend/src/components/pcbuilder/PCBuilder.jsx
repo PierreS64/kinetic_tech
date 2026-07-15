@@ -96,7 +96,19 @@ export default function PCBuilder({ storeProducts = [], onAddPartsToCart }) {
           parsedSpecs = JSON.parse(prod.specs);
         } catch(e) {}
       }
-      return { ...prod, ...parsedSpecs };
+      
+      const enriched = { ...prod, ...parsedSpecs };
+      
+      // Normalize missing ramType
+      if (!enriched.ramType) {
+        if (enriched.ram) {
+          enriched.ramType = enriched.ram;
+        } else if (enriched.type && String(enriched.type).toLowerCase().includes('ddr')) {
+          enriched.ramType = enriched.type;
+        }
+      }
+      
+      return enriched;
     };
 
     storeProducts.forEach(prod => {
