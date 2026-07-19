@@ -303,3 +303,9 @@ body.light-theme .brand-logo-subtext {
 @media (min-width: 769px) {
   .show-mobile { display: none !important; }
 }
+
+/* Fix select option colors in dark mode */
+body:not(.light-theme) select option {
+  background-color: var(--color-surface-container-high);
+  color: var(--color-on-surface);
+}

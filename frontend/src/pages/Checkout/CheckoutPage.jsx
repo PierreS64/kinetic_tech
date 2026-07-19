@@ -21,7 +21,14 @@ import {
 } from 'lucide-react';
 import api from '../../utils/api';
 
-export default function Checkout({ cartItems, onClearCart, setActiveView, onUpdateQuantity, onRemoveItem, currentUser, onAddOrder }) {
+import { useAuth } from '../../contexts/AuthContext';
+import { useCart } from '../../contexts/CartContext';
+import { useNavigate } from 'react-router-dom';
+
+export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity, onRemoveItem, onAddOrder }) {
+  const { currentUser } = useAuth();
+  const { cartItems, setCartItems, handleUpdateQuantity, handleRemoveItem } = useCart();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: currentUser?.fullName || '',
     phone: currentUser?.phone || '',
@@ -113,6 +120,13 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
 
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
+    // Require login
+    if (!currentUser) {
+      alert('Vui lòng đăng nhập để tiến hành đặt hàng.');
+      navigate('/login');
+      return;
+    }
+
     
     // Check cart
     if (cartItems.length === 0) {
@@ -139,7 +153,8 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
       const payload = {
         shippingAddress: fullAddress,
         paymentMethod: paymentMethod === 'cod' ? 'COD' : 'PAYOS',
-        ...(appliedPromo?.id && { couponId: appliedPromo.id })
+        ...(appliedPromo?.id && { couponId: appliedPromo.id }),
+        items: cartItems.map(i => ({ productId: i.id, quantity: i.quantity }))
       };
       
       const res = await api.post('/orders', payload);
@@ -176,6 +191,9 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
           total,
           notes: formData.notes
         });
+        
+        // Clear cart immediately after successful order
+        if (setCartItems) setCartItems([]);
       }
     } catch (err) {
       console.error(err);
@@ -185,8 +203,8 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
   };
 
   const handleFinish = () => {
-    onClearCart();
-    setActiveView('deals');
+    if (setCartItems) setCartItems([]);
+    navigate('/');
   };
 
   // If cart is empty and no order placed yet, render empty cart state
@@ -201,7 +219,7 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
       
       {/* Return link */}
       <button 
-        onClick={() => setActiveView('deals')}
+        onClick={() => navigate('/')}
         className="btn btn-ghost"
         style={{ padding: '0 8px', marginBottom: '24px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '4px' }}
       >
@@ -571,8 +589,8 @@ export default function Checkout({ cartItems, onClearCart, setActiveView, onUpda
           </div>
         </form>
         <CheckoutSidebar 
-          cartItems={cartItems} formatVND={formatVND} onUpdateQuantity={onUpdateQuantity} 
-          onRemoveItem={onRemoveItem} promoCode={promoCode} setPromoCode={setPromoCode} 
+          cartItems={cartItems} formatVND={formatVND} onUpdateQuantity={handleUpdateQuantity} 
+          onRemoveItem={handleRemoveItem} promoCode={promoCode} setPromoCode={setPromoCode} 
           promoError={promoError} setPromoError={setPromoError} handleApplyPromo={handleApplyPromo} 
           appliedPromo={appliedPromo} handleRemovePromo={handleRemovePromo} subtotal={subtotal} 
           shippingCost={shippingCost} vatTax={vatTax} discountAmount={discountAmount} 

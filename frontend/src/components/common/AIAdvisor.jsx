@@ -2,7 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bot, Send, User, ShoppingCart, Loader2, X } from 'lucide-react';
 import { io } from 'socket.io-client';
 
-export default function AIAdvisor({ onAddToCart, theme, onClose }) {
+import { useAppContext } from '../../contexts/AppContext';
+
+export default function AIAdvisor({ onAddToCart, onClose }) {
+  const { theme } = useAppContext();
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -314,31 +317,33 @@ export default function AIAdvisor({ onAddToCart, theme, onClose }) {
       </div>
 
       {/* Preset Chips */}
-      <div style={{
-        padding: '8px 16px',
-        display: 'flex',
-        gap: '8px',
-        flexWrap: 'wrap',
-        background: 'rgba(0,0,0,0.1)',
-        borderTop: '1px solid rgba(255, 255, 255, 0.04)'
-      }}>
-        {presetQuestions.map((q, idx) => (
-          <button
-            key={idx}
-            onClick={() => handleSend(q.text)}
-            className="btn btn-outline"
-            style={{
-              padding: '6px 12px',
-              fontSize: '11px',
-              borderRadius: 'var(--rounded-full)',
-              background: 'rgba(255,255,255,0.02)',
-              borderColor: 'rgba(255,255,255,0.08)'
-            }}
-          >
-            {q.text}
-          </button>
-        ))}
-      </div>
+      {messages.length <= 1 && (
+        <div style={{
+          padding: '8px 16px',
+          display: 'flex',
+          gap: '8px',
+          flexWrap: 'wrap',
+          background: 'rgba(0,0,0,0.1)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.04)'
+        }}>
+          {presetQuestions.map((q, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleSend(q.text)}
+              className="btn btn-outline"
+              style={{
+                padding: '6px 12px',
+                fontSize: '11px',
+                borderRadius: 'var(--rounded-full)',
+                background: 'rgba(255,255,255,0.02)',
+                borderColor: 'rgba(255,255,255,0.08)'
+              }}
+            >
+              {q.text}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Input Tray */}
       <form

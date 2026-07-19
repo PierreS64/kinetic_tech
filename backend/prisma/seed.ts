@@ -12,8 +12,8 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const mockDataPath = path.resolve(__dirname, '../../frontend/src/utils/mockData.js');
-  let mockDataContent = fs.readFileSync(mockDataPath, 'utf-8');
+  const seedDataPath = path.resolve(__dirname, 'seedData.js');
+  let mockDataContent = fs.readFileSync(seedDataPath, 'utf-8');
 
   const idRegex = /id:\s*'([a-zA-Z0-9-]+)'/g;
   let match;
@@ -50,24 +50,12 @@ async function main() {
     }
   }
 
-  fs.writeFileSync(mockDataPath, modifiedContent, 'utf-8');
-  console.log('Updated mockData.js with UUIDs.');
+  fs.writeFileSync(seedDataPath, modifiedContent, 'utf-8');
+  console.log('Updated seedData.js with UUIDs.');
   
-  const appJsxPath = path.resolve(__dirname, '../../frontend/src/App.jsx');
-  let appJsxContent = fs.readFileSync(appJsxPath, 'utf-8');
-  let appJsxModified = false;
-  for (const [oldId, newId] of Object.entries(idMapping)) {
-    if (appJsxContent.includes(`'${oldId}'`)) {
-      appJsxContent = appJsxContent.replaceAll(`'${oldId}'`, `'${newId}'`);
-      appJsxModified = true;
-    }
-  }
-  if (appJsxModified) {
-    fs.writeFileSync(appJsxPath, appJsxContent, 'utf-8');
-    console.log('Updated App.jsx with UUIDs.');
-  }
+  
 
-  const mockDataUrl = 'file://' + mockDataPath.replace(/\\/g, '/');
+  const mockDataUrl = 'file://' + seedDataPath.replace(/\\/g, '/');
   const { products, builderParts } = await import(mockDataUrl);
   
   // Helper to seed a single product item

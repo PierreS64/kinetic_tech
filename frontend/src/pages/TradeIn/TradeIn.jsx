@@ -135,7 +135,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
   };
 
   return (
-    <div style={{ minHeight: '80vh', paddingBottom: '40px' }}>
+    <div className="container" style={{ minHeight: '80vh', paddingBottom: '40px', maxWidth: '1000px', margin: '0 auto' }}>
       {/* Intro Banner */}
       <div 
          

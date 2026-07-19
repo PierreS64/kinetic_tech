@@ -25,7 +25,7 @@ import {
 // ScrollReveal helper using IntersectionObserver for storytelling elements
 function ScrollReveal({ children, delay = 0, duration = 800, direction = 'up', distance = '30px' }) {
   const ref = useRef(null);
-  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [isIntersecting, setIsIntersecting] = useState(true);
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {

@@ -141,18 +141,25 @@ export default function Warranty() {
     }
   };
 
-  const handleRepairSearch = (e) => {
+  const handleRepairSearch = async (e) => {
     e.preventDefault();
+    if (!searchRepairId.trim()) return;
+    
+    setIsChecking(true);
     setRepairError('');
     setRepairResult(null);
 
-    const rc = searchRepairId.trim().toUpperCase();
-    if (!rc) return;
-
-    if (MOCK_REPAIR_CASES[rc]) {
-      setRepairResult(MOCK_REPAIR_CASES[rc]);
-    } else {
-      setRepairError('Mã số phiếu sửa chữa không tồn tại. Vui lòng kiểm tra lại.');
+    try {
+      const res = await api.get(`/tickets/track/${searchRepairId.trim()}`);
+      if (res.data) {
+        setRepairResult(res.data);
+      } else {
+        setRepairError('Không tìm thấy mã sửa chữa này.');
+      }
+    } catch (err) {
+      setRepairError('Không tìm thấy mã sửa chữa này.');
+    } finally {
+      setIsChecking(false);
     }
   };
 

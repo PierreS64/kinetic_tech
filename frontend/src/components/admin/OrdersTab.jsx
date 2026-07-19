@@ -1,8 +1,11 @@
 import React from 'react';
 import { TrendingUp, ShoppingBag, Package, MessageSquare, Shield, Search, Plus, Trash2, CheckCircle2, XCircle, AlertCircle, ArrowRight, DollarSign, Wrench, RefreshCw, FileText, ChevronRight, Filter, Check, X, Edit2, Tag } from 'lucide-react';
 
+import { useAppContext } from '../../contexts/AppContext';
+
 export default function OrdersTab(props) {
-  const { theme, orders, tickets, warranties, tradeins, feedbacks, storeProducts, setStoreProducts, setOrders, setTickets, setWarranties, setTradeins, setFeedbacks, selectedOrder, setSelectedOrder, promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo, selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo, handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handlePromoProductPriceChange, selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText, selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation, isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort, priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput, detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal, textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts, totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount } = props;
+  const { theme, orders, tickets, warranties, tradeins, feedbacks, storeProducts, setStoreProducts, setOrders } = useAppContext();
+  const { setTickets, setWarranties, setTradeins, setFeedbacks, selectedOrder, setSelectedOrder, promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo, selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo, handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handlePromoProductPriceChange, selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText, selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation, isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort, priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput, detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal, textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts, totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount } = props;
 
   return (
 
@@ -35,13 +38,12 @@ export default function OrdersTab(props) {
                         <th style={{ padding: '12px 16px', fontWeight: '700' }}>Tổng Tiền</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700' }}>Thanh Toán</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700' }}>Trạng Thái</th>
-                        <th style={{ padding: '12px 16px', fontWeight: '700', textAlign: 'center' }}>Thao tác</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredOrders.length === 0 ? (
                         <tr>
-                          <td colSpan="7" style={{ textAlign: 'center', color: 'var(--color-outline)', padding: '30px' }}>Không tìm thấy đơn hàng nào.</td>
+                          <td colSpan="6" style={{ textAlign: 'center', color: 'var(--color-outline)', padding: '30px' }}>Không tìm thấy đơn hàng nào.</td>
                         </tr>
                       ) : (
                         filteredOrders.map(order => (
@@ -75,28 +77,6 @@ export default function OrdersTab(props) {
                                 {order.status === 'PROCESSING' && 'Đang xử lý'}
                                 {order.status === 'PENDING' && 'Chờ duyệt'}
                               </span>
-                            </td>
-                            <td onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center', justifyContent: 'center' }}>
-                                 {order.status === 'PENDING' && (
-                                   <button onClick={() => updateOrderStatus(order.id, 'PROCESSING')} className="btn btn-primary" style={{ padding: '4px 8px', fontSize: '11px', width: '90px' }} title="Duyệt đơn hàng">
-                                     Duyệt đơn
-                                   </button>
-                                 )}
-                                 {order.status === 'PROCESSING' && (
-                                   <button onClick={() => updateOrderStatus(order.id, 'DELIVERED')} className="btn" style={{ padding: '4px 8px', fontSize: '11px', width: '90px', background: '#388e3c', color: 'white' }} title="Hoàn thành đơn hàng">
-                                     Hoàn thành
-                                   </button>
-                                 )}
-                                 {['PENDING', 'PROCESSING'].includes(order.status) && (
-                                   <button onClick={() => updateOrderStatus(order.id, 'CANCELLED')} className="btn" style={{ padding: '4px 8px', fontSize: '11px', width: '90px', background: '#d32f2f', color: 'white' }} title="Hủy đơn hàng">
-                                     Hủy
-                                   </button>
-                                 )}
-                                 {['DELIVERED', 'CANCELLED'].includes(order.status) && (
-                                  <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Khóa</span>
-                                )}
-                              </div>
                             </td>
                           </tr>
                         ))

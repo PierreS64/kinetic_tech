@@ -2,7 +2,12 @@ import React from 'react';
 import './cart.css';
 import { X, Trash2, Plus, Minus, CreditCard, ShoppingBag, CheckCircle } from 'lucide-react';
 
-export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onRemoveItem, onClearCart, onCheckout, theme, toggleTheme }) {
+import { useAppContext } from '../../contexts/AppContext';
+import { useCart } from '../../contexts/CartContext';
+
+export default function Cart({ isOpen, onClose, onCheckout }) {
+  const { theme, toggleTheme } = useAppContext();
+  const { cartItems, handleUpdateQuantity, handleRemoveItem, handleClearCart } = useCart();
   // Format currency to VND
   const formatVND = (value) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
@@ -124,7 +129,7 @@ export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onR
                       padding: '2px'
                     }}>
                       <button 
-                        onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                         className="btn btn-ghost"
                         style={{ padding: '4px', minWidth: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-on-surface)' }}
                       >
@@ -134,7 +139,7 @@ export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onR
                         {item.quantity}
                       </span>
                       <button 
-                        onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                         className="btn btn-ghost"
                         style={{ padding: '4px', minWidth: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-on-surface)' }}
                       >
@@ -143,7 +148,7 @@ export default function Cart({ isOpen, onClose, cartItems, onUpdateQuantity, onR
                     </div>
 
                     <button 
-                      onClick={() => onRemoveItem(item.id)}
+                      onClick={() => handleRemoveItem(item.id)}
                       className="btn btn-ghost"
                       style={{ color: 'var(--color-error)', padding: '4px' }}
                     >

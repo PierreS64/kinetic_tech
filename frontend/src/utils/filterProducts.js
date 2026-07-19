@@ -18,7 +18,7 @@ export function getFilteredProducts(storeProducts, activeView, searchQuery, sele
   // Filter products based on search query and sidebar filters
   return storeProducts.filter(product => {
     // 1. Category check
-    const matchesCategory = activeView === 'deals' ? true : product.category === activeView;
+    const matchesCategory = activeView === 'deals' ? true : (product.category || '').toLowerCase() === activeView.toLowerCase();
     
     // 2. Search check
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -26,9 +26,12 @@ export function getFilteredProducts(storeProducts, activeView, searchQuery, sele
     
     // 3. Brand check
     const matchesBrand = selectedBrands.length === 0 || selectedBrands.some(brand => {
-      return product.name.toLowerCase().includes(brand.toLowerCase()) || 
+      const pBrand = product.brand ? product.brand.toLowerCase() : '';
+      return pBrand === brand.toLowerCase() ||
+             product.name.toLowerCase().includes(brand.toLowerCase()) || 
              product.tags.some(tag => tag.toLowerCase() === brand.toLowerCase()) ||
-             (brand.toLowerCase() === 'asus' && product.name.toLowerCase().includes('rog'));
+             (brand.toLowerCase() === 'asus' && product.name.toLowerCase().includes('rog')) ||
+             (brand.toLowerCase() === 'apple' && (product.name.toLowerCase().includes('macbook') || product.name.toLowerCase().includes('mac') || product.name.toLowerCase().includes('iphone') || product.name.toLowerCase().includes('ipad')));
     });
     
     // 4. Price check

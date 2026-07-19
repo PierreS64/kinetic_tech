@@ -4,6 +4,8 @@ import api from '../../utils/api';
 import { ArrowLeft, ArrowRight, Flame } from 'lucide-react';
 import ProductCard from '../../components/Common/ProductCard';
 
+import { useAppContext } from '../../contexts/AppContext';
+
 const bannerSlides = [
   {
     id: 1,
@@ -40,7 +42,8 @@ const bannerSlides = [
   }
 ];
 
-export default function HeroCarousel({ onCtaClick, theme, products = [], onAddToCart, onBuyNow, onViewDetails, likedProductIds = [], onToggleLike }) {
+export default function HeroCarousel({ onCtaClick, products = [], onAddToCart, onBuyNow, onViewDetails, onToggleLike }) {
+  const { theme, likedProductIds = [] } = useAppContext();
   const [slides, setSlides] = useState(bannerSlides);
   const [currentSlide, setCurrentSlide] = useState(0);
   const saleScrollRef = useRef(null);

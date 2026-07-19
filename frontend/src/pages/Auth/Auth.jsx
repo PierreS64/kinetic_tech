@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { User, Mail, Lock, Phone, ArrowRight, UserPlus, LogIn, CheckCircle2, ShieldCheck, Facebook } from 'lucide-react';
 import api from '../../utils/api';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHome }) {
+  const { handleLoginSuccess } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(initialTab); // 'login' or 'register'
   const [activeReview, setActiveReview] = useState(0);
   const [fade, setFade] = useState(true);
@@ -94,7 +98,14 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
         password: formData.password
       });
       setSuccessMsg('Đăng nhập thành công! Chào mừng quay trở lại.');
-      setTimeout(() => { onLoginSuccess(response.data.user, response.data.access_token); }, 1200);
+      setTimeout(() => { 
+        if (onLoginSuccess) {
+          onLoginSuccess(response.data.user, response.data.access_token); 
+        } else {
+          handleLoginSuccess(response.data.user, response.data.access_token);
+          navigate(-1);
+        }
+      }, 1200);
     } catch (err) {
       setError(err.response?.data?.message || 'Tên đăng nhập hoặc Mật khẩu không đúng.');
       setLoading(false);
@@ -127,7 +138,14 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
       const loginRes = await api.post('/auth/login', { email, password });
       
       setSuccessMsg('Tạo tài khoản thành công! Tự động đăng nhập...');
-      setTimeout(() => { onLoginSuccess(loginRes.data.user, loginRes.data.access_token); }, 1500);
+      setTimeout(() => { 
+        if (onLoginSuccess) {
+          onLoginSuccess(loginRes.data.user, loginRes.data.access_token); 
+        } else {
+          handleLoginSuccess(loginRes.data.user, loginRes.data.access_token);
+          navigate(-1);
+        }
+      }, 1500);
     } catch (err) {
       setError(err.response?.data?.message || 'Có lỗi xảy ra khi tạo tài khoản.');
       setLoading(false);

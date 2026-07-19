@@ -1,9 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ShoppingCart, Shield, Truck, RotateCcw, Star, MessageCircle, Heart } from 'lucide-react';
 import api from '../../utils/api';
+import { useAppContext } from '../../contexts/AppContext';
+import { useCart } from '../../contexts/CartContext';
+import { X } from 'lucide-react';
 
-export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, theme, isLiked, onToggleLike }) {
+
+export default function ProductDetail({ product, onClose }) {
   if (!product) return null;
+  const { theme, likedProductIds, handleToggleLike } = useAppContext();
+  const { handleAddToCart, handleBuyNow } = useCart();
+  const isLiked = likedProductIds.includes(product.id);
+  const onToggleLike = () => handleToggleLike(product.id);
+  const onAddToCart = () => handleAddToCart(product);
+  const onBuyNow = async () => {
+    await handleBuyNow(product);
+    if (onClose) onClose();
+  };
+
 
   const [reviews, setReviews] = useState([]);
   const [loadingReviews, setLoadingReviews] = useState(false);
@@ -59,9 +73,13 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px', animation: 'fadeIn 0.3s' }}>
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', animation: 'fadeIn 0.2s' }} onClick={onClose}>
+    <div style={{ maxWidth: '1200px', width: '100%', maxHeight: '90vh', overflowY: 'auto', margin: '0 auto', padding: '24px', backgroundColor: theme === 'light' ? '#f8fafc' : '#020617', borderRadius: '12px', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
+      <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10, background: 'none', border: 'none', cursor: 'pointer', color: theme === 'light' ? '#0f172a' : 'white' }}>
+        <X size={24} />
+      </button>
       <button 
-        onClick={onBack}
+        onClick={onClose}
          
         style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px', color: theme === 'light' ? '#475569' : 'rgba(255,255,255,0.7)' }}
        className="btn btn-ghost">
@@ -258,6 +276,7 @@ export default function ProductDetail({ product, onBack, onAddToCart, onBuyNow, 
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 }

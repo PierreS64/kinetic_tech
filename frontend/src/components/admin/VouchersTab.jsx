@@ -1,19 +1,11 @@
 import React from 'react';
 import { Plus, Trash2, X, Tag } from 'lucide-react';
 
+import { useAppContext } from '../../contexts/AppContext';
+
 export default function VouchersTab(props) {
-  const { 
-    theme, 
-    vouchers, 
-    isAddingVoucher, 
-    setIsAddingVoucher, 
-    newVoucher, 
-    setNewVoucher, 
-    handleAddVoucher, 
-    handleDeleteVoucher,
-    formatVND,
-    textColor
-  } = props;
+  const { theme } = useAppContext();
+  const { vouchers, isAddingVoucher, setIsAddingVoucher, newVoucher, setNewVoucher, handleAddVoucher, handleDeleteVoucher, formatVND, textColor } = props;
 
   return (
     <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">

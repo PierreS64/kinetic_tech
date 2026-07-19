@@ -23,20 +23,18 @@ import {
 } from 'lucide-react';
 import SmartSearch from '../../components/common/SmartSearch';
 
-export default function Navbar({ 
-  activeView, 
-  setActiveView, 
-  cartItemsCount, 
-  toggleCart, 
-  searchQuery, 
-  setSearchQuery,
-  currentUser,
-  onLogout,
-  theme,
-  toggleTheme,
-  storeProducts,
-  onSelectProduct
-}) {
+import { useAppContext } from '../../contexts/AppContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { useCart } from '../../contexts/CartContext';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+export default function Navbar()  {
+    const navigate = useNavigate();
+  const location = useLocation();
+  const activeView = location.pathname.replace('/kinetictech', '').substring(1) || 'deals';
+  const { searchQuery, setSearchQuery, theme, toggleTheme, storeProducts, setSelectedProduct } = useAppContext();
+  const { currentUser, handleLogout } = useAuth();
+  const { cartItems, setCartOpen } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [supportDropdownOpen, setSupportDropdownOpen] = useState(false);
@@ -112,8 +110,13 @@ export default function Navbar({
     return () => window.removeEventListener('resize', updateIndicator);
   }, [updateIndicator]);
 
-  const handleNavClick = (viewId) => {
-    setActiveView(viewId);
+    const handleNavClick = (viewId) => {
+    if (viewId === 'deals') navigate('/');
+    else if (viewId === 'laptop') navigate('/laptop');
+    else if (viewId === 'điện thoại') navigate('/phone');
+    else if (viewId === 'gaming gear') navigate('/gear');
+    else if (viewId === 'linh kiện') navigate('/components');
+    else navigate('/' + viewId);
     setMobileMenuOpen(false);
   };
 
@@ -364,7 +367,7 @@ export default function Navbar({
         }}  className="desktop-search">
           <SmartSearch 
             data={storeProducts} 
-            onSelect={onSelectProduct} 
+            onSelect={setSelectedProduct} 
             placeholder="Tìm kiếm linh kiện, thiết bị..." 
           />
         </div>
@@ -507,7 +510,7 @@ export default function Navbar({
                   {!['ADMIN', 'TECHNICIAN'].includes(currentUser.role) && (
                     <button
                       onClick={() => {
-                        setActiveView('account');
+                        handleNavClick('account');
                         setUserDropdownOpen(false);
                       }}
                       className="btn btn-ghost global-dropdown-item"
@@ -519,7 +522,7 @@ export default function Navbar({
                   {['ADMIN', 'TECHNICIAN'].includes(currentUser.role) && (
                     <button
                       onClick={() => {
-                        setActiveView('admin');
+                        handleNavClick('admin');
                         setUserDropdownOpen(false);
                       }}
                       className="btn btn-ghost global-dropdown-item"
@@ -531,9 +534,9 @@ export default function Navbar({
                   )}
                   <button
                     onClick={() => {
-                      onLogout();
+                      handleLogout();
                       setUserDropdownOpen(false);
-                      setActiveView('deals');
+                      handleNavClick('deals');
                     }}
                     className="btn btn-ghost global-dropdown-item item-danger"
                   >
@@ -600,7 +603,7 @@ export default function Navbar({
                 {['ADMIN', 'TECHNICIAN'].includes(currentUser.role) && (
                   <button
                     onClick={() => {
-                      setActiveView('admin');
+                      handleNavClick('admin');
                       setMobileMenuOpen(false);
                     }}
                     className="btn btn-primary"
@@ -613,7 +616,7 @@ export default function Navbar({
                 {!['ADMIN', 'TECHNICIAN'].includes(currentUser.role) && (
                   <button
                     onClick={() => {
-                      setActiveView('account');
+                      handleNavClick('account');
                       setMobileMenuOpen(false);
                     }}
                     className="btn btn-primary"
@@ -625,9 +628,9 @@ export default function Navbar({
                 )}
                 <button
                   onClick={() => {
-                    onLogout();
+                    handleLogout();
                     setMobileMenuOpen(false);
-                    setActiveView('deals');
+                    handleNavClick('deals');
                   }}
                   className="btn btn-outline"
                   style={{ width: '100%', padding: '10px', color: 'var(--color-error)', borderColor: 'rgba(255, 76, 76, 0.3)' }}

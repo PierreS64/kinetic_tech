@@ -1,7 +1,9 @@
 import React from 'react';
 import { ShoppingBag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function EmptyCart({ setActiveView }) {
+  const navigate = useNavigate();
     return (
       <div  style={{ paddingTop: '60px', maxWidth: '480px' }} className="container animate-fade-in-up">
         <div 
@@ -22,7 +24,7 @@ export default function EmptyCart({ setActiveView }) {
             Vui lòng chọn sản phẩm và thêm vào giỏ hàng trước khi tiến hành thanh toán.
           </p>
           <button 
-            onClick={() => setActiveView('deals')}
+            onClick={() => { if (setActiveView) { setActiveView('deals'); } else { navigate('/'); } }}
             className="btn btn-primary"
             style={{ width: '100%', padding: '12px' }}
           >

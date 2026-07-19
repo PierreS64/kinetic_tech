@@ -2,7 +2,18 @@ import React, { useState } from 'react';
 import './productCard.css';
 import { Star, ShoppingCart, CreditCard, Heart } from 'lucide-react';
 
-export default function ProductCard({ product, onAddToCart, onBuyNow, isLiked = false, onToggleLike, onViewDetails }) {
+import { useCart } from '../../contexts/CartContext';
+import { useAppContext } from '../../contexts/AppContext';
+
+export default function ProductCard({ product, onViewDetails }) {
+  const { handleAddToCart, handleBuyNow } = useCart();
+  const { likedProductIds, handleToggleLike } = useAppContext();
+  
+  const isLiked = likedProductIds.includes(product.id);
+  const onToggleLike = () => handleToggleLike(product.id);
+  const onAddToCart = () => handleAddToCart(product);
+  const onBuyNow = () => handleBuyNow(product);
+
   const { id, name, price, oldPrice, image, specs, rating, reviews, tags, inStock } = product;
 
   // Format currency to VND

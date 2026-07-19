@@ -35,6 +35,9 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
                       objectFit: 'cover',
                       border: '1px solid rgba(255,255,255,0.06)'
                     }}
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/100x100?text=No+Image';
+                    }}
                   />
                   <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '2px' }}>
                     <h4 style={{

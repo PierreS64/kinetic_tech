@@ -1,8 +1,11 @@
 import React from 'react';
 import { X, Check } from 'lucide-react';
 
+import { useAppContext } from '../../contexts/AppContext';
+
 export default function AdminModals(props) {
-  const { theme, detailedItem, setDetailedItem, handleCloseDetailedModal, textColor, productEditDraft, setProductEditDraft, handleInputBlurOrEnter, selectedOrder, setSelectedOrder, formatVND, updateOrderStatus, priceConfirmModal, setPriceConfirmModal, updateProductPrice, productConfirmModal, setProductConfirmModal, setStoreProducts } = props;
+  const { theme, setStoreProducts } = useAppContext();
+  const { detailedItem, setDetailedItem, handleCloseDetailedModal, textColor, productEditDraft, setProductEditDraft, handleInputBlurOrEnter, selectedOrder, setSelectedOrder, formatVND, updateOrderStatus, priceConfirmModal, setPriceConfirmModal, updateProductPrice, productConfirmModal, setProductConfirmModal } = props;
 
   return (
     <>
@@ -491,18 +494,18 @@ export default function AdminModals(props) {
                 </div>
 
                 <div style={{ display: 'flex', gap: '8px' }}>
-                  {selectedOrder.status === 'pending' && (
-                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'processing')} className="btn btn-primary" style={{ padding: '8px 14px', fontSize: '12px' }}>
+                  {selectedOrder.status === 'PENDING' && (
+                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'PROCESSING')} className="btn btn-primary" style={{ padding: '8px 14px', fontSize: '12px' }}>
                       Duyệt đơn
                     </button>
                   )}
-                  {selectedOrder.status === 'processing' && (
-                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'completed')} className="btn" style={{ padding: '8px 14px', fontSize: '12px', background: '#388e3c', color: 'white' }}>
+                  {selectedOrder.status === 'PROCESSING' && (
+                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'DELIVERED')} className="btn" style={{ padding: '8px 14px', fontSize: '12px', background: '#388e3c', color: 'white' }}>
                       Đã giao hàng
                     </button>
                   )}
-                  {['pending', 'processing'].includes(selectedOrder.status) && (
-                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled')} className="btn" style={{ padding: '8px 14px', fontSize: '12px', background: '#d32f2f', color: 'white' }}>
+                  {['PENDING', 'PROCESSING'].includes(selectedOrder.status) && (
+                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'CANCELLED')} className="btn" style={{ padding: '8px 14px', fontSize: '12px', background: '#d32f2f', color: 'white' }}>
                       Hủy đơn
                     </button>
                   )}

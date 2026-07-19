@@ -211,7 +211,7 @@ export default function SupportTicket({ theme, currentUser }) {
   };
 
   return (
-    <div style={{ minHeight: '80vh' }}>
+    <div style={{ minHeight: '80vh', maxWidth: '1000px', margin: '0 auto', padding: '40px 20px' }}>
       
       {/* Title */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
