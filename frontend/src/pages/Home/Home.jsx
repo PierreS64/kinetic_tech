@@ -20,13 +20,13 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  const { storeProducts, setSelectedProduct } = useAppContext();
+  const { storeProducts, setSelectedProduct, setAiOpen } = useAppContext();
   const navigate = useNavigate();
   
   const handleCarouselCta = (slideIndex) => {
     if (slideIndex === 0) navigate('/laptop');
     else if (slideIndex === 1) navigate('/pc-builder');
-    else navigate('/ai-advisor');
+    else setAiOpen(true);
   };
 
   const categories = [
