@@ -29,3 +29,42 @@ body.light-theme .form-input:focus {
   border-color: var(--color-primary) !important;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1) !important;
 }
+
+/* Custom Checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 3px;
+  background-color: var(--color-surface-container);
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+body.light-theme input[type="checkbox"] {
+  background-color: #ffffff;
+  border-color: #cbd5e1;
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4.5px;
+  top: 1.5px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

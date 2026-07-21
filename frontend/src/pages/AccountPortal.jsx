@@ -34,10 +34,10 @@ import {
 } from 'lucide-react';
 
 export default function AccountPortal({ 
-  setActiveView, onToggleLike, products = [], onAddOrder, onAddTradeIn, onAddFeedback, onUpdateProfile, onAddSupportTicket
+  setActiveView, onToggleLike, products = [], onAddOrder, onAddTradeIn, onAddFeedback, onAddSupportTicket
 }) {
   const { theme, likedProductIds = [], orders = [], tradeins = [], feedbacks = [], handleToggleLike, setSelectedDetailProduct } = useAppContext();
-  const { currentUser } = useAuth();
+  const { currentUser, handleUpdateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState(() => {
     try {
       return localStorage.getItem('kinetic_account_tab') || 'overview';
@@ -289,7 +289,7 @@ export default function AccountPortal({
       });
 
       // Update global user state
-      onUpdateProfile({
+      handleUpdateProfile({
         ...currentUser,
         ...response.data
       });
@@ -355,7 +355,7 @@ export default function AccountPortal({
   }
 
   const tabProps = {
-    currentUser, setActiveView, theme, likedProductIds, onToggleLike: handleToggleLike, products, orders, onAddOrder, tradeins: userTradeins, onAddTradeIn, feedbacks: userFeedbacks, onAddFeedback, onUpdateProfile, onAddSupportTicket,
+    currentUser, setActiveView, theme, likedProductIds, onToggleLike: handleToggleLike, products, orders, onAddOrder, tradeins: userTradeins, onAddTradeIn, feedbacks: userFeedbacks, onAddFeedback, onUpdateProfile: handleUpdateProfile, onAddSupportTicket,
     activeTab, setActiveTab, selectedOrder, setSelectedOrder, supportProduct, setSupportProduct, supportOrderId, setSupportOrderId, supportMessage, setSupportMessage, supportUrgency, setSupportUrgency, supportSuccess, setSupportSuccess,
     feedbackTitle, setFeedbackTitle, feedbackContent, setFeedbackContent, feedbackSuccess, setFeedbackSuccess, profileForm, setProfileForm, profileSuccess, setProfileSuccess, passwordForm, setPasswordForm, passwordError, setPasswordError, passwordSuccess, setPasswordSuccess,
     formatVND, userOrders, recentOrders, userTradeins, favoriteProducts, warrantyProducts, vouchers, handleCopyVoucher, handleFeedbackSubmit, handleSupportRequestSubmit, handleProfileUpdate, handlePasswordChange

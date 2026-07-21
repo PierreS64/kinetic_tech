@@ -6,12 +6,12 @@ import { Prisma, User } from '@prisma/client';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { email } });
+  async findByEmail(email: string): Promise<any> {
+    return this.prisma.user.findUnique({ where: { email }, include: { UserAddress: true } });
   }
 
-  async findById(id: string): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { id } });
+  async findById(id: string): Promise<any> {
+    return this.prisma.user.findUnique({ where: { id }, include: { UserAddress: true } });
   }
 
   async create(data: Prisma.UserCreateInput): Promise<User> {
@@ -23,6 +23,20 @@ export class UsersService {
       where: { id },
       data,
     });
+  }
+
+  async upsertAddress(userId: string, address: string) {
+    const addresses = await this.prisma.userAddress.findMany({ where: { userId } });
+    if (addresses.length > 0) {
+      return this.prisma.userAddress.update({
+        where: { id: addresses[0].id },
+        data: { address },
+      });
+    } else {
+      return this.prisma.userAddress.create({
+        data: { userId, address, isDefault: true },
+      });
+    }
   }
 
   async findTechnicians() {

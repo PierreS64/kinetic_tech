@@ -1,4 +1,4 @@
-import { Controller, Patch, Body, Param, UseGuards, Get } from '@nestjs/common';
+import { Controller, Patch, Body, Param, UseGuards, Get, BadRequestException, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
@@ -20,11 +20,13 @@ export class UsersController {
     if (body.fullName) updateData.fullName = body.fullName;
     if (body.phone) updateData.phone = body.phone;
 
-    // In Prisma schema, address is a separate model (UserAddress).
-    // For simplicity, we just update fullName and phone here.
+    if (body.address) {
+      await this.usersService.upsertAddress(id, body.address);
+    }
 
     const user = await this.usersService.update(id, updateData);
     const { password, ...result } = user as any;
+    result.address = body.address;
     return result;
   }
 
@@ -33,18 +35,18 @@ export class UsersController {
   async changePassword(@Param('id') id: string, @Body() body: any) {
     const user = await this.usersService.findById(id);
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
 
     if (!user.password) {
-      throw new Error(
+      throw new BadRequestException(
         'Tài khoản này đăng nhập bằng Google/Facebook, không thể đổi mật khẩu.',
       );
     }
 
     const isMatch = await bcrypt.compare(body.oldPassword, user.password);
     if (!isMatch) {
-      throw new Error('Mật khẩu cũ không chính xác');
+      throw new BadRequestException('Mật khẩu cũ không chính xác');
     }
 
     const hashedPassword = await bcrypt.hash(body.newPassword, 10);

@@ -177,18 +177,18 @@ export default function OverviewTab(props) {
                               <span style={{ 
                                 fontSize: '9px',
                                 background: 
-                                  order.status === 'completed' ? 'rgba(76,175,80,0.12)' : 
-                                  order.status === 'cancelled' ? 'rgba(255,76,76,0.12)' :
-                                  order.status === 'processing' ? 'rgba(0,123,255,0.12)' : 'rgba(253,139,0,0.12)',
+                                  order.status === 'DELIVERED' ? 'rgba(76,175,80,0.12)' : 
+                                  order.status === 'CANCELLED' ? 'rgba(255,76,76,0.12)' :
+                                  order.status === 'PROCESSING' ? 'rgba(0,123,255,0.12)' : 'rgba(253,139,0,0.12)',
                                 color: 
-                                  order.status === 'completed' ? '#81c784' : 
-                                  order.status === 'cancelled' ? '#ffb4ab' :
-                                  order.status === 'processing' ? '#adc7ff' : '#ffb77d',
+                                  order.status === 'DELIVERED' ? '#81c784' : 
+                                  order.status === 'CANCELLED' ? '#ffb4ab' :
+                                  order.status === 'PROCESSING' ? '#adc7ff' : '#ffb77d',
                                 padding: '2px 6px',
                                 borderRadius: '4px',
                                 fontWeight: '700'
                               }}>
-                                {order.status === 'completed' ? 'Đã giao' : order.status === 'cancelled' ? 'Đã hủy' : order.status === 'processing' ? 'Đang xử lý' : 'Chờ duyệt'}
+                                {order.status === 'DELIVERED' ? 'Đã giao' : order.status === 'CANCELLED' ? 'Đã hủy' : order.status === 'PROCESSING' ? 'Đang xử lý' : 'Chờ duyệt'}
                               </span>
                             </div>
                           </div>
