@@ -10,6 +10,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { ShoppingCart, MessageCircle } from 'lucide-react';
 
 import Navbar from './layouts/Navbar/Navbar';
+import Footer from './layouts/Footer/Footer';
 import Home from './pages/Home/Home';
 import Catalog from './pages/Catalog/Catalog';
 import PCBuilder from './pages/PCBuilder';
@@ -96,6 +97,7 @@ export default function App() {
           <Route path="/account" element={<AccountPortal products={storeProducts} />} />
         </Routes>
       </main>
+      <Footer />
 
       {/* Global Modals & Float Buttons */}
       {selectedProduct && (
