@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ReviewsService } from './reviews.service';
-import { ReviewsController } from './reviews.controller';
+import { ReviewsService } from './application/reviews.service';
+import { ReviewsController } from './api/reviews.controller';
 import { PrismaModule } from '../../core/prisma/prisma.module';
 import { CloudinaryModule } from '../../core/cloudinary/cloudinary.module';
 

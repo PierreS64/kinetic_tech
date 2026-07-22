@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { KnowledgeBaseService } from './knowledge-base.service';
-import { KnowledgeBaseController } from './knowledge-base.controller';
+import { KnowledgeBaseService } from './application/knowledge-base.service';
+import { KnowledgeBaseController } from './api/knowledge-base.controller';
 import { PrismaModule } from '../../core/prisma/prisma.module';
 
 @Module({

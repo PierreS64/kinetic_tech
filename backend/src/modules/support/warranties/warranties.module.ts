@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { WarrantiesService } from './warranties.service';
-import { WarrantiesController } from './warranties.controller';
+import { WarrantiesService } from './application/warranties.service';
+import { WarrantiesController } from './api/warranties.controller';
 
 import { PrismaModule } from '../../core/prisma/prisma.module';
 

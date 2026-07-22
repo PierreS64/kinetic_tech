@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { FavoritesService } from './favorites.service';
-import { FavoritesController } from './favorites.controller';
+import { FavoritesService } from './application/favorites.service';
+import { FavoritesController } from './api/favorites.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({

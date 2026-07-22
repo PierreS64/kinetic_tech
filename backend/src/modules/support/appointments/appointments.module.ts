@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppointmentsService } from './appointments.service';
-import { AppointmentsController } from './appointments.controller';
+import { AppointmentsService } from './application/appointments.service';
+import { AppointmentsController } from './api/appointments.controller';
 import { PrismaModule } from '../../core/prisma/prisma.module';
 
 @Module({
