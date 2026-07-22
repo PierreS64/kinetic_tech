@@ -8,10 +8,11 @@ export function useCart() {
   return useContext(CartContext);
 }
 
-export function CartProvider({ children }) {
+export function CartProvider({ children, userId = 'guest' }) {
+  const storageKey = `kinetic_cart_${userId}`;
   const [cartItems, setCartItems] = useState(() => {
     try {
-      const stored = localStorage.getItem('kinetic_cart');
+      const stored = localStorage.getItem(storageKey);
       return stored ? JSON.parse(stored) : [];
     } catch (e) {
       console.error('Failed to parse cart from local storage', e);
@@ -22,8 +23,8 @@ export function CartProvider({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.setItem('kinetic_cart', JSON.stringify(cartItems));
-  }, [cartItems]);
+    localStorage.setItem(storageKey, JSON.stringify(cartItems));
+  }, [cartItems, storageKey]);
 
   const handleAddToCart = async (product, quantity = 1) => {
     setCartItems(prev => {

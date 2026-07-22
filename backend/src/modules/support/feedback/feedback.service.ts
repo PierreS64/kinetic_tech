@@ -18,6 +18,7 @@ export class FeedbackService {
 
   async findAll() {
     return this.prisma.feedback.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: 'desc' },
       include: { User: { select: { id: true, fullName: true, email: true } } },
     });
@@ -25,14 +26,15 @@ export class FeedbackService {
 
   async getMyFeedbacks(userId: string) {
     return this.prisma.feedback.findMany({
-      where: { userId },
+      where: { userId, deletedAt: null },
       orderBy: { createdAt: 'desc' },
     });
   }
 
   async delete(id: string) {
-    return this.prisma.feedback.delete({
+    return this.prisma.feedback.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
   }
 }

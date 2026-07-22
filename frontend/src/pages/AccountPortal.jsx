@@ -88,6 +88,7 @@ export default function AccountPortal({
   const [supportOrderId, setSupportOrderId] = useState('');
   const [supportMessage, setSupportMessage] = useState('');
   const [supportUrgency, setSupportUrgency] = useState('Thường');
+  const [supportType, setSupportType] = useState('Báo lỗi phần cứng thiết bị');
   const [supportSuccess, setSupportSuccess] = useState(false);
 
   // Feedback form state
@@ -131,6 +132,7 @@ export default function AccountPortal({
       paymentMethod: o.paymentMethod || 'COD',
       items: o.items || (o.OrderItem ? o.OrderItem.map(oi => ({
         id: oi.productVariantId || oi.id,
+        productId: oi.ProductVariant?.productId || oi.ProductVariant?.Product?.id,
         name: oi.ProductVariant?.Product?.name || 'Linh kiện PC',
         quantity: oi.quantity,
         price: oi.price,
@@ -168,14 +170,15 @@ export default function AccountPortal({
     
     completedOrders.forEach(order => {
       order.items.forEach(item => {
-        // Parse purchase date to calculate expiration date (+12 months)
-        const orderDateStr = order.date.split(' ')[0]; // "2026-06-02"
         let orderDate = new Date();
-        if (orderDateStr.includes('-')) {
-          orderDate = new Date(orderDateStr);
-        } else if (orderDateStr.includes('/')) {
-          const parts = orderDateStr.split('/');
-          orderDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        if (order.createdAt) {
+          orderDate = new Date(order.createdAt);
+        } else if (order.date) {
+          const datePart = order.date.split(' ').find(p => p.includes('/'));
+          if (datePart) {
+            const parts = datePart.replace(',', '').split('/');
+            if (parts.length === 3) orderDate = new Date(parts[2], parts[1] - 1, parts[0]);
+          }
         }
         
         const expDate = new Date(orderDate);
@@ -194,7 +197,7 @@ export default function AccountPortal({
 
         items.push({
           orderId: order.id,
-          productId: item.id,
+          productId: item.productId || item.id,
           name: item.name,
           purchaseDate: purchaseDateFormatted,
           expirationDate: expDateFormatted,
@@ -253,13 +256,55 @@ export default function AccountPortal({
     }
 
     try {
+      let userDeviceId = undefined;
+      let finalDescription = `Thiết bị: ${supportProduct?.name || 'Không xác định'} (Đơn hàng: ${supportOrderId || 'N/A'})\nLoại sự cố: ${supportType}\nChi tiết sự cố: ${supportMessage}`;
+      
+      // If submitted from Warranty Tab, it has a serial number
+      if (supportProduct?.serial) {
+        // For warranties, don't include device name in description since it's linked via UserDevice
+        finalDescription = `Loại sự cố: ${supportType}\nChi tiết sự cố: ${supportMessage}`;
+        
+        const parseDate = (dateStr) => {
+          if (!dateStr) return new Date().toISOString();
+          const parts = dateStr.split('/');
+          if (parts.length === 3) {
+            return new Date(parts[2], parts[1] - 1, parts[0]).toISOString();
+          }
+          return new Date(dateStr).toISOString();
+        };
+
+        try {
+          const deviceResponse = await api.post('/user-devices', {
+            productId: supportProduct.productId || supportProduct.id,
+            serialNumber: supportProduct.serial,
+            purchaseDate: parseDate(supportProduct.purchaseDate),
+            warrantyExpiryDate: parseDate(supportProduct.expirationDate)
+          });
+          userDeviceId = deviceResponse.data.id;
+        } catch (deviceErr) {
+          if (deviceErr.response?.status === 400 || deviceErr.response?.data?.message?.includes('Serial')) {
+             try {
+               const existingDevice = await api.get(`/user-devices/warranty/${supportProduct.serial}`);
+               userDeviceId = existingDevice.data.id;
+             } catch (fetchErr) {
+               console.error("Could not fetch existing device", fetchErr);
+             }
+          } else {
+             throw deviceErr;
+          }
+        }
+      }
+
       const response = await api.post('/tickets', {
-        description: `Thiết bị: ${supportProduct?.name || 'Không xác định'} (Đơn hàng: ${supportOrderId || 'N/A'})\nChi tiết sự cố: ${supportMessage}`,
-        severity: supportUrgency === 'high' ? 'HIGH' : supportUrgency === 'medium' ? 'MEDIUM' : 'LOW'
+        description: finalDescription,
+        severity: supportUrgency === 'high' ? 'HIGH' : supportUrgency === 'medium' ? 'MEDIUM' : 'LOW',
+        userDeviceId: userDeviceId
       });
       
       // Update global tickets state
-      onAddSupportTicket(response.data);
+      if (onAddSupportTicket) {
+        onAddSupportTicket(response.data);
+      }
       
       setSupportSuccess(true);
       setSupportMessage('');
@@ -356,7 +401,7 @@ export default function AccountPortal({
 
   const tabProps = {
     currentUser, setActiveView, theme, likedProductIds, onToggleLike: handleToggleLike, products, orders, onAddOrder, tradeins: userTradeins, onAddTradeIn, feedbacks: userFeedbacks, onAddFeedback, onUpdateProfile: handleUpdateProfile, onAddSupportTicket,
-    activeTab, setActiveTab, selectedOrder, setSelectedOrder, supportProduct, setSupportProduct, supportOrderId, setSupportOrderId, supportMessage, setSupportMessage, supportUrgency, setSupportUrgency, supportSuccess, setSupportSuccess,
+    activeTab, setActiveTab, selectedOrder, setSelectedOrder, supportProduct, setSupportProduct, supportOrderId, setSupportOrderId, supportMessage, setSupportMessage, supportUrgency, setSupportUrgency, supportType, setSupportType, supportSuccess, setSupportSuccess,
     feedbackTitle, setFeedbackTitle, feedbackContent, setFeedbackContent, feedbackSuccess, setFeedbackSuccess, profileForm, setProfileForm, profileSuccess, setProfileSuccess, passwordForm, setPasswordForm, passwordError, setPasswordError, passwordSuccess, setPasswordSuccess,
     formatVND, userOrders, recentOrders, userTradeins, favoriteProducts, warrantyProducts, vouchers, handleCopyVoucher, handleFeedbackSubmit, handleSupportRequestSubmit, handleProfileUpdate, handlePasswordChange
   };

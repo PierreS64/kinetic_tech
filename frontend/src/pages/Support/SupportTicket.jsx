@@ -21,6 +21,8 @@ const INITIAL_TICKETS = [];
 export default function SupportTicket({ theme, currentUser }) {
   const isLight = theme === 'light';
   const [tickets, setTickets] = useState(INITIAL_TICKETS);
+  const [warranties, setWarranties] = useState([]);
+  const [activeTab, setActiveTab] = useState('technical');
   const [activeTicketId, setActiveTicketId] = useState(null); // ID of expanded ticket
   const [isCreating, setIsCreating] = useState(false); // is creating a new ticket
   const [newTicket, setNewTicket] = useState({
@@ -38,20 +40,29 @@ export default function SupportTicket({ theme, currentUser }) {
 
   const fetchTickets = async () => {
     try {
-      const res = await api.get('/tickets/my-tickets');
-      const mapped = res.data.map(t => {
+      const [ticketsRes, warrantiesRes] = await Promise.all([
+        api.get('/tickets/my-tickets').catch(() => ({ data: [] })),
+        api.get('/warranties/my-warranties').catch(() => ({ data: [] }))
+      ]);
+
+      const mapTicketData = (t, isWarranty) => {
         const parts = t.description ? t.description.split('\n||REPLY||\n') : [];
         const mainDesc = parts[0] || '';
         
-        const descMatch = mainDesc.match(/^\[(.*?)\] - \[(.*?)\] - (.*)$/);
         let subject = 'Hỗ trợ kỹ thuật #' + t.id.substring(0,6).toUpperCase();
         let category = 'Khác';
         let pureDesc = mainDesc;
         
-        if (descMatch) {
-          subject = descMatch[1];
-          category = descMatch[2];
-          pureDesc = descMatch[3];
+        if (isWarranty) {
+          subject = `Bảo hành ${t.UserDevice?.Product?.name || 'Sản phẩm'}`;
+          category = 'Bảo hành';
+        } else {
+          const descMatch = mainDesc.match(/^\[(.*?)\] - \[(.*?)\] - (.*)$/);
+          if (descMatch) {
+            subject = descMatch[1];
+            category = descMatch[2];
+            pureDesc = descMatch[3];
+          }
         }
 
         const messages = [
@@ -83,14 +94,17 @@ export default function SupportTicket({ theme, currentUser }) {
           messages,
           description: t.description
         };
-      });
-      setTickets(mapped);
+      };
+
+      setTickets(ticketsRes.data.map(t => mapTicketData(t, false)));
+      setWarranties(warrantiesRes.data.map(t => mapTicketData(t, true)));
     } catch (err) {
-      console.error('Failed to fetch tickets', err);
+      console.error('Failed to fetch tickets/warranties', err);
     }
   };
 
-  const activeTicket = tickets.find(t => t.id === activeTicketId) || null;
+  const displayList = activeTab === 'technical' ? tickets : warranties;
+  const activeTicket = displayList.find(t => t.id === activeTicketId) || null;
 
   const handleCreateTicket = async (e) => {
     e.preventDefault();
@@ -169,7 +183,8 @@ export default function SupportTicket({ theme, currentUser }) {
         time: new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
       };
 
-      setTickets(prev => prev.map(t => {
+      const setList = activeTab === 'technical' ? setTickets : setWarranties;
+      setList(prev => prev.map(t => {
         if (t.id === activeTicketId) {
           return {
             ...t,
@@ -214,15 +229,15 @@ export default function SupportTicket({ theme, currentUser }) {
     <div style={{ minHeight: '80vh', maxWidth: '1000px', margin: '0 auto', padding: '40px 20px' }}>
       
       {/* Title */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
         <div>
-          <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat' }}>TICKET HỖ TRỢ KỸ THUẬT</h2>
+          <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat' }}>YÊU CẦU HỖ TRỢ & BẢO HÀNH</h2>
           <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>
             Kết nối trực tiếp với đội ngũ chuyên viên phần cứng và kỹ sư hệ thống của Kinetic Tech.
           </p>
         </div>
 
-        {!isCreating && !activeTicketId && (
+        {!isCreating && !activeTicketId && activeTab === 'technical' && (
           <button 
             onClick={() => setIsCreating(true)}
             className="btn btn-primary"
@@ -232,6 +247,40 @@ export default function SupportTicket({ theme, currentUser }) {
           </button>
         )}
       </div>
+
+      {/* Tabs */}
+      {!isCreating && !activeTicketId && (
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '28px', borderBottom: isLight ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' }}>
+          <button 
+            onClick={() => setActiveTab('technical')}
+            style={{
+              background: 'none', border: 'none', 
+              fontSize: '14px', fontWeight: '700', cursor: 'pointer',
+              color: activeTab === 'technical' ? 'var(--color-primary)' : 'var(--color-outline)',
+              position: 'relative'
+            }}
+          >
+            Hỗ trợ kỹ thuật
+            {activeTab === 'technical' && (
+              <div style={{ position: 'absolute', bottom: '-13px', left: 0, width: '100%', height: '2px', background: 'var(--color-primary)' }} />
+            )}
+          </button>
+          <button 
+            onClick={() => setActiveTab('warranty')}
+            style={{
+              background: 'none', border: 'none', 
+              fontSize: '14px', fontWeight: '700', cursor: 'pointer',
+              color: activeTab === 'warranty' ? 'var(--color-primary)' : 'var(--color-outline)',
+              position: 'relative'
+            }}
+          >
+            Bảo hành
+            {activeTab === 'warranty' && (
+              <div style={{ position: 'absolute', bottom: '-13px', left: 0, width: '100%', height: '2px', background: 'var(--color-primary)' }} />
+            )}
+          </button>
+        </div>
+      )}
 
       {isCreating ? (
         /* Create Ticket Form */
@@ -469,7 +518,7 @@ export default function SupportTicket({ theme, currentUser }) {
         /* Support Ticket Dashboard Grid List */
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           
-          {tickets.length === 0 ? (
+          {displayList.length === 0 ? (
             <div style={{
               textAlign: 'center',
               padding: '60px 20px',
@@ -485,7 +534,7 @@ export default function SupportTicket({ theme, currentUser }) {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {tickets.map(ticket => (
+              {displayList.map(ticket => (
                 <div 
                   key={ticket.id}
                   onClick={() => setActiveTicketId(ticket.id)}

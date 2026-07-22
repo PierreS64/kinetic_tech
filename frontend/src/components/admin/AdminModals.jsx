@@ -49,7 +49,7 @@ export default function AdminModals(props) {
                   </div>
                   <div>
                     <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Mô tả lỗi:</span>
-                    <p style={{ fontSize: '13px', color: textColor, background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '4px', border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.05)', marginTop: '4px', lineHeight: '1.5' }}>
+                    <p style={{ fontSize: '13px', color: textColor, background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '4px', border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.05)', marginTop: '4px', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
                       {detailedItem.issue}
                     </p>
                   </div>
@@ -104,8 +104,8 @@ export default function AdminModals(props) {
                   </div>
                   <div>
                     <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Tình trạng thiết bị chi tiết:</span>
-                    <p style={{ fontSize: '13px', color: textColor, background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '4px', border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.05)', marginTop: '4px', lineHeight: '1.5' }}>
-                      {detailedItem.conditionDesc}
+                    <p style={{ fontSize: '13px', color: textColor, background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)', padding: '10px', borderRadius: '4px', border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.05)', marginTop: '4px', lineHeight: '1.5', whiteSpace: 'pre-wrap' }}>
+                      {detailedItem.conditionDesc?.replace(/\. Mô tả:/g, '\nMô tả:').replace(/\. Nâng cấp lên:/g, '\nNâng cấp lên:').replace(/\. Lịch hẹn:/g, '\nLịch hẹn:')}
                     </p>
                   </div>
                   <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
@@ -159,7 +159,7 @@ export default function AdminModals(props) {
                   </div>
                   <div>
                     <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Nội dung góp ý chi tiết:</span>
-                    <p style={{ fontSize: '13px', color: textColor, background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '4px', border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.05)', marginTop: '4px', lineHeight: '1.6' }}>
+                    <p style={{ fontSize: '13px', color: textColor, background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '4px', border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.05)', marginTop: '4px', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
                       {detailedItem.content}
                     </p>
                   </div>

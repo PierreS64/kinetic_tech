@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, User, CheckCircle, AlertCircle } from 'lucide-react';
 import api from '../../utils/api';
+import { useAuth } from '../../contexts/AuthContext';
+import { useAppContext } from '../../contexts/AppContext';
 
-export default function Appointments({ theme, currentUser }) {
+export default function Appointments() {
+  const { currentUser } = useAuth();
+  const { theme } = useAppContext();
   const [appointments, setAppointments] = useState([]);
   const [technicians, setTechnicians] = useState([]);
   
@@ -203,7 +207,7 @@ export default function Appointments({ theme, currentUser }) {
               </select>
             </div>
 
-            <button type="submit" className="btn btn-primary" style={{ marginTop: '10px', padding: '12px' }} disabled={loading || !currentUser}>
+            <button type="submit" className="btn btn-primary" style={{ marginTop: '10px', padding: '12px' }} disabled={loading}>
               {loading ? 'Đang xử lý...' : 'Xác Nhận Đặt Lịch'}
             </button>
           </form>

@@ -21,6 +21,7 @@ import {
   Github,
   Twitter
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // ScrollReveal helper using IntersectionObserver for storytelling elements
 function ScrollReveal({ children, delay = 0, duration = 800, direction = 'up', distance = '30px' }) {
@@ -69,8 +70,9 @@ function ScrollReveal({ children, delay = 0, duration = 800, direction = 'up', d
   );
 }
 
-export default function AboutUs({ theme, setActiveView }) {
+export default function AboutUs({ theme }) {
   const isLight = theme === 'light';
+  const navigate = useNavigate();
   const [bootStep, setBootStep] = useState(0);
   const [isBooted, setIsBooted] = useState(false);
   const terminalEndRef = useRef(null);
@@ -579,7 +581,7 @@ export default function AboutUs({ theme, setActiveView }) {
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '14px' }}>
               <button
-                onClick={() => setActiveView('deals')}
+                onClick={() => navigate('/')}
                 className="btn btn-secondary"
                 style={{ padding: '12px 24px', fontSize: '13px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}
               >
@@ -587,7 +589,7 @@ export default function AboutUs({ theme, setActiveView }) {
                 Khám Phá Sản Phẩm
               </button>
               <button
-                onClick={() => setActiveView('pc-builder')}
+                onClick={() => navigate('/pc-builder')}
                 className="btn btn-outline"
                 style={{ padding: '12px 24px', fontSize: '13px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}
               >

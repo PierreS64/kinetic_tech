@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Request } from '@nestjs/common';
 import { WarrantiesService } from './warranties.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -10,5 +10,10 @@ export class WarrantiesController {
   @Get()
   getAllWarranties() {
     return this.warrantiesService.getAllWarranties();
+  }
+
+  @Get('my-warranties')
+  getMyWarranties(@Request() req) {
+    return this.warrantiesService.getCustomerWarranties(req.user.id);
   }
 }

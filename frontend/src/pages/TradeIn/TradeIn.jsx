@@ -96,7 +96,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
       
       const payload = {
         deviceName: `${typeLabel}: ${modelName}`,
-        condition: `Sử dụng: ${usageTime}. Mô tả: ${notes || 'Không có mô tả thêm'}. Nâng cấp lên: ${formData.targetDevice}. Lịch hẹn: ${formData.appointmentDate} tại ${formData.storeLocation}.`
+        condition: `Sử dụng: ${usageTime}\nMô tả: ${notes || 'Không có mô tả thêm'}\nNâng cấp lên: ${formData.targetDevice}\nLịch hẹn: ${formData.appointmentDate} tại ${formData.storeLocation}.`
       };
       
       // Call backend API

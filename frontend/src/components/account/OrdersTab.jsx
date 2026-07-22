@@ -8,7 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 export default function OrdersTab(props) {
   const { theme, likedProductIds, orders, tradeins, feedbacks } = useAppContext();
   const { currentUser } = useAuth();
-  const { setActiveView, onToggleLike, products, onAddOrder, onAddTradeIn, onAddFeedback, onUpdateProfile, onAddSupportTicket, activeTab, setActiveTab, selectedOrder, setSelectedOrder, supportProduct, setSupportProduct, supportOrderId, setSupportOrderId, supportMessage, setSupportMessage, supportUrgency, setSupportUrgency, supportSuccess, setSupportSuccess, feedbackTitle, setFeedbackTitle, feedbackContent, setFeedbackContent, feedbackSuccess, setFeedbackSuccess, profileForm, setProfileForm, profileSuccess, setProfileSuccess, passwordForm, setPasswordForm, passwordError, setPasswordError, passwordSuccess, setPasswordSuccess, formatVND, userOrders, recentOrders, userTradeins, favoriteProducts, warrantyProducts, vouchers, handleCopyVoucher, handleFeedbackSubmit, handleSupportRequestSubmit, handleProfileUpdate, handlePasswordChange } = props;
+  const { setActiveView, onToggleLike, products, onAddOrder, onAddTradeIn, onAddFeedback, onUpdateProfile, onAddSupportTicket, activeTab, setActiveTab, selectedOrder, setSelectedOrder, supportProduct, setSupportProduct, supportOrderId, setSupportOrderId, supportMessage, setSupportMessage, supportUrgency, setSupportUrgency, supportType, setSupportType, supportSuccess, setSupportSuccess, feedbackTitle, setFeedbackTitle, feedbackContent, setFeedbackContent, feedbackSuccess, setFeedbackSuccess, profileForm, setProfileForm, profileSuccess, setProfileSuccess, passwordForm, setPasswordForm, passwordError, setPasswordError, passwordSuccess, setPasswordSuccess, formatVND, userOrders, recentOrders, userTradeins, favoriteProducts, warrantyProducts, vouchers, handleCopyVoucher, handleFeedbackSubmit, handleSupportRequestSubmit, handleProfileUpdate, handlePasswordChange } = props;
 
   return (
 
@@ -93,7 +93,7 @@ export default function OrdersTab(props) {
                       alignItems: 'center',       
                       justifyContent: 'center'
                     }} 
-                    className="modal-overlay" onClick={() => setSelectedOrder(null)}
+                    className="modal-overlay" onClick={() => { setSelectedOrder(null); setSupportProduct(null); }}
                   >
                     <div 
                        
@@ -106,7 +106,7 @@ export default function OrdersTab(props) {
                           <h4 style={{ fontSize: '16px', fontWeight: '800' }}>Chi tiết đơn hàng {selectedOrder.id}</h4>
                           <span style={{ fontSize: '11px', color: 'var(--color-outline)' }}>Ngày đặt: {selectedOrder.date}</span>
                         </div>
-                        <button onClick={() => setSelectedOrder(null)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
+                        <button onClick={() => { setSelectedOrder(null); setSupportProduct(null); }} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
                           <X size={18} color="#ff8000" />
                         </button>
                       </div>
@@ -296,7 +296,7 @@ export default function OrdersTab(props) {
                             {supportSuccess ? (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#81c784', fontSize: '12px', padding: '10px 0' }}>
                                 <CheckCircle2 size={16} />
-                                <span>Gửi yêu cầu hỗ trợ thành công! Kỹ thuật viên sẽ phản hồi bạn trong mục Support Ticket hoặc SMS.</span>
+                                <span>Gửi yêu cầu hỗ trợ thành công! Kỹ thuật viên sẽ phản hồi bạn trong mục Support Ticket (Tab Bảo hành) hoặc SMS.</span>
                               </div>
                             ) : (
                               <form onSubmit={handleSupportRequestSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -316,7 +316,16 @@ export default function OrdersTab(props) {
                                   </div>
                                   <div>
                                     <label style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Loại sự cố</label>
-                                    <input type="text" value="Báo lỗi phần cứng thiết bị" disabled  style={{ padding: '8px', fontSize: '12px', opacity: 0.7 }}  className="form-input" />
+                                    <input 
+                                      type="text" 
+                                      value={supportType} 
+                                      onChange={(e) => setSupportType(e.target.value)} 
+                                      onFocus={() => { if (supportType === 'Báo lỗi phần cứng thiết bị') setSupportType(''); }}
+                                      onBlur={() => { if (!supportType.trim()) setSupportType('Báo lỗi phần cứng thiết bị'); }}
+                                      placeholder="Báo lỗi phần cứng thiết bị" 
+                                      style={{ padding: '8px', fontSize: '12px' }} 
+                                      className="form-input" 
+                                    />
                                   </div>
                                 </div>
                                 <div>

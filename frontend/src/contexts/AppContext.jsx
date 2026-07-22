@@ -8,7 +8,7 @@ export function useAppContext() {
   return useContext(AppContext);
 }
 
-export function AppProvider({ children }) {
+export function AppProvider({ children, userId = 'guest' }) {
   const [theme, setTheme] = useState(() => {
     try {
       const stored = localStorage.getItem('kinetic_theme');
@@ -30,9 +30,10 @@ export function AppProvider({ children }) {
   const [tickets, setTickets] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
   const [warranties, setWarranties] = useState([]);
+  const storageKey = `kinetic_liked_${userId}`;
   const [likedProductIds, setLikedProductIds] = useState(() => {
     try {
-      const stored = localStorage.getItem('kinetic_liked');
+      const stored = localStorage.getItem(storageKey);
       return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
@@ -108,8 +109,8 @@ export function AppProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('kinetic_liked', JSON.stringify(likedProductIds));
-  }, [likedProductIds]);
+    localStorage.setItem(storageKey, JSON.stringify(likedProductIds));
+  }, [likedProductIds, storageKey]);
 
   const value = {
     theme, toggleTheme,

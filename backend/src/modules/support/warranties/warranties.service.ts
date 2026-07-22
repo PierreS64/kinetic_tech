@@ -25,4 +25,23 @@ export class WarrantiesService {
       },
     });
   }
+
+  async getCustomerWarranties(customerId: string) {
+    return this.prisma.ticket.findMany({
+      where: {
+        customerId,
+        userDeviceId: {
+          not: null,
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        UserDevice: {
+          include: {
+            Product: true,
+          },
+        },
+      },
+    });
+  }
 }

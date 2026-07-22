@@ -91,6 +91,12 @@ export default function AppointmentsTab({ appointments, updateAppointmentStatus,
                           Đã hoàn thành
                         </button>
                       )}
+                      {apt.status === 'COMPLETED' && (
+                        <span style={{ color: 'var(--color-outline)', fontSize: '10px' }}>Đã hoàn thành</span>
+                      )}
+                      {apt.status === 'CANCELLED' && (
+                        <span style={{ color: 'var(--color-outline)', fontSize: '10px' }}>Đã hủy</span>
+                      )}
                     </div>
                   </td>
                 </tr>

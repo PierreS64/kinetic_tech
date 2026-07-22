@@ -133,7 +133,7 @@ export default function OverviewTab(props) {
                 </div>
 
                 {/* Dashboard Sub-grid */}
-                <div style={{ display: 'grid', gap: '24px' }}   className="grid-responsive-2col overview-subgrid">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }} className="overview-subgrid">
                   
                   {/* Left sub-column: Recent 3 Orders */}
                   <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '20px' }} className="glass-panel">
@@ -170,7 +170,12 @@ export default function OverviewTab(props) {
                           >
                             <div>
                               <strong style={{ fontSize: '12px', color: 'white', display: 'block' }}>{order.id}</strong>
-                              <span style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>{order.date.split(' ')[0]}</span>
+                              <span style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>{order.date}</span>
+                              {order.items && order.items.length > 0 && (
+                                <span style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block', marginTop: '4px' }}>
+                                  {order.items[0].name} {order.items.length > 1 ? `và ${order.items.length - 1} sản phẩm khác` : ''}
+                                </span>
+                              )}
                             </div>
                             <div style={{ textAlign: 'right' }}>
                               <span style={{ fontWeight: '700', fontSize: '12px', color: 'var(--color-secondary-dim)', display: 'block' }}>{formatVND(order.total)}</span>
@@ -202,50 +207,6 @@ export default function OverviewTab(props) {
                         </button>
                       </div>
                     )}
-                  </div>
-
-                  {/* Right sub-column: Current Vouchers */}
-                  <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '20px' }} className="glass-panel">
-                    <h4 style={{ fontSize: '14px', fontWeight: '800', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px' }}>
-                      <Tag size={16} color="var(--color-secondary-dim)" />
-                      Mã giảm giá hiện có
-                    </h4>
-                    
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      {vouchers.map(v => (
-                        <div 
-                          key={v.code} 
-                          style={{
-                            background: 'rgba(253, 139, 0, 0.03)',
-                            border: '1px dashed rgba(253, 139, 0, 0.25)',
-                            borderRadius: 'var(--rounded)',
-                            padding: '10px 12px',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <span style={{ fontFamily: 'monospace', fontWeight: '800', fontSize: '13px', color: 'white', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px' }}>
-                                {v.code}
-                              </span>
-                              <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-secondary-dim)' }}>
-                                {v.label}
-                              </span>
-                            </div>
-                            <span style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block', marginTop: '4px' }}>{v.desc}</span>
-                          </div>
-                          <button 
-                            onClick={() => handleCopyVoucher(v.code)}
-                            className="btn btn-outline" 
-                            style={{ padding: '4px 8px', fontSize: '10px', height: 'fit-content' }}
-                          >
-                            Sao chép
-                          </button>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
 

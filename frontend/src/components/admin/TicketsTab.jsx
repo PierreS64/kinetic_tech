@@ -86,7 +86,7 @@ export default function TicketsTab(props) {
                                 <span style={{ fontSize: '9px', fontWeight: '700', display: 'block', color: isAgent ? 'var(--color-primary-dim)' : 'var(--color-secondary-dim)', marginBottom: '2px' }}>
                                   {isAgent ? (msg.agentName || 'Kỹ thuật viên') : selectedTicket.customerName}
                                 </span>
-                                <p style={{ fontSize: '12px', color: textColor, lineHeight: '1.4' }}>{msg.text}</p>
+                                <p style={{ fontSize: '12px', color: textColor, lineHeight: '1.4', whiteSpace: 'pre-wrap' }}>{msg.text}</p>
                                 <span style={{ fontSize: '9px', color: 'var(--color-outline)', display: 'block', textAlign: 'right', marginTop: '4px' }}>{msg.time}</span>
                               </div>
                             );
