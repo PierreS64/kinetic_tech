@@ -87,7 +87,7 @@ export default function AppointmentsTab({ appointments, updateAppointmentStatus,
                         </>
                       )}
                       {apt.status === 'CONFIRMED' && (
-                        <button onClick={() => updateAppointmentStatus(apt.id, 'COMPLETED')} className="btn" style={{ padding: '4px 6px', fontSize: '10px', background: '#388e3c', color: 'white' }}>
+                        <button onClick={() => updateAppointmentStatus(apt.id, 'COMPLETED')} className="btn" style={{ padding: '4px 6px', fontSize: '10px', background: '#388e3c', color: 'var(--color-on-surface)' }}>
                           Đã hoàn thành
                         </button>
                       )}

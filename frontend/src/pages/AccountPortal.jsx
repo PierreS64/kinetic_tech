@@ -49,6 +49,7 @@ export default function AccountPortal({
   const { setOrders } = useAppContext();
   const [fetchedTradeins, setFetchedTradeins] = useState([]);
   const [fetchedFeedbacks, setFetchedFeedbacks] = useState([]);
+  const [fetchedVouchers, setFetchedVouchers] = useState([]);
 
   React.useEffect(() => {
     if (currentUser) {
@@ -69,6 +70,20 @@ export default function AccountPortal({
           if (res.data) setFetchedFeedbacks(res.data);
         })
         .catch(err => console.error('Failed to fetch feedbacks', err));
+        
+      api.get('/coupons')
+        .then(res => {
+          if (res.data) {
+            const mappedVouchers = res.data.map(c => ({
+              code: c.code,
+              label: c.discountPercentage ? `Giảm ${c.discountPercentage}%` : `Giảm ${new Intl.NumberFormat('vi-VN').format(c.discountAmount)}đ`,
+              desc: `Khuyến mãi cho đơn hàng hợp lệ`,
+              exp: `HSD: ${new Date(c.validUntil).toLocaleDateString('vi-VN')}`
+            }));
+            setFetchedVouchers(mappedVouchers);
+          }
+        })
+        .catch(err => console.error('Failed to fetch coupons', err));
     }
   }, [currentUser, setOrders]);
 
@@ -210,12 +225,8 @@ export default function AccountPortal({
     return items;
   }, [userOrders]);
 
-  // Standard Voucher list
-  const vouchers = [
-    { code: 'KINETIC5', label: 'Giảm 5%', desc: 'Giảm 5% cho tất cả đơn hàng linh kiện và gear.', exp: 'HSD: 30/06/2026' },
-    { code: 'FREESHIP', label: 'Freeship', desc: 'Miễn phí vận chuyển cho hóa đơn từ 15 triệu.', exp: 'HSD: 15/07/2026' },
-    { code: 'HELLO', label: 'Giảm 500K', desc: 'Tặng ngay 500.000đ cho khách hàng mới đăng ký.', exp: 'HSD: 31/12/2026' }
-  ];
+  // Standard Voucher list from API
+  const vouchers = fetchedVouchers;
 
   const handleCopyVoucher = (code) => {
     navigator.clipboard.writeText(code);

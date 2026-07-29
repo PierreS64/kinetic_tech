@@ -19,7 +19,7 @@ export default function EmptyCart({ setActiveView }) {
           }}
          className="glass-panel">
           <ShoppingBag size={48} color="var(--color-outline)" />
-          <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'white' }}>Giỏ hàng của bạn đang trống!</h3>
+          <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--color-on-surface)' }}>Giỏ hàng của bạn đang trống!</h3>
           <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', lineHeight: '1.5' }}>
             Vui lòng chọn sản phẩm và thêm vào giỏ hàng trước khi tiến hành thanh toán.
           </p>

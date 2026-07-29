@@ -23,6 +23,7 @@ import SupportTicket from './pages/Support/SupportTicket';
 import Warranty from './pages/Support/Warranty';
 import OrderTracking from './pages/Support/OrderTracking';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
+import QuickViewModal from './components/common/QuickViewModal';
 import Appointments from './pages/Support/Appointments';
 import AdminDashboard from './pages/AdminDashboard';
 import AboutUs from './pages/AboutUs/AboutUs';
@@ -34,7 +35,7 @@ import { useCart } from './contexts/CartContext';
 
 export default function App() {
   const { theme, storeProducts, aiOpen, setAiOpen, selectedProduct, setSelectedProduct, selectedDetailProduct, setSelectedDetailProduct } = useAppContext();
-  const { cartOpen, setCartOpen, cartItems } = useCart();
+  const { cartOpen, setCartOpen, cartItems, handleAddToCart, handleBuyNow } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -72,6 +73,11 @@ export default function App() {
     }
   }, [selectedDetailProduct]);
 
+  const handleQuickViewDetails = (prod) => {
+    setSelectedProduct(null);
+    navigate(`/product/${prod.id || prod.variantId}`);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
@@ -83,6 +89,7 @@ export default function App() {
           <Route path="/phone" element={<Catalog activeView="điện thoại" />} />
           <Route path="/gear" element={<Catalog activeView="gaming gear" />} />
           <Route path="/components" element={<Catalog activeView="linh kiện" />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/pc-builder" element={<PCBuilder />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
@@ -101,11 +108,19 @@ export default function App() {
 
       {/* Global Modals & Float Buttons */}
       {selectedProduct && (
-        <ProductDetail product={selectedProduct} onClose={() => setSelectedProduct(null)} />
-      )}
-      
-      {selectedDetailProduct && (
-        <ProductDetail product={selectedDetailProduct} onClose={() => setSelectedDetailProduct(null)} />
+        <QuickViewModal 
+          selectedProduct={selectedProduct} 
+          onClose={() => setSelectedProduct(null)} 
+          onViewDetails={handleQuickViewDetails}
+          onAddToCart={handleAddToCart}
+          onBuyNow={(prod) => {
+            handleBuyNow(prod);
+            setSelectedProduct(null);
+            navigate('/checkout');
+          }}
+          theme={theme}
+          storeProducts={storeProducts}
+        />
       )}
 
       <Cart isOpen={cartOpen} onClose={() => setCartOpen(false)} onCheckout={() => { setCartOpen(false); navigate('/checkout'); }} />

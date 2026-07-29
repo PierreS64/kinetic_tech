@@ -324,7 +324,7 @@ export default function HeroCarousel({ onCtaClick, products = [], onAddToCart, o
                 DEALS CHỚP NHOÁNG
                 <b style={{
                   background: 'red',
-                  color: 'white',
+                  color: 'var(--color-on-surface)',
                   fontSize: '12px',
                   padding: '2px 8px',
                   borderRadius: 'var(--rounded-sm)',

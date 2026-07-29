@@ -92,7 +92,8 @@ export function AppProvider({ children, userId = 'guest' }) {
             reviews: Math.floor(Math.random() * 100) + 20,
             tags: tagsArr,
             featured: true,
-            inStock: (p.ProductVariant?.[0]?.stockQuantity || 0) > 0
+            inStock: (p.ProductVariant?.[0]?.stockQuantity || 0) > 0,
+            variantId: p.ProductVariant?.[0]?.id
           };
         });
         setStoreProducts(mappedProducts);
@@ -102,10 +103,32 @@ export function AppProvider({ children, userId = 'guest' }) {
     }
   };
 
-  const loadUserData = async () => {}; // mock
+  const loadUserData = async () => {
+    if (userId === 'guest') return;
+    try {
+      const res = await api.get('/users/me');
+      if (res.data) {
+        // We need to update the currentUser in AuthContext
+        // To do this, we can dispatch a custom event or just return the data so caller handles it
+        // Or we can import useAuth. Since we can't easily do it here without refactoring, 
+        // we just save to local storage for now or we will update AuthContext.
+        const storedUserStr = localStorage.getItem('kinetic_user');
+        if (storedUserStr) {
+          const storedUser = JSON.parse(storedUserStr);
+          const updated = { ...storedUser, ...res.data };
+          localStorage.setItem('kinetic_user', JSON.stringify(updated));
+          // Dispatch a custom event to notify AuthContext to reload (optional)
+          window.dispatchEvent(new Event('kinetic_user_updated'));
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load user data', err);
+    }
+  };
 
   useEffect(() => {
     loadProducts();
+    loadUserData();
   }, []);
 
   useEffect(() => {

@@ -34,11 +34,11 @@ export default function OrderReceipt({ orderReceipt, formatVND, handleFinish }) 
             }}>
               <CheckCircle2 size={36} color="#81c784" />
             </div>
-            <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#ffffff', letterSpacing: '0.5px' }}>
+            <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--color-on-surface)', letterSpacing: '0.5px' }}>
               ĐẶT HÀNG THÀNH CÔNG!
             </h2>
             <p style={{ fontSize: '13px', color: '#a5d6a7', marginTop: '6px' }}>
-              Mã đơn hàng: <strong style={{ color: 'white', fontSize: '15px' }}>{orderReceipt.orderId}</strong>
+              Mã đơn hàng: <strong style={{ color: 'var(--color-on-surface)', fontSize: '15px' }}>{orderReceipt.orderId}</strong>
             </p>
             <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '8px' }}>
               Đơn hàng của bạn đã được ghi nhận trên hệ thống và chuyên viên sẽ liên hệ trong 15 phút.
@@ -58,13 +58,13 @@ export default function OrderReceipt({ orderReceipt, formatVND, handleFinish }) 
             }}  className="grid-responsive-2col">
               <div>
                 <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Thời gian đặt hàng:</span>
-                <span style={{ color: 'white', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: 'var(--color-on-surface)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Calendar size={13} /> {orderReceipt.date}
                 </span>
               </div>
               <div>
                 <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '4px' }}>Phương thức thanh toán:</span>
-                <span style={{ color: 'white', fontWeight: '600' }}>{orderReceipt.paymentMethod}</span>
+                <span style={{ color: 'var(--color-on-surface)', fontWeight: '600' }}>{orderReceipt.paymentMethod}</span>
               </div>
             </div>
 
@@ -107,10 +107,10 @@ export default function OrderReceipt({ orderReceipt, formatVND, handleFinish }) 
                   <tbody>
                     {orderReceipt.items.map(item => (
                       <tr key={item.id}>
-                        <td style={{ padding: '10px 14px', color: 'white', fontWeight: '500' }}>{item.name}</td>
+                        <td style={{ padding: '10px 14px', color: 'var(--color-on-surface)', fontWeight: '500' }}>{item.name}</td>
                         <td style={{ padding: '10px 14px', textAlign: 'center', color: 'var(--color-on-surface-variant)' }}>{item.quantity}</td>
                         <td style={{ padding: '10px 14px', textAlign: 'right', color: 'var(--color-on-surface-variant)' }}>{formatVND(item.price)}</td>
-                        <td style={{ padding: '10px 14px', textAlign: 'right', color: 'white', fontWeight: '600' }}>{formatVND(item.price * item.quantity)}</td>
+                        <td style={{ padding: '10px 14px', textAlign: 'right', color: 'var(--color-on-surface)', fontWeight: '600' }}>{formatVND(item.price * item.quantity)}</td>
                       </tr>
                     ))}
                   </tbody>

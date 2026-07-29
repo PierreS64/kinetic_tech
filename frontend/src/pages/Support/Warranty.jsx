@@ -14,77 +14,12 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-const MOCK_WARRANTIES = {
-  'SN-ROG-AZOTH': {
-    productName: 'Bàn phím cơ ASUS ROG Azoth Wireless',
-    purchaseDate: '15/08/2025',
-    warrantyMonths: 24,
-    status: 'active', // 'active', 'expired'
-    remainingMonths: 14,
-    invoiceId: 'INV-48291',
-    history: [
-      { date: '15/08/2025', desc: 'Mua mới & Kích hoạt bảo hành điện tử chính hãng.' },
-      { date: '10/01/2026', desc: 'Bảo dưỡng vệ sinh phím, lube lại switch cơ học miễn phí.' }
-    ]
-  },
-  'SN-IPHONE15': {
-    productName: 'iPhone 15 Pro Max 256GB Titanium',
-    purchaseDate: '01/08/2025',
-    warrantyMonths: 12,
-    status: 'active',
-    remainingMonths: 2,
-    invoiceId: 'INV-39847',
-    history: [
-      { date: '01/08/2025', desc: 'Mua mới tại đại lý Kinetic Tech Cầu Giấy.' }
-    ]
-  },
-  'SN-RYZEN7': {
-    productName: 'CPU AMD Ryzen 7 7800X3D (AM5)',
-    purchaseDate: '10/10/2025',
-    warrantyMonths: 36,
-    status: 'active',
-    remainingMonths: 28,
-    invoiceId: 'INV-59028',
-    history: [
-      { date: '10/10/2025', desc: 'Mua lẻ lắp ráp kèm bộ PC Custom.' }
-    ]
-  },
-  'SN-ASUS-ROG': {
-    productName: 'Laptop ASUS ROG Strix G16 (2024)',
-    purchaseDate: '12/04/2024',
-    warrantyMonths: 24,
-    status: 'expired',
-    remainingMonths: 0,
-    invoiceId: 'INV-20947',
-    history: [
-      { date: '12/04/2024', desc: 'Mua mới & Kích hoạt bảo hành chính hãng ASUS Việt Nam.' },
-      { date: '15/04/2026', desc: 'Bảo hành hết hạn.' }
-    ]
-  }
-};
-
-const MOCK_REPAIR_CASES = {
-  'RC-83742': {
-    id: 'RC-83742',
-    productName: 'Card Màn Hình ASUS ROG Strix RTX 4080 Super',
-    reportedIssue: 'Quạt tản nhiệt số 2 phát ra tiếng kêu to và quay không đều khi đạt nhiệt độ > 70 độ.',
-    statusStep: 3, // 1: Received, 2: Inspected, 3: Under Repair, 4: Ready
-    receivedDate: '28/05/2026',
-    estimatedDate: '06/06/2026',
-    technician: 'Lê Thế Dân (Chuyên viên Đồ họa & GPU)',
-    updates: [
-      { date: '28/05/2026 10:00', desc: 'Nhận thiết bị lỗi tại Kinetic Cầu Giấy.' },
-      { date: '29/05/2026 14:30', desc: 'Kỹ thuật viên kiểm tra phát hiện vỡ trục bạc đạn quạt số 2. Đã đặt linh kiện quạt chính hãng thay thế.' },
-      { date: '01/06/2026 11:00', desc: 'Bắt đầu tháo rã thay mới cụm quạt tản và tra lại keo gốm tản nhiệt MX-6.' }
-    ]
-  }
-};
-
 export default function Warranty() {
   const [activeTab, setActiveTab] = useState('lookup'); // 'lookup', 'activate', 'repair'
   const [searchSn, setSearchSn] = useState('');
   const [warrantyResult, setWarrantyResult] = useState(null);
   const [searchError, setSearchError] = useState('');
+  const [isChecking, setIsChecking] = useState(false);
 
   const [searchRepairId, setSearchRepairId] = useState('');
   const [repairResult, setRepairResult] = useState(null);
@@ -243,7 +178,7 @@ export default function Warranty() {
             <form onSubmit={handleSnSearch} style={{ display: 'flex', gap: '10px' }}>
               <input 
                 type="text"
-                placeholder="Nhập Serial Number (Ví dụ: SN-ROG-AZOTH, SN-RYZEN7...)"
+                placeholder="Nhập Serial Number..."
                 value={searchSn}
                 onChange={(e) => setSearchSn(e.target.value)}
                 className="form-input"
@@ -253,10 +188,6 @@ export default function Warranty() {
                 <Search size={15} /> Tìm kiếm
               </button>
             </form>
-
-            <div style={{ marginTop: '12px', fontSize: '11px', color: 'var(--color-outline)' }}>
-              💡 Thử các S/N mẫu: <strong style={{ color: 'var(--color-primary-dim)', cursor: 'pointer' }} onClick={() => setSearchSn('SN-ROG-AZOTH')}>SN-ROG-AZOTH</strong>, <strong style={{ color: 'var(--color-primary-dim)', cursor: 'pointer' }} onClick={() => setSearchSn('SN-RYZEN7')}>SN-RYZEN7</strong> hoặc <strong style={{ color: 'var(--color-primary-dim)', cursor: 'pointer' }} onClick={() => setSearchSn('SN-ASUS-ROG')}>SN-ASUS-ROG</strong> (hết hạn).
-            </div>
           </div>
 
           {searchError && (
@@ -272,7 +203,7 @@ export default function Warranty() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px', marginBottom: '20px' }}>
                 <div>
                   <span  style={{ fontSize: '11px' }} className="spec-chip-primary">S/N: {warrantyResult.sn}</span>
-                  <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'white', marginTop: '6px' }}>{warrantyResult.productName}</h4>
+                  <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-on-surface)', marginTop: '6px' }}>{warrantyResult.productName}</h4>
                   <span style={{ fontSize: '12px', color: 'var(--color-outline)', display: 'block', marginTop: '4px' }}>Hóa đơn: {warrantyResult.invoiceId}</span>
                 </div>
 
@@ -289,13 +220,13 @@ export default function Warranty() {
               <div style={{ display: 'grid', gap: '16px', fontSize: '13px', marginBottom: '24px' }}  className="grid-responsive-2col">
                 <div>
                   <span style={{ color: 'var(--color-outline)' }}>Ngày mua hàng:</span>
-                  <p style={{ color: 'white', fontWeight: '600', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <p style={{ color: 'var(--color-on-surface)', fontWeight: '600', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <Calendar size={13} /> {warrantyResult.purchaseDate}
                   </p>
                 </div>
                 <div>
                   <span style={{ color: 'var(--color-outline)' }}>Thời hạn bảo hành:</span>
-                  <p style={{ color: 'white', fontWeight: '600', marginTop: '2px' }}>
+                  <p style={{ color: 'var(--color-on-surface)', fontWeight: '600', marginTop: '2px' }}>
                     {warrantyResult.warrantyMonths} Tháng {warrantyResult.status === 'active' && `(Còn ${warrantyResult.remainingMonths} tháng)`}
                   </p>
                 </div>
@@ -314,7 +245,7 @@ export default function Warranty() {
                     <div key={i} style={{ position: 'relative' }}>
                       <div style={{ position: 'absolute', left: '-20px', top: '3px', width: '10px', height: '10px', borderRadius: '50%', background: 'var(--color-primary)', border: '2px solid var(--color-background)' }} />
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block' }}>{hist.date}</span>
-                      <p style={{ fontSize: '12px', color: 'white', marginTop: '2px' }}>{hist.desc}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--color-on-surface)', marginTop: '2px' }}>{hist.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -332,7 +263,7 @@ export default function Warranty() {
               <div style={{ display: 'inline-flex', alignItems: 'center', justifyInters: 'center', width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(76, 175, 80, 0.15)', border: '2px solid #81c784', justifyContent: 'center', marginBottom: '16px' }}>
                 <CheckCircle size={30} color="#81c784" />
               </div>
-              <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'white' }}>KÍCH HOẠT BẢO HÀNH THÀNH CÔNG!</h3>
+              <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--color-on-surface)' }}>KÍCH HOẠT BẢO HÀNH THÀNH CÔNG!</h3>
               <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '8px', lineHeight: '1.5' }}>
                 Cảm ơn {activationForm.fullName}. Thiết bị có Serial Number <strong>{activationForm.sn}</strong> đã được kích hoạt bảo hành điện tử chính hãng từ ngày hôm nay. Hóa đơn và thời gian bảo hành đã được đồng bộ lên hệ thống Kinetic Tech.
               </p>
@@ -349,7 +280,7 @@ export default function Warranty() {
 
               <form onSubmit={handleActivate} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Serial Number (S/N) sản phẩm *</label>
+                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Serial Number (S/N) sản phẩm *</label>
                   <input 
                     type="text"
                     required
@@ -363,7 +294,7 @@ export default function Warranty() {
 
                 <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Họ và tên chủ sở hữu *</label>
+                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Họ và tên chủ sở hữu *</label>
                     <input 
                       type="text"
                       required
@@ -375,7 +306,7 @@ export default function Warranty() {
                     />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Số điện thoại liên kết *</label>
+                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Số điện thoại liên kết *</label>
                     <input 
                       type="tel"
                       required
@@ -390,7 +321,7 @@ export default function Warranty() {
 
                 <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Địa chỉ Email (Nhận thông báo)</label>
+                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Địa chỉ Email (Nhận thông báo)</label>
                     <input 
                       type="email"
                       placeholder="example@gmail.com..."
@@ -401,7 +332,7 @@ export default function Warranty() {
                     />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Mã số hóa đơn mua hàng (Nếu có)</label>
+                    <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Mã số hóa đơn mua hàng (Nếu có)</label>
                     <input 
                       type="text"
                       placeholder="INV-XXXXX..."
@@ -463,7 +394,7 @@ export default function Warranty() {
               {/* Header card */}
               <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '16px', marginBottom: '24px' }}>
                 <span  style={{ fontSize: '11px' }} className="spec-chip-primary">Phiếu nhận sửa chữa: {repairResult.id}</span>
-                <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'white', marginTop: '6px' }}>{repairResult.productName}</h4>
+                <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-on-surface)', marginTop: '6px' }}>{repairResult.productName}</h4>
                 <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '6px', lineHeight: '1.4' }}>
                   <strong>Lỗi báo cáo:</strong> {repairResult.reportedIssue}
                 </p>
@@ -522,7 +453,7 @@ export default function Warranty() {
               }}  className="grid-responsive-2col">
                 <div>
                   <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '2px' }}>Kỹ thuật viên phụ trách:</span>
-                  <span style={{ color: 'white', fontWeight: '600' }}>{repairResult.technician}</span>
+                  <span style={{ color: 'var(--color-on-surface)', fontWeight: '600' }}>{repairResult.technician}</span>
                 </div>
                 <div>
                   <span style={{ color: 'var(--color-outline)', display: 'block', marginBottom: '2px' }}>Hẹn trả máy dự kiến:</span>
@@ -542,7 +473,7 @@ export default function Warranty() {
                     <div key={i} style={{ position: 'relative' }}>
                       <div style={{ position: 'absolute', left: '-20px', top: '3px', width: '10px', height: '10px', borderRadius: '50%', background: i === 0 ? 'var(--color-primary)' : 'var(--color-outline)', border: '2px solid var(--color-background)' }} />
                       <span style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block' }}>{up.date}</span>
-                      <p style={{ fontSize: '12px', color: 'white', marginTop: '2px' }}>{up.desc}</p>
+                      <p style={{ fontSize: '12px', color: 'var(--color-on-surface)', marginTop: '2px' }}>{up.desc}</p>
                     </div>
                   ))}
                 </div>

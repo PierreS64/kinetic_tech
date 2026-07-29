@@ -37,7 +37,7 @@ export default function FeedbackTab(props) {
                     }}>
                       <CheckCircle2 size={32} />
                     </div>
-                    <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'white', marginBottom: '8px' }}>Gửi góp ý thành công!</h4>
+                    <h4 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-on-surface)', marginBottom: '8px' }}>Gửi góp ý thành công!</h4>
                     <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', maxWidth: '400px', margin: '0 auto' }}>
                       Cảm ơn bạn đã dành thời gian phản hồi. Đội ngũ quản trị viên đã ghi nhận và sẽ phản hồi qua email/SĐT đăng ký của bạn nếu cần thiết.
                     </p>

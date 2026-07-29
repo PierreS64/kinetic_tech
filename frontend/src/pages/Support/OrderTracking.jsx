@@ -1,40 +1,138 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Calendar, Clock, Truck, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Search, MapPin, Calendar, Clock, Truck, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import api from '../../utils/api';
 
 export default function OrderTracking({ orders = [] }) {
   const [orderIdInput, setOrderIdInput] = useState('');
   const [trackedOrder, setTrackedOrder] = useState(null);
   const [searched, setSearched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const formatVND = (value) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    if (!orderIdInput.trim()) return;
-    
-    // Support prefix search or exact match
-    const searchId = orderIdInput.trim().toUpperCase();
-    const match = orders.find(o => o.id.toUpperCase() === searchId || o.id.toUpperCase() === `ORD-${searchId}` || o.id.toUpperCase() === `KT-${searchId}`);
-    
-    setTrackedOrder(match || null);
-    setSearched(true);
+    const input = orderIdInput.trim();
+    if (!input) return;
+
+    setIsLoading(true);
+    setSearched(false);
+    setTrackedOrder(null);
+
+    let cleanId = input;
+    // Strip common prefixes
+    if (cleanId.toUpperCase().startsWith('ORD-')) {
+      cleanId = cleanId.substring(4);
+    } else if (cleanId.toUpperCase().startsWith('KT-')) {
+      cleanId = cleanId.substring(3);
+    }
+
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(cleanId)) {
+      // Local fallback if it is not a UUID
+      const match = orders.find(o => o.id.toUpperCase() === input.toUpperCase() || o.id.toUpperCase() === cleanId.toUpperCase());
+      if (match) {
+        const mappedOrder = {
+          ...match,
+          id: match.id,
+          date: match.date || new Date(match.createdAt).toLocaleString('vi-VN'),
+          total: match.total || match.totalAmount || 0,
+          status: (match.status || 'pending').toLowerCase() === 'delivered' ? 'completed' : (match.status || 'pending').toLowerCase(),
+          customerName: match.customerName || match.User?.fullName || 'Khách hàng',
+          phone: match.phone || match.User?.phone || match.User?.phoneNumber || 'N/A',
+          address: match.address || match.shippingAddress || 'Hà Nội',
+          items: match.items || (match.OrderItem ? match.OrderItem.map(oi => ({
+            id: oi.productVariantId || oi.id,
+            name: oi.ProductVariant?.Product?.name || 'Linh kiện PC',
+            quantity: oi.quantity,
+            price: oi.price,
+            image: oi.ProductVariant?.Product?.ProductImage?.[0]?.imageUrl || ''
+          })) : [])
+        };
+        setTrackedOrder(mappedOrder);
+      } else {
+        setTrackedOrder(null);
+      }
+      setIsLoading(false);
+      setSearched(true);
+      return;
+    }
+
+    try {
+      const res = await api.get(`/orders/track/${cleanId}`);
+      const data = res.data;
+
+      // Map raw API order to frontend format
+      const mappedOrder = {
+        ...data,
+        id: data.id,
+        date: new Date(data.createdAt).toLocaleString('vi-VN'),
+        total: data.totalAmount || 0,
+        status: (data.status || 'pending').toLowerCase() === 'delivered' ? 'completed' : (data.status || 'pending').toLowerCase(),
+        customerName: data.User?.fullName || 'Khách hàng',
+        phone: data.User?.phone || data.User?.phoneNumber || 'N/A',
+        address: data.shippingAddress || 'Hà Nội',
+        items: data.OrderItem ? data.OrderItem.map(oi => ({
+          id: oi.productVariantId || oi.id,
+          name: oi.ProductVariant?.Product?.name || 'Linh kiện PC',
+          quantity: oi.quantity,
+          price: oi.price,
+          image: oi.ProductVariant?.Product?.ProductImage?.[0]?.imageUrl || ''
+        })) : []
+      };
+
+      setTrackedOrder(mappedOrder);
+    } catch (err) {
+      console.error(err);
+      // Fallback to local match if API fails
+      const match = orders.find(o => o.id.toUpperCase() === input.toUpperCase() || o.id.toUpperCase() === cleanId.toUpperCase());
+      if (match) {
+        const mappedFallback = {
+          ...match,
+          id: match.id,
+          date: match.date || new Date(match.createdAt).toLocaleString('vi-VN'),
+          total: match.total || match.totalAmount || 0,
+          status: (match.status || 'pending').toLowerCase() === 'delivered' ? 'completed' : (match.status || 'pending').toLowerCase(),
+          customerName: match.customerName || match.User?.fullName || 'Khách hàng',
+          phone: match.phone || match.User?.phone || match.User?.phoneNumber || 'N/A',
+          address: match.address || match.shippingAddress || 'Hà Nội',
+          items: match.items || (match.OrderItem ? match.OrderItem.map(oi => ({
+            id: oi.productVariantId || oi.id,
+            name: oi.ProductVariant?.Product?.name || 'Linh kiện PC',
+            quantity: oi.quantity,
+            price: oi.price,
+            image: oi.ProductVariant?.Product?.ProductImage?.[0]?.imageUrl || ''
+          })) : [])
+        };
+        setTrackedOrder(mappedFallback);
+      } else {
+        setTrackedOrder(null);
+      }
+    } finally {
+      setIsLoading(false);
+      setSearched(true);
+    }
   };
 
   // Helper to determine active step
   const getStepStatus = (status, stepIndex) => {
     // Steps: 1: Placed, 2: Confirmed, 3: In Transit, 4: Delivered
-    if (status === 'cancelled') {
+    const normalizedStatus = (status || '').toLowerCase();
+    if (normalizedStatus === 'cancelled') {
       return stepIndex === 1 ? 'cancelled' : 'inactive';
     }
-    
-    switch (status) {
+
+    switch (normalizedStatus) {
       case 'pending':
         return stepIndex === 1 ? 'active' : 'inactive';
       case 'processing':
         return stepIndex <= 2 ? 'active' : stepIndex === 3 ? 'pending-step' : 'inactive';
+      case 'shipped':
+        return stepIndex <= 3 ? 'active' : stepIndex === 4 ? 'pending-step' : 'inactive';
       case 'completed':
+      case 'delivered':
         return 'active';
       default:
         return 'inactive';
@@ -77,8 +175,15 @@ export default function OrderTracking({ orders = [] }) {
         </form>
       </div>
 
+      {/* Loading state */}
+      {isLoading && (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }} className="glass-panel">
+          <Loader2 className="animate-spin" size={32} color="var(--color-primary-dim)" style={{ animation: 'spin 1s linear infinite' }} />
+        </div>
+      )}
+
       {/* Result Display */}
-      {searched && (
+      {!isLoading && searched && (
         trackedOrder ? (
           <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '30px', border: '1px solid rgba(0, 123, 255, 0.25)' }} className="glass-panel-glow-blue animate-fade-in-up">
             {/* Header info */}
@@ -133,7 +238,11 @@ export default function OrderTracking({ orders = [] }) {
                     position: 'absolute',
                     top: '20px',
                     left: '5%',
-                    width: trackedOrder.status === 'pending' ? '0%' : trackedOrder.status === 'processing' ? '50%' : '90%',
+                    width: 
+                      trackedOrder.status === 'pending' ? '0%' : 
+                      trackedOrder.status === 'processing' ? '33%' : 
+                      trackedOrder.status === 'shipped' ? '66%' : 
+                      (trackedOrder.status === 'completed' || trackedOrder.status === 'delivered') ? '100%' : '0%',
                     height: '4px',
                     background: 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))',
                     boxShadow: '0 0 10px rgba(0, 123, 255, 0.5)',

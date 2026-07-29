@@ -99,7 +99,7 @@ export default function ProductCard({ product, onViewDetails }) {
             fontSize: '15px',
             fontWeight: '600',
             lineHeight: '1.4',
-            color: '#ffffff',
+            color: 'var(--color-on-surface)',
             minHeight: '42px',
             display: '-webkit-box',
             WebkitLineClamp: 2,

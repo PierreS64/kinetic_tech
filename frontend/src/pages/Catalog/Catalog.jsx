@@ -74,7 +74,7 @@ export default function Catalog({ activeView }) {
                   setMinPrice(0);
                   setMaxPrice(80000000);
                   setOnlyInStock(false);
-                }} style={{ marginTop: '20px', padding: '10px 20px', background: 'var(--color-primary-dim)', color: 'white', border: 'none', borderRadius: 'var(--rounded-md)', cursor: 'pointer' }}>Xóa bộ lọc</button>
+                }} style={{ marginTop: '20px', padding: '10px 20px', background: 'var(--color-primary-dim)', color: 'var(--color-on-surface)', border: 'none', borderRadius: 'var(--rounded-md)', cursor: 'pointer' }}>Xóa bộ lọc</button>
               </div>
             ) : (
               <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px' }}>

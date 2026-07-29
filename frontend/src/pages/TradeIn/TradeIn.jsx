@@ -187,9 +187,9 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
           }}>
             <ShieldCheck size={36} color="var(--color-secondary)" />
           </div>
-          <h3 style={{ fontSize: '22px', fontWeight: '800', color: 'white' }}>ĐĂNG KÝ THẨM ĐỊNH THÀNH CÔNG!</h3>
+          <h3 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--color-on-surface)' }}>ĐĂNG KÝ THẨM ĐỊNH THÀNH CÔNG!</h3>
           <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '8px' }}>
-            Mã số yêu cầu thẩm định của bạn: <strong style={{ color: 'white', fontSize: '16px' }}>{bookingCode}</strong>
+            Mã số yêu cầu thẩm định của bạn: <strong style={{ color: 'var(--color-on-surface)', fontSize: '16px' }}>{bookingCode}</strong>
           </p>
           
           <div style={{
@@ -235,7 +235,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
 
             {/* Select Device Type */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Chọn nhóm linh kiện / thiết bị *</label>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Chọn nhóm linh kiện / thiết bị *</label>
               <select
                 value={deviceType}
                 onChange={(e) => setDeviceType(e.target.value)}
@@ -250,7 +250,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
 
             {/* Model Name */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Tên Model / Mã sản phẩm chính xác *</label>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Tên Model / Mã sản phẩm chính xác *</label>
               <input 
                 type="text"
                 required
@@ -264,7 +264,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
 
             {/* Usage Time / Warranty Status */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Thời gian đã sử dụng / Tình trạng bảo hành *</label>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Thời gian đã sử dụng / Tình trạng bảo hành *</label>
               <input 
                 type="text"
                 required
@@ -278,7 +278,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
 
             {/* Detail notes */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Mô tả chi tiết tình trạng ngoại quan & hoạt động (Không bắt buộc)</label>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Mô tả chi tiết tình trạng ngoại quan & hoạt động (Không bắt buộc)</label>
               <textarea 
                 rows="3"
                 placeholder="Ví dụ: Hàng dùng phòng điều hòa, không rỉ sét, quạt chạy êm không ồn, còn nguyên box hóa đơn..."
@@ -291,7 +291,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
 
             {/* Image upload preview */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Hình ảnh thực tế của linh kiện (Khuyên dùng - Ảnh rõ nét giúp thẩm định nhanh & giá tốt nhất) *</label>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Hình ảnh thực tế của linh kiện (Khuyên dùng - Ảnh rõ nét giúp thẩm định nhanh & giá tốt nhất) *</label>
               <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
                 <input 
                   type="file"
@@ -322,7 +322,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                         top: '-8px',
                         right: '-8px',
                         background: 'var(--color-error)',
-                        color: 'white',
+                        color: 'var(--color-on-surface)',
                         border: 'none',
                         borderRadius: '50%',
                         width: '20px',
@@ -354,7 +354,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
 
             {/* Target Upgrade Device */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Chọn sản phẩm muốn lên đời nâng cấp *</label>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Chọn sản phẩm muốn lên đời nâng cấp *</label>
               <select
                 name="targetDevice"
                 value={formData.targetDevice}
@@ -374,7 +374,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
             {/* Customer Personal Details */}
             <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Họ và tên *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Họ và tên *</label>
                 <input 
                   type="text"
                   name="fullName"
@@ -387,7 +387,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                  className="form-input" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Số điện thoại liên hệ *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Số điện thoại liên hệ *</label>
                 <input 
                   type="tel"
                   name="phone"
@@ -404,7 +404,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
             {/* Receipt Date & Store Address */}
             <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-1_2fr">
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Ngày mang máy thẩm định *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Ngày mang máy thẩm định *</label>
                 <input 
                   type="date"
                   name="appointmentDate"
@@ -416,7 +416,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                  className="form-input" />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Địa điểm tiếp nhận thẩm định *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Địa điểm tiếp nhận thẩm định *</label>
                 <select
                   name="storeLocation"
                   value={formData.storeLocation}
@@ -434,7 +434,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
             {/* Address if home collection */}
             {formData.storeLocation.includes('tận nhà') && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}  className="animate-fade-in-up">
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Địa chỉ nhà riêng nhận linh kiện cũ *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Địa chỉ nhà riêng nhận linh kiện cũ *</label>
                 <input 
                   type="text"
                   name="email"
@@ -459,7 +459,7 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
               lineHeight: '1.5',
               marginTop: '10px'
             }}>
-              <span style={{ color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+              <span style={{ color: 'var(--color-on-surface)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
                 <Sparkles size={13} color="var(--color-secondary)" /> QUY TRÌNH THẨM ĐỊNH & BÁO GIÁ
               </span>
               1. Khách hàng gửi form yêu cầu (Kèm đầy đủ ảnh thực tế rõ ràng).<br/>

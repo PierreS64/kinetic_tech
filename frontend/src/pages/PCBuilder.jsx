@@ -9,9 +9,9 @@ import { useAppContext } from '../contexts/AppContext';
 
 const checkMatch = (str1, str2) => {
   if (!str1 || !str2) return false;
-  const s1 = String(str1).toLowerCase().replace(/\s/g, '');
-  const s2 = String(str2).toLowerCase().replace(/\s/g, '');
-  return s1.includes(s2) || s2.includes(s1);
+  const s1 = String(str1).toLowerCase().trim();
+  const s2 = String(str2).toLowerCase().trim();
+  return s1 === s2;
 };
 export default function PCBuilder({ onAddPartsToCart }) {
   const { storeProducts = [] } = useAppContext();
@@ -484,7 +484,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
                     <div>
                       <h4 style={{ fontSize: '14px', fontWeight: '700' }}>{cat.name}</h4>
                       {selected ? (
-                        <p style={{ fontSize: '13px', color: '#ffffff', fontWeight: '500', marginTop: '2px', maxWidth: '380px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <p style={{ fontSize: '13px', color: 'var(--color-on-surface)', fontWeight: '500', marginTop: '2px', maxWidth: '380px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {selected.name}
                         </p>
                       ) : (
@@ -562,7 +562,7 @@ export default function PCBuilder({ onAddPartsToCart }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--color-on-surface-variant)' }}>
               <span>Linh kiện đã chọn:</span>
-              <span style={{ fontWeight: '600', color: 'white' }}>
+              <span style={{ fontWeight: '600', color: 'var(--color-on-surface)' }}>
                 {Object.values(selectedParts).filter(p => p !== null).length} / 8
               </span>
             </div>

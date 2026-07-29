@@ -66,8 +66,24 @@ async function main() {
     }
     
     console.log(`Seeding Product: ${product.name} (${product.id})`);
-    
-    const desc = product.description || (typeof product.specs === 'object' ? JSON.stringify(product.specs) : product.specs) || product.name;
+    const specsObj = { ...product };
+    if (typeof product.specs === 'object' && product.specs !== null) {
+      Object.assign(specsObj, product.specs);
+      delete specsObj.specs;
+    }
+    delete specsObj.id;
+    delete specsObj.name;
+    delete specsObj.category;
+    delete specsObj.brand;
+    delete specsObj.price;
+    delete specsObj.oldPrice;
+    delete specsObj.image;
+    delete specsObj.rating;
+    delete specsObj.reviews;
+    delete specsObj.tags;
+    delete specsObj.featured;
+    delete specsObj.inStock;
+    const desc = JSON.stringify(specsObj);
 
     const createdProduct = await prisma.product.upsert({
       where: { id: product.id },

@@ -76,6 +76,7 @@ export default function AdminDashboard() {
             total: o.totalAmount || 0,
             items: (o.OrderItem || []).map(oi => ({
               name: oi.ProductVariant?.Product?.name || 'Sản phẩm',
+              productId: oi.ProductVariant?.Product?.id,
               quantity: oi.quantity,
               price: oi.price,
             }))
@@ -428,11 +429,22 @@ export default function AdminDashboard() {
 
   const textColor = theme === 'light' ? '#0f172a' : '#ffffff';
 
-  // Mock "Đã bán tháng này" — stable random seeded by product id
+  // Calculate sold items this month from real orders
   const getSoldThisMonth = (prodId) => {
-    let hash = 0;
-    for (let i = 0; i < prodId.length; i++) hash = prodId.charCodeAt(i) + ((hash << 5) - hash);
-    return Math.abs(hash % 120) + 1;
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    return orders.filter(o => {
+      // In AdminDashboard, o.rawDate or o.createdAt can be used. Let's use o.createdAt as it's the ISO string from backend
+      const d = new Date(o.createdAt);
+      return o.status === 'DELIVERED' && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    }).reduce((sum, o) => {
+      // Find matching items in order's mapped items
+      const matchingItems = (o.items || []).filter(oi => oi.productId === prodId);
+      const itemTotal = matchingItems.reduce((acc, oi) => acc + oi.quantity, 0);
+      return sum + itemTotal;
+    }, 0);
   };
 
   // Helpers

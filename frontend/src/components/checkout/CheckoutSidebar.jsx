@@ -9,7 +9,7 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
           
           {/* List of items being purchased */}
           <div  style={{ padding: '20px', borderRadius: 'var(--rounded-md)', height: 'fit-content' }} className="glass-panel">
-            <h3 style={{ fontSize: '14px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px', marginBottom: '16px', color: 'white' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: '800', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '10px', marginBottom: '16px', color: 'var(--color-on-surface)' }}>
               ĐƠN HÀNG CỦA BẠN ({cartItems.reduce((acc, curr) => acc + curr.quantity, 0)})
             </h3>
 
@@ -43,7 +43,7 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
                     <h4 style={{
                       fontSize: '12px',
                       fontWeight: '600',
-                      color: 'white',
+                      color: 'var(--color-on-surface)',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis'
@@ -102,7 +102,7 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
                       </button>
                     </div>
                   </div>
-                  <span style={{ fontSize: '12px', fontWeight: '700', color: 'white', whiteSpace: 'nowrap', alignSelf: 'center' }}>
+                  <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-on-surface)', whiteSpace: 'nowrap', alignSelf: 'center' }}>
                     {formatVND(item.price * item.quantity)}
                   </span>
                 </div>
@@ -268,15 +268,15 @@ export default function CheckoutSidebar({ cartItems, formatVND, onUpdateQuantity
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Tạm tính:</span>
-                <span style={{ color: 'white' }}>{formatVND(subtotal)}</span>
+                <span style={{ color: 'var(--color-on-surface)' }}>{formatVND(subtotal)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Phí vận chuyển:</span>
-                <span style={{ color: 'white' }}>{shippingCost === 0 ? 'Miễn phí' : formatVND(shippingCost)}</span>
+                <span style={{ color: 'var(--color-on-surface)' }}>{shippingCost === 0 ? 'Miễn phí' : formatVND(shippingCost)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Thuế VAT (8%):</span>
-                <span style={{ color: 'white' }}>{formatVND(vatTax)}</span>
+                <span style={{ color: 'var(--color-on-surface)' }}>{formatVND(vatTax)}</span>
               </div>
               {discountAmount > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--color-secondary-dim)' }}>

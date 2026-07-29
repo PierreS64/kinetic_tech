@@ -44,19 +44,19 @@ export default function WarrantyTab(props) {
                         }}
                       >
                         <div style={{ flex: '1 1 300px' }}>
-                          <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'white' }}>{prod.name}</h4>
+                          <h4 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--color-on-surface)' }}>{prod.name}</h4>
                           <div style={{ display: 'grid', gap: '8px 16px', marginTop: '10px', fontSize: '12px', color: 'var(--color-on-surface-variant)' }}  className="grid-responsive-2col">
                             <div>
                               <span style={{ color: 'var(--color-outline)' }}>Mã Serial/IMEI:</span>
-                              <strong style={{ display: 'block', color: 'white', fontFamily: 'monospace', fontSize: '13px', marginTop: '2px' }}>{prod.serial}</strong>
+                              <strong style={{ display: 'block', color: 'var(--color-on-surface)', fontFamily: 'monospace', fontSize: '13px', marginTop: '2px' }}>{prod.serial}</strong>
                             </div>
                             <div>
                               <span style={{ color: 'var(--color-outline)' }}>Ngày hết hạn bảo hành:</span>
-                              <strong style={{ display: 'block', color: 'white', marginTop: '2px' }}>{prod.expirationDate}</strong>
+                              <strong style={{ display: 'block', color: 'var(--color-on-surface)', marginTop: '2px' }}>{prod.expirationDate}</strong>
                             </div>
                             <div>
                               <span style={{ color: 'var(--color-outline)' }}>Ngày mua:</span>
-                              <span style={{ display: 'block', color: 'white', marginTop: '2px' }}>{prod.purchaseDate}</span>
+                              <span style={{ display: 'block', color: 'var(--color-on-surface)', marginTop: '2px' }}>{prod.purchaseDate}</span>
                             </div>
                             <div>
                               <span style={{ color: 'var(--color-outline)' }}>Đơn hàng:</span>
@@ -116,7 +116,7 @@ export default function WarrantyTab(props) {
 
                       <div style={{ padding: '20px' }}>
                         <div style={{ marginBottom: '16px', fontSize: '13px', color: 'var(--color-on-surface-variant)' }}>
-                          Sản phẩm: <strong style={{ color: 'white' }}>{supportProduct.name}</strong><br />
+                          Sản phẩm: <strong style={{ color: 'var(--color-on-surface)' }}>{supportProduct.name}</strong><br />
                           Đơn hàng: #{supportOrderId}
                         </div>
 

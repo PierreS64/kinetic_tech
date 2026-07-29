@@ -85,7 +85,7 @@ export default function TradeInTab(props) {
                                     }
                                   }}
                                   className="btn"
-                                  style={{ padding: '4px 6px', fontSize: '9px', background: '#388e3c', color: 'white', whiteSpace: 'nowrap' }}
+                                  style={{ padding: '4px 6px', fontSize: '9px', background: '#388e3c', color: 'var(--color-on-surface)', whiteSpace: 'nowrap' }}
                                 >
                                   Hoàn tất
                                 </button>

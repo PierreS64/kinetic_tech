@@ -41,14 +41,14 @@ export default function OverviewTab(props) {
                             <span style={{ fontSize: '10px', fontWeight: '800', color: 'var(--color-secondary-dim)', textTransform: 'uppercase', display: 'block', letterSpacing: '0.5px' }}>
                               🔔 BÁO GIÁ THU CŨ MỚI (YÊU CẦU: {trade.id})
                             </span>
-                            <h4 style={{ fontSize: '13px', fontWeight: '700', color: 'white', marginTop: '6px' }}>
+                            <h4 style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-on-surface)', marginTop: '6px' }}>
                               {trade.oldDevice}
                             </h4>
                             <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>
                               Định giá thu mua đề nghị: <strong style={{ color: 'var(--color-secondary-dim)', fontSize: '15px' }}>{formatVND(trade.offeredPrice)}</strong>
                             </p>
                             <span style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block', marginTop: '4px' }}>
-                              Dùng cấn trừ nâng cấp lên đời: <strong style={{ color: 'white' }}>{trade.targetDevice}</strong>
+                              Dùng cấn trừ nâng cấp lên đời: <strong style={{ color: 'var(--color-on-surface)' }}>{trade.targetDevice}</strong>
                             </span>
                           </div>
 
@@ -102,7 +102,7 @@ export default function OverviewTab(props) {
                       CHIẾN DỊCH HÈ SIÊU NHIỆT - LÊN ĐỜI HI-END LAPTOP
                     </h3>
                     <p style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginTop: '8px', lineHeight: '1.6' }}>
-                      Áp dụng đặc quyền trả góp 0%, tặng gói vệ sinh bảo dưỡng laptop trọn đời trị giá <strong style={{ color: 'white' }}>1.500.000đ</strong> và voucher giảm giá trực tiếp tới <strong style={{ color: 'var(--color-secondary-dim)' }}>2.000.000đ</strong> khi mua các dòng Asus ROG Strix 2026.
+                      Áp dụng đặc quyền trả góp 0%, tặng gói vệ sinh bảo dưỡng laptop trọn đời trị giá <strong style={{ color: 'var(--color-on-surface)' }}>1.500.000đ</strong> và voucher giảm giá trực tiếp tới <strong style={{ color: 'var(--color-secondary-dim)' }}>2.000.000đ</strong> khi mua các dòng Asus ROG Strix 2026.
                     </p>
                     <button 
                       onClick={() => setActiveView('laptop')}
@@ -169,7 +169,7 @@ export default function OverviewTab(props) {
                             className="list-hover-effect"
                           >
                             <div>
-                              <strong style={{ fontSize: '12px', color: 'white', display: 'block' }}>{order.id}</strong>
+                              <strong style={{ fontSize: '12px', color: 'var(--color-on-surface)', display: 'block' }}>{order.id}</strong>
                               <span style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>{order.date}</span>
                               {order.items && order.items.length > 0 && (
                                 <span style={{ fontSize: '11px', color: 'var(--color-outline)', display: 'block', marginTop: '4px' }}>
@@ -273,7 +273,7 @@ export default function OverviewTab(props) {
                             <img src={prod.image} alt={prod.name} style={{ height: '100%', objectFit: 'contain' }} />
                           </div>
 
-                          <h5 style={{ fontSize: '12px', fontWeight: '600', color: 'white', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '34px', lineHeight: '1.4' }}>
+                          <h5 style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '34px', lineHeight: '1.4' }}>
                             {prod.name}
                           </h5>
 

@@ -369,7 +369,7 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
                   type="submit" disabled={loading}
                   style={{
                     width: '100%', height: '48px', marginTop: '8px', background: 'var(--color-primary)',
-                    color: 'white', border: 'none', borderRadius: 'var(--rounded-md)', fontWeight: '600',
+                    color: 'var(--color-on-surface)', border: 'none', borderRadius: 'var(--rounded-md)', fontWeight: '600',
                     fontSize: '15px', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex',
                     alignItems: 'center', justifyContent: 'center', gap: '8px', transition: 'all 0.2s',
                     opacity: loading ? 0.7 : 1
@@ -429,15 +429,15 @@ export default function Auth({ onLoginSuccess, initialTab = 'login', onBackToHom
               transform: fade ? 'translateY(0)' : 'translateY(10px)',
               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
             }}>
-              <p style={{ color: 'white', fontSize: '16px', fontStyle: 'italic', lineHeight: '1.5', marginBottom: '16px', minHeight: '48px' }}>
+              <p style={{ color: 'var(--color-on-surface)', fontSize: '16px', fontStyle: 'italic', lineHeight: '1.5', marginBottom: '16px', minHeight: '48px' }}>
                 "{reviews[activeReview].text}"
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: reviews[activeReview].color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: reviews[activeReview].color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-on-surface)', fontWeight: 'bold' }}>
                   {reviews[activeReview].avatar}
                 </div>
                 <div>
-                  <p style={{ color: 'white', fontWeight: '600', fontSize: '14px' }}>{reviews[activeReview].author}</p>
+                  <p style={{ color: 'var(--color-on-surface)', fontWeight: '600', fontSize: '14px' }}>{reviews[activeReview].author}</p>
                   <p style={{ color: 'var(--color-outline)', fontSize: '12px' }}>{reviews[activeReview].role}</p>
                 </div>
               </div>

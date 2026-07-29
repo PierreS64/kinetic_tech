@@ -20,7 +20,7 @@ export default function PCBuilderModal(props) {
               alignItems: 'center',
               background: 'rgba(10, 25, 47, 0.8)'
             }}>
-              <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'white' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'var(--color-on-surface)' }}>
                 CHỌN LINH KIỆN: {activeCatDetails?.name}
               </h3>
               <button
@@ -96,7 +96,7 @@ export default function PCBuilderModal(props) {
                       type="button"
                       onClick={() => setFilterSelectedColor('all')}
                       className="btn"
-                      style={{ flex: 1, padding: '6px 0', fontSize: '11px', background: filterSelectedColor === 'all' ? 'var(--color-primary)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                      style={{ flex: 1, padding: '6px 0', fontSize: '11px', background: filterSelectedColor === 'all' ? 'var(--color-primary)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-on-surface)' }}
                     >
                       Tất cả
                     </button>
@@ -104,7 +104,7 @@ export default function PCBuilderModal(props) {
                       type="button"
                       onClick={() => setFilterSelectedColor('Đen')}
                       className="btn"
-                      style={{ flex: 1, padding: '6px 0', fontSize: '11px', background: filterSelectedColor === 'Đen' ? 'var(--color-primary)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                      style={{ flex: 1, padding: '6px 0', fontSize: '11px', background: filterSelectedColor === 'Đen' ? 'var(--color-primary)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-on-surface)' }}
                     >
                       Đen
                     </button>
@@ -112,7 +112,7 @@ export default function PCBuilderModal(props) {
                       type="button"
                       onClick={() => setFilterSelectedColor('Trắng')}
                       className="btn"
-                      style={{ flex: 1, padding: '6px 0', fontSize: '11px', background: filterSelectedColor === 'Trắng' ? 'var(--color-primary)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' }}
+                      style={{ flex: 1, padding: '6px 0', fontSize: '11px', background: filterSelectedColor === 'Trắng' ? 'var(--color-primary)' : 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-on-surface)' }}
                     >
                       Trắng
                     </button>
@@ -216,7 +216,7 @@ export default function PCBuilderModal(props) {
                           {/* Detail Text */}
                           <div style={{ flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <h4 style={{ fontSize: '13px', fontWeight: '700', color: 'white', lineHeight: '1.4' }}>
+                              <h4 style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-on-surface)', lineHeight: '1.4' }}>
                                 {part.name}
                               </h4>
                               {part.color && (

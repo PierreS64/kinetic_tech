@@ -1,4 +1,4 @@
-import { Controller, Patch, Body, Param, UseGuards, Get, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Controller, Patch, Body, Param, UseGuards, Get, BadRequestException, NotFoundException, Request } from '@nestjs/common';
 import { UsersService } from '../application/users.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
@@ -7,6 +7,15 @@ import * as bcrypt from 'bcrypt';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  async getMe(@Request() req: any) {
+    const user = await this.usersService.findById(req.user.id);
+    if (!user) throw new NotFoundException('User not found');
+    const { password, ...result } = user as any;
+    return result;
+  }
 
   @Get('technicians')
   async getTechnicians() {

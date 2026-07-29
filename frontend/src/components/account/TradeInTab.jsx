@@ -44,7 +44,7 @@ export default function TradeInTab(props) {
                       <tbody>
                         {userTradeins.map(trade => (
                           <tr key={trade.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                            <td style={{ fontWeight: '700', color: 'white', padding: '12px 16px' }}>
+                            <td style={{ fontWeight: '700', color: 'var(--color-on-surface)', padding: '12px 16px' }}>
                               {trade.oldDevice}
                             </td>
                             <td style={{ padding: '12px 16px', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={trade.conditionDesc}>

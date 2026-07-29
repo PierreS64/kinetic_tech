@@ -17,6 +17,21 @@ export function AuthProvider({ children }) {
     }
   });
 
+  useEffect(() => {
+    const handleUserUpdated = () => {
+      try {
+        const stored = localStorage.getItem('kinetic_user');
+        if (stored) {
+          setCurrentUser(JSON.parse(stored));
+        }
+      } catch (e) {
+        // ignore
+      }
+    };
+    window.addEventListener('kinetic_user_updated', handleUserUpdated);
+    return () => window.removeEventListener('kinetic_user_updated', handleUserUpdated);
+  }, []);
+
   const handleLoginSuccess = (user, token) => {
     setCurrentUser(user);
     localStorage.setItem('kinetic_user', JSON.stringify(user));

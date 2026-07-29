@@ -250,7 +250,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'grid', gap: '16px' }}  className="grid-responsive-2col">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Họ và tên người nhận *</label>
+                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Họ và tên người nhận *</label>
                   <div style={{ position: 'relative' }}>
                     <input 
                       type="text" 
@@ -266,7 +266,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Số điện thoại liên hệ *</label>
+                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Số điện thoại liên hệ *</label>
                   <div style={{ position: 'relative' }}>
                     <input 
                       type="tel" 
@@ -284,7 +284,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Địa chỉ Email nhận hóa đơn *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Địa chỉ Email nhận hóa đơn *</label>
                 <div style={{ position: 'relative' }}>
                   <input 
                     type="email" 
@@ -302,7 +302,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
 
               <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-3col">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Tỉnh / Thành phố *</label>
+                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Tỉnh / Thành phố *</label>
                   <input 
                     type="text" 
                     name="city"
@@ -315,7 +315,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                    className="form-input" />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Quận / Huyện *</label>
+                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Quận / Huyện *</label>
                   <input 
                     type="text" 
                     name="district"
@@ -328,7 +328,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                    className="form-input" />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Phường / Xã</label>
+                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Phường / Xã</label>
                   <input 
                     type="text" 
                     name="ward"
@@ -342,7 +342,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Địa chỉ chi tiết (Số nhà, tên đường...) *</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Địa chỉ chi tiết (Số nhà, tên đường...) *</label>
                 <input 
                   type="text" 
                   name="address"
@@ -356,7 +356,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'white' }}>Ghi chú đơn hàng (Không bắt buộc)</label>
+                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-on-surface)' }}>Ghi chú đơn hàng (Không bắt buộc)</label>
                 <textarea 
                   name="notes"
                   placeholder="Ghi chú thời gian giao hàng, hướng dẫn chỉ đường..."
@@ -400,7 +400,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                   style={{ marginTop: '3px', accentColor: 'var(--color-primary)' }}
                 />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: '700', color: 'white', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-on-surface)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <DollarSign size={14} color="var(--color-secondary-dim)" />
                     Thanh toán khi nhận hàng (COD)
                   </span>
@@ -432,7 +432,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                   style={{ marginTop: '3px', accentColor: 'var(--color-primary)' }}
                 />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
-                  <span style={{ fontSize: '13px', fontWeight: '700', color: 'white', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-on-surface)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <QrCode size={14} color="var(--color-primary-dim)" />
                     Chuyển khoản nhanh qua mã QR (Khuyên dùng)
                   </span>
@@ -467,16 +467,17 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                         boxShadow: '0 4px 10px rgba(0,0,0,0.3)'
                       }}>
                         <img 
-                          src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=VietQR:Techcombank|1902049583739|KINETIC%20TECH%20STORE" 
+                          src={`https://img.vietqr.io/image/TCB-1902049583739-compact.jpg?amount=${total}&addInfo=${encodeURIComponent('KINETIC ' + formData.phone)}&accountName=${encodeURIComponent('CTY CP KINETIC TECH STORE')}`} 
                           alt="Bank Transfer QR Code" 
                           style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                         />
                       </div>
                       <div style={{ fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '4px', color: 'var(--color-on-surface-variant)' }}>
                         <p>Ngân hàng: <strong>Techcombank (TCB)</strong></p>
-                        <p>Số tài khoản: <strong style={{ color: 'white' }}>1902049583739</strong></p>
+                        <p>Số tài khoản: <strong style={{ color: 'var(--color-on-surface)' }}>1902049583739</strong></p>
                         <p>Chủ tài khoản: <strong>CTY CP KINETIC TECH STORE</strong></p>
-                        <p>Nội dung CK: <strong style={{ color: 'var(--color-secondary-dim)' }}>KINETIC {Math.floor(1000 + Math.random() * 9000)}</strong></p>
+                        <p>Số tiền: <strong style={{ color: 'var(--color-secondary-dim)' }}>{formatVND(total)}</strong></p>
+                        <p>Nội dung CK: <strong style={{ color: 'var(--color-secondary-dim)' }}>KINETIC {formData.phone || 'SĐT'}</strong></p>
                         <p style={{ fontStyle: 'italic', fontSize: '11px', color: '#81c784', marginTop: '4px' }}>
                           * Hệ thống sẽ tự động duyệt đơn hàng sau khi nhận được tiền.
                         </p>
@@ -508,7 +509,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                   style={{ marginTop: '3px', accentColor: 'var(--color-primary)' }}
                 />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' }}>
-                  <span style={{ fontSize: '13px', fontWeight: '700', color: 'white', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--color-on-surface)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <CreditCard size={14} color="var(--color-primary-dim)" />
                     Thẻ tín dụng Quốc tế (Visa, Mastercard, JCB)
                   </span>
@@ -531,7 +532,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                       }}
                      className="animate-fade-in-up">
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <span style={{ fontSize: '11px', color: 'white' }}>Tên in trên thẻ</span>
+                        <span style={{ fontSize: '11px', color: 'var(--color-on-surface)' }}>Tên in trên thẻ</span>
                         <input 
                           type="text" 
                           name="name"
@@ -543,7 +544,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                          className="form-input" />
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        <span style={{ fontSize: '11px', color: 'white' }}>Số thẻ</span>
+                        <span style={{ fontSize: '11px', color: 'var(--color-on-surface)' }}>Số thẻ</span>
                         <input 
                           type="text" 
                           name="number"
@@ -556,7 +557,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                       </div>
                       <div style={{ display: 'grid', gap: '10px' }}  className="grid-responsive-2col">
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <span style={{ fontSize: '11px', color: 'white' }}>Hạn dùng (MM/YY)</span>
+                          <span style={{ fontSize: '11px', color: 'var(--color-on-surface)' }}>Hạn dùng (MM/YY)</span>
                           <input 
                             type="text" 
                             name="expiry"
@@ -568,7 +569,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
                            className="form-input" />
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <span style={{ fontSize: '11px', color: 'white' }}>Mã bí mật CVV</span>
+                          <span style={{ fontSize: '11px', color: 'var(--color-on-surface)' }}>Mã bí mật CVV</span>
                           <input 
                             type="password" 
                             name="cvv"

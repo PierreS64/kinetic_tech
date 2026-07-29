@@ -74,7 +74,7 @@ export default function FeedbacksTab(props) {
                                     }
                                   }}
                                   className="btn"
-                                  style={{ padding: '4px 8px', fontSize: '10px', width: '70px', background: '#d32f2f', color: 'white' }}
+                                  style={{ padding: '4px 8px', fontSize: '10px', width: '70px', background: '#d32f2f', color: 'var(--color-on-surface)' }}
                                   title="Xóa"
                                 >
                                   Xóa

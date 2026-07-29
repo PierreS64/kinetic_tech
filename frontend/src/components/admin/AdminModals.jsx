@@ -500,12 +500,12 @@ export default function AdminModals(props) {
                     </button>
                   )}
                   {selectedOrder.status === 'PROCESSING' && (
-                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'DELIVERED')} className="btn" style={{ padding: '8px 14px', fontSize: '12px', background: '#388e3c', color: 'white' }}>
+                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'DELIVERED')} className="btn" style={{ padding: '8px 14px', fontSize: '12px', background: '#388e3c', color: 'var(--color-on-surface)' }}>
                       Đã giao hàng
                     </button>
                   )}
                   {['PENDING', 'PROCESSING'].includes(selectedOrder.status) && (
-                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'CANCELLED')} className="btn" style={{ padding: '8px 14px', fontSize: '12px', background: '#d32f2f', color: 'white' }}>
+                    <button onClick={() => updateOrderStatus(selectedOrder.id, 'CANCELLED')} className="btn" style={{ padding: '8px 14px', fontSize: '12px', background: '#d32f2f', color: 'var(--color-on-surface)' }}>
                       Hủy đơn
                     </button>
                   )}

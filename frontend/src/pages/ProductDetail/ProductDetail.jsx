@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Shield, Truck, RotateCcw, Star, MessageCircle, Heart } from 'lucide-react';
 import api from '../../utils/api';
 import { useAppContext } from '../../contexts/AppContext';
 import { useCart } from '../../contexts/CartContext';
-import { X } from 'lucide-react';
 
-
-export default function ProductDetail({ product, onClose }) {
-  if (!product) return null;
-  const { theme, likedProductIds, handleToggleLike } = useAppContext();
+export default function ProductDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { theme, storeProducts, likedProductIds, handleToggleLike } = useAppContext();
   const { handleAddToCart, handleBuyNow } = useCart();
-  const isLiked = likedProductIds.includes(product.id);
-  const onToggleLike = () => handleToggleLike(product.id);
-  const onAddToCart = () => handleAddToCart(product);
-  const onBuyNow = async () => {
-    await handleBuyNow(product);
-    if (onClose) onClose();
-  };
-
-
+  
+  const product = storeProducts.find(p => p.id === id || p.variantId === id);
+  
   const [reviews, setReviews] = useState([]);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
@@ -29,6 +23,18 @@ export default function ProductDetail({ product, onClose }) {
       fetchReviews();
     }
   }, [product]);
+
+  if (!product) {
+    return <div className="container" style={{ paddingTop: '100px', textAlign: 'center' }}>Đang tải hoặc không tìm thấy sản phẩm.</div>;
+  }
+
+  const isLiked = likedProductIds.includes(product.id);
+  const onToggleLike = () => handleToggleLike(product.id);
+  const onAddToCart = () => handleAddToCart(product);
+  const onBuyNow = async () => {
+    await handleBuyNow(product);
+    navigate('/checkout');
+  };
 
   const fetchReviews = async () => {
     setLoadingReviews(true);
@@ -73,20 +79,16 @@ export default function ProductDetail({ product, onClose }) {
   };
 
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', animation: 'fadeIn 0.2s' }} onClick={onClose}>
-    <div style={{ maxWidth: '1200px', width: '100%', maxHeight: '90vh', overflowY: 'auto', margin: '0 auto', padding: '24px', backgroundColor: theme === 'light' ? '#f8fafc' : '#020617', borderRadius: '12px', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
-      <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10, background: 'none', border: 'none', cursor: 'pointer', color: theme === 'light' ? '#0f172a' : 'white' }}>
-        <X size={24} />
-      </button>
+    <div className="container" style={{ paddingTop: '40px', paddingBottom: '40px', animation: 'fadeIn 0.3s' }}>
       <button 
-        onClick={onClose}
-         
+        onClick={() => navigate(-1)}
         style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px', color: theme === 'light' ? '#475569' : 'rgba(255,255,255,0.7)' }}
-       className="btn btn-ghost">
+        className="btn btn-ghost"
+      >
         <ArrowLeft size={16} /> Quay lại
       </button>
 
-      <div style={{ display: 'grid', gap: '48px', background: 'var(--color-surface-container)', padding: '32px', borderRadius: 'var(--rounded-lg)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }}  className="grid-responsive-2col">
+      <div style={{ display: 'grid', gap: '48px', background: 'var(--color-surface-container)', padding: '32px', borderRadius: 'var(--rounded-lg)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }} className="grid-responsive-2col">
         {/* Left: Image */}
         <div style={{ background: 'var(--color-surface-container-low)', borderRadius: 'var(--rounded)', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img 
@@ -109,10 +111,10 @@ export default function ProductDetail({ product, onClose }) {
               {product.name}
             </h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: 'var(--color-on-surface-variant)' }}>
-              <span style={{ color: '#ffb77d', fontWeight: 'bold' }}>★ {product.rating}</span>
-              <span>({product.reviews} đánh giá)</span>
+              <span style={{ color: '#ffb77d', fontWeight: 'bold' }}>★ {product.rating || 5}</span>
+              <span>({product.reviews || 0} đánh giá)</span>
               <span>|</span>
-              <span>Thương hiệu: <strong style={{ color: 'var(--color-primary-dim)' }}>{product.specs?.Brand || 'Khác'}</strong></span>
+              <span>Thương hiệu: <strong style={{ color: 'var(--color-primary-dim)' }}>{product.specs?.Brand || product.brand || 'Khác'}</strong></span>
             </div>
           </div>
 
@@ -125,30 +127,32 @@ export default function ProductDetail({ product, onClose }) {
                 <span style={{ fontSize: '18px', textDecoration: 'line-through', color: 'var(--color-outline)' }}>
                   {formatVND(product.oldPrice)}
                 </span>
-                <span  style={{ fontSize: '12px', padding: '2px 8px' }} className="status-badge status-badge-sale">
+                <span style={{ fontSize: '12px', padding: '2px 8px' }} className="status-badge status-badge-sale">
                   Tiết kiệm {discount}%
                 </span>
               </>
             )}
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '700', color: theme === 'light' ? '#1e293b' : '#f8fafc' }}>Thông Số Kỹ Thuật Chi Tiết</h3>
-            <table  style={{ fontSize: '14px' }} className="kinetic-table">
-              <tbody>
-                {Object.entries(product.specs || {}).map(([key, val]) => (
-                  <tr key={key}>
-                    <td style={{ width: '30%', fontWeight: '600', color: 'var(--color-on-surface-variant)' }}>{key}</td>
-                    <td style={{ color: theme === 'light' ? '#0f172a' : 'white' }}>{val}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {product.specs && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '700', color: theme === 'light' ? '#1e293b' : '#f8fafc' }}>Thông Số Kỹ Thuật Chi Tiết</h3>
+              <table style={{ fontSize: '14px' }} className="kinetic-table">
+                <tbody>
+                  {Object.entries(product.specs).map(([key, val]) => (
+                    <tr key={key}>
+                      <td style={{ width: '30%', fontWeight: '600', color: 'var(--color-on-surface-variant)' }}>{key}</td>
+                      <td style={{ color: theme === 'light' ? '#0f172a' : 'white' }}>{val}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
             <button 
-              onClick={() => onAddToCart(product)}
+              onClick={() => onAddToCart()}
               disabled={!product.inStock}
               className="btn btn-outline"
               style={{ flex: 1, padding: '16px', fontSize: '15px', fontWeight: '700' }}
@@ -157,7 +161,7 @@ export default function ProductDetail({ product, onClose }) {
               Thêm Vào Giỏ Hàng
             </button>
             <button 
-              onClick={() => onBuyNow(product)}
+              onClick={() => onBuyNow()}
               disabled={!product.inStock}
               className="btn btn-secondary"
               style={{ flex: 1, padding: '16px', fontSize: '15px', fontWeight: '700' }}
@@ -168,7 +172,7 @@ export default function ProductDetail({ product, onClose }) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                if (onToggleLike) onToggleLike(product.id);
+                if (onToggleLike) onToggleLike();
               }}
               className="btn"
               style={{ 
@@ -187,7 +191,7 @@ export default function ProductDetail({ product, onClose }) {
             </button>
           </div>
 
-          <div style={{ display: 'grid', gap: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px' }}  className="grid-responsive-2col">
+          <div style={{ display: 'grid', gap: '12px', marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '20px' }} className="grid-responsive-2col">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--color-on-surface-variant)', fontSize: '13px' }}>
               <Shield size={20} color="var(--color-primary-dim)" />
               <span>Bảo hành chính hãng 24-36 tháng</span>
@@ -263,20 +267,19 @@ export default function ProductDetail({ product, onClose }) {
             </div>
             <div>
               <textarea 
-                
                 rows="4" 
                 placeholder="Chia sẻ cảm nhận của bạn về sản phẩm này..."
                 value={newReview.comment}
-                className="form-input" onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                className="kinetic-input" 
+                onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
               />
             </div>
-            <button type="submit"  disabled={submittingReview} style={{ alignSelf: 'flex-start', padding: '12px 24px' }} className="btn btn-primary">
+            <button type="submit" disabled={submittingReview} style={{ alignSelf: 'flex-start', padding: '12px 24px' }} className="btn btn-primary">
               {submittingReview ? 'Đang gửi...' : 'Gửi Đánh Giá'}
             </button>
           </form>
         </div>
       </div>
-    </div>
     </div>
   );
 }

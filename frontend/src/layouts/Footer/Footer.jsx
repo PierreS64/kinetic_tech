@@ -16,11 +16,11 @@ const Footer = () => {
         color: 'var(--color-on-surface-variant)'
       }} className="container">
         <div>
-          <h4 style={{ color: 'white', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>KINETIC TECH</h4>
+          <h4 style={{ color: 'var(--color-on-surface)', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>KINETIC TECH</h4>
           <p style={{ lineHeight: '1.6' }}>Hệ thống cửa hàng bán lẻ linh kiện máy tính, laptop hi-end hàng đầu Việt Nam.</p>
         </div>
         <div>
-          <h4 style={{ color: 'white', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>HỖ TRỢ KHÁCH HÀNG</h4>
+          <h4 style={{ color: 'var(--color-on-surface)', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>HỖ TRỢ KHÁCH HÀNG</h4>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', cursor: 'pointer', padding: 0 }}>
             <li>Hướng dẫn mua hàng online</li>
             <li>Chính sách bảo hành đổi trả</li>
@@ -28,7 +28,7 @@ const Footer = () => {
           </ul>
         </div>
         <div>
-          <h4 style={{ color: 'white', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>LIÊN HỆ</h4>
+          <h4 style={{ color: 'var(--color-on-surface)', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>LIÊN HỆ</h4>
           <p style={{ lineHeight: '1.6' }}>
             Email: hotro@kinetictech.vn<br />
             Hotline: 1900 1234 (8:00 - 21:00)<br />
@@ -36,7 +36,7 @@ const Footer = () => {
           </p>
         </div>
         <div>
-          <h4 style={{ color: 'white', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>THÔNG TIN PHÁP LÝ</h4>
+          <h4 style={{ color: 'var(--color-on-surface)', fontWeight: '700', fontSize: '14px', marginBottom: '16px' }}>THÔNG TIN PHÁP LÝ</h4>
           <p style={{ lineHeight: '1.6' }}>
             <strong>Kinetic Tech Store</strong><br />
             GPĐKKD số: 0101234567 do Sở KH&ĐT Hà Nội cấp ngày 01/01/2026.<br />

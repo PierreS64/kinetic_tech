@@ -118,7 +118,7 @@ export default function OrdersTab(props) {
                         <div style={{ display: 'grid', gap: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', padding: '14px', borderRadius: 'var(--rounded)' }}  className="grid-responsive-2col">
                           <div>
                             <span style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--color-outline)', fontWeight: '800', display: 'block', marginBottom: '4px' }}>Địa chỉ giao hàng</span>
-                            <span style={{ fontSize: '12px', color: 'white', lineHeight: '1.5' }}>
+                            <span style={{ fontSize: '12px', color: 'var(--color-on-surface)', lineHeight: '1.5' }}>
                               Người nhận: {selectedOrder.customerName}<br />
                               SĐT: {selectedOrder.phone}<br />
                               Địa chỉ: {selectedOrder.address || 'Hà Nội'}
@@ -126,7 +126,7 @@ export default function OrdersTab(props) {
                           </div>
                           <div>
                             <span style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--color-outline)', fontWeight: '800', display: 'block', marginBottom: '4px' }}>Thanh toán</span>
-                            <span style={{ fontSize: '12px', color: 'white', lineHeight: '1.5' }}>
+                            <span style={{ fontSize: '12px', color: 'var(--color-on-surface)', lineHeight: '1.5' }}>
                               Phương thức: {selectedOrder.paymentMethod}<br />
                               Trạng thái: <strong>{selectedOrder.status === 'DELIVERED' ? 'Đã thanh toán' : 'Chờ xác thực'}</strong>
                             </span>
@@ -163,11 +163,11 @@ export default function OrdersTab(props) {
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, width: '20%' }}>
                                 <div style={{
                                   width: '32px', height: '32px', borderRadius: '50%',
-                                  background: 'var(--color-primary)', color: 'white',
+                                  background: 'var(--color-primary)', color: 'var(--color-on-surface)',
                                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold',
                                   boxShadow: '0 0 10px rgba(0, 123, 255, 0.4)'
                                 }}>1</div>
-                                <span style={{ fontSize: '11px', fontWeight: '700', color: 'white', marginTop: '6px' }}>Đã đặt đơn</span>
+                                <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--color-on-surface)', marginTop: '6px' }}>Đã đặt đơn</span>
                               </div>
 
                               {/* Step 2 */}
@@ -233,7 +233,7 @@ export default function OrdersTab(props) {
                                 }}
                               >
                                 <div style={{ flex: 1 }}>
-                                  <span style={{ fontWeight: '600', fontSize: '13px', color: 'white', display: 'block' }}>{item.name}</span>
+                                  <span style={{ fontWeight: '600', fontSize: '13px', color: 'var(--color-on-surface)', display: 'block' }}>{item.name}</span>
                                   <span style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>
                                     Số lượng: {item.quantity} | Đơn giá: {formatVND(item.price)}
                                   </span>

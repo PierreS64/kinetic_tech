@@ -448,7 +448,7 @@ export default function Navbar()  {
                   height: '24px',
                   borderRadius: '50%',
                   background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))',
-                  color: 'white',
+                  color: 'var(--color-on-surface)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -586,7 +586,7 @@ export default function Navbar()  {
                     height: '32px',
                     borderRadius: '50%',
                     background: 'var(--color-primary)',
-                    color: 'white',
+                    color: 'var(--color-on-surface)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -596,7 +596,7 @@ export default function Navbar()  {
                     {currentUser.fullName.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h4 style={{ fontSize: '13px', fontWeight: 'bold', color: 'white' }}>{currentUser.fullName}</h4>
+                    <h4 style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--color-on-surface)' }}>{currentUser.fullName}</h4>
                     <p style={{ fontSize: '11px', color: 'var(--color-outline)' }}>{currentUser.email}</p>
                   </div>
                 </div>

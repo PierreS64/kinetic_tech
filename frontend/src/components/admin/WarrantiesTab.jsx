@@ -66,7 +66,7 @@ export default function WarrantiesTab(props) {
                                 </button>
                               )}
                               {claim.status === 'repairing' && (
-                                <button onClick={(e) => { e.stopPropagation(); updateWarrantyStatus(claim.id, 'returned'); }} className="btn" style={{ padding: '4px 6px', fontSize: '10px', background: '#388e3c', color: 'white' }}>
+                                <button onClick={(e) => { e.stopPropagation(); updateWarrantyStatus(claim.id, 'returned'); }} className="btn" style={{ padding: '4px 6px', fontSize: '10px', background: '#388e3c', color: 'var(--color-on-surface)' }}>
                                   Trả khách
                                 </button>
                               )}
