@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TrendingUp, ShoppingBag, Package, MessageSquare, Shield, Search, Plus, Trash2, CheckCircle2, XCircle, AlertCircle, ArrowRight, DollarSign, Wrench, RefreshCw, FileText, ChevronRight, Filter, Check, X, Edit2, Tag } from 'lucide-react';
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -8,10 +8,12 @@ export default function OverviewTab(props) {
   const { theme, storeProducts, setStoreProducts, setOrders } = useAppContext();
   const { orders, tickets, warranties, tradeins, feedbacks, setTickets, setWarranties, setTradeins, setFeedbacks, selectedOrder, setSelectedOrder, promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo, selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo, handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handlePromoProductPriceChange, selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText, selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation, isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort, priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput, detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal, textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts, totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount } = props;
 
-  // Calculate revenue for the last 7 days
-  const last7DaysData = Array.from({ length: 7 }).map((_, i) => {
+  const [chartRange, setChartRange] = useState(7);
+
+  // Calculate revenue for the selected range
+  const chartData = Array.from({ length: chartRange }).map((_, i) => {
     const d = new Date();
-    d.setDate(d.getDate() - (6 - i));
+    d.setDate(d.getDate() - (chartRange - 1 - i));
     const localDate = new Date(d.getTime() - (d.getTimezoneOffset() * 60000));
     const rawDateStr = localDate.toISOString().split('T')[0];
     
@@ -42,13 +44,41 @@ export default function OverviewTab(props) {
 
                 {/* Revenue Chart Section */}
                 <div style={{ marginBottom: '30px' }}>
-                  <h4 style={{ fontSize: '14px', fontWeight: '700', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <TrendingUp size={14} color="var(--color-primary-dim)" />
-                    Biểu đồ doanh thu 7 ngày qua
-                  </h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: '700', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <TrendingUp size={14} color="var(--color-primary-dim)" />
+                      Biểu đồ doanh thu
+                    </h4>
+                    <div style={{ display: 'flex', gap: '4px', background: 'rgba(255,255,255,0.05)', padding: '2px', borderRadius: '6px' }}>
+                      {[
+                        { label: '7 ngày', value: 7 },
+                        { label: '1 tháng', value: 30 },
+                        { label: '3 tháng', value: 90 },
+                        { label: '1 năm', value: 365 }
+                      ].map(option => (
+                        <button
+                          key={option.value}
+                          onClick={() => setChartRange(option.value)}
+                          style={{
+                            padding: '4px 12px',
+                            fontSize: '11px',
+                            fontWeight: '600',
+                            borderRadius: '4px',
+                            border: 'none',
+                            cursor: 'pointer',
+                            background: chartRange === option.value ? 'var(--color-primary)' : 'transparent',
+                            color: chartRange === option.value ? '#fff' : 'var(--color-on-surface-variant)',
+                            transition: 'all 0.2s'
+                          }}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                   <div style={{ height: '250px', width: '100%', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 'var(--rounded)', padding: '16px 16px 0 0' }}>
                     <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={last7DaysData}>
+                      <AreaChart data={chartData}>
                         <defs>
                           <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#007bff" stopOpacity={0.3}/>
