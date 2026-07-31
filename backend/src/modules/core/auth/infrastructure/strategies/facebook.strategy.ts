@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-facebook';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../../application/auth.service';
-import { AuthProvider } from '@prisma/client';
+// import removed
 
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
@@ -22,10 +22,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
     profile: Profile,
     done: (err: any, user: any, info?: any) => void,
   ): Promise<any> {
-    const user = await this.authService.validateOAuthLogin(
-      profile,
-      AuthProvider.FACEBOOK,
-    );
+    const user = await this.authService.validateOAuthLogin(profile, 'FACEBOOK');
     done(null, user);
   }
 }

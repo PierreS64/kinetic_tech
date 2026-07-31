@@ -3,15 +3,15 @@ import { Calendar, User, Clock, MapPin, Search } from 'lucide-react';
 
 export default function AppointmentsTab({ appointments, updateAppointmentStatus, theme, textColor }) {
   return (
-    <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }}>
+    <div className="glass-panel" style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', height: '620px', display: 'flex', flexDirection: 'column' }}>
       <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', color: textColor }}>
         Quản Lý Lịch Hẹn Sửa Chữa
       </h3>
 
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ flex: 1, overflowY: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }} className="zebra-table">
-          <thead>
-            <tr style={{ background: 'var(--color-surface-container-high)' }}>
+          <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+            <tr style={{ background: 'var(--color-surface-container-high)', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
               <th style={{ padding: '12px 16px', fontWeight: '700', color: textColor }}>Khách Hàng</th>
               <th style={{ padding: '12px 16px', fontWeight: '700', color: textColor }}>Thời Gian (Ngày & Giờ)</th>
               <th style={{ padding: '12px 16px', fontWeight: '700', color: textColor }}>Hình Thức</th>

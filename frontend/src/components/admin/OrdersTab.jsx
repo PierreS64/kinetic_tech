@@ -9,7 +9,7 @@ export default function OrdersTab(props) {
 
   return (
 
-              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', height: '620px', display: 'flex', flexDirection: 'column' }} className="glass-panel">
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Quản Lý Đơn Hàng</h3>
 
@@ -28,10 +28,10 @@ export default function OrdersTab(props) {
                 </div>
 
                 {/* Orders list table */}
-                <div style={{ overflowX: 'auto' }}>
+                <div style={{ flex: 1, overflowY: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
-                    <thead>
-                      <tr style={{ background: 'var(--color-surface-container-high)' }}>
+                    <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                      <tr style={{ background: 'var(--color-surface-container-high)', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                         <th style={{ padding: '12px 16px', fontWeight: '700' }}>Mã Đơn Hàng</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700' }}>Khách Hàng</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700' }}>Thời Gian</th>
@@ -74,7 +74,7 @@ export default function OrdersTab(props) {
                               }} className="status-badge">
                                 {order.status === 'DELIVERED' && 'Đã giao'}
                                 {order.status === 'CANCELLED' && 'Đã hủy'}
-                                {order.status === 'PROCESSING' && 'Đang xử lý'}
+                                {order.status === 'PROCESSING' && 'Đang giao hàng'}
                                 {order.status === 'PENDING' && 'Chờ duyệt'}
                               </span>
                             </td>

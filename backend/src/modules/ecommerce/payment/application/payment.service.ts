@@ -39,8 +39,8 @@ export class PaymentService {
       orderCode,
       amount,
       description: `DH ${orderCode}`,
-      returnUrl: `${DOMAIN}/checkout?status=success`,
-      cancelUrl: `${DOMAIN}/checkout?status=cancel`,
+      returnUrl: `${DOMAIN}/checkout?status=success&orderId=${orderId}`,
+      cancelUrl: `${DOMAIN}/checkout?status=cancel&orderId=${orderId}`,
     };
 
     try {

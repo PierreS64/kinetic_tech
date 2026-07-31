@@ -13,7 +13,10 @@ import {
 } from '@nestjs/common';
 import { TicketsService } from '../application/tickets.service';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateTicketDto, UpdateTicketStatusDto } from '../application/dtos/ticket.dto';
+import {
+  CreateTicketDto,
+  UpdateTicketStatusDto,
+} from '../application/dtos/ticket.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('tickets')

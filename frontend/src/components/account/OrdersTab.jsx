@@ -58,7 +58,7 @@ export default function OrdersTab(props) {
                               }} className="status-badge">
                                 {order.status === 'DELIVERED' && 'Đã hoàn thành'}
                                 {order.status === 'CANCELLED' && 'Đã hủy'}
-                                {order.status === 'PROCESSING' && 'Đang xử lý'}
+                                {order.status === 'PROCESSING' && 'Đang giao hàng'}
                                 {order.status === 'PENDING' && 'Chờ duyệt'}
                               </span>
                             </td>

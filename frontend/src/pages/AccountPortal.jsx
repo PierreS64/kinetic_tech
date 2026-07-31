@@ -7,6 +7,7 @@ import ProfileTab from '../components/account/ProfileTab';
 import PolicyTab from '../components/account/PolicyTab';
 import FeedbackTab from '../components/account/FeedbackTab';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAppContext } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -38,6 +39,13 @@ export default function AccountPortal({
 }) {
   const { theme, likedProductIds = [], orders = [], tradeins = [], feedbacks = [], handleToggleLike, setSelectedDetailProduct } = useAppContext();
   const { currentUser, handleUpdateProfile } = useAuth();
+  const navigate = useNavigate();
+  const handleSetActiveView = setActiveView || ((view) => {
+    if (view === 'deals' || view === 'laptop') navigate('/laptop');
+    else if (view === 'login') navigate('/login');
+    else if (view === 'trade-in') navigate('/trade-in');
+    else navigate('/');
+  });
   const [activeTab, setActiveTab] = useState(() => {
     try {
       return localStorage.getItem('kinetic_account_tab') || 'overview';
@@ -398,10 +406,10 @@ export default function AccountPortal({
             Vui lòng đăng nhập hoặc tạo tài khoản để có thể quản lý thông tin, theo dõi lịch sử mua hàng, bảo hành và gửi hỗ trợ kỹ thuật trực tiếp.
           </p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-            <button onClick={() => setActiveView('login')} className="btn btn-primary" style={{ padding: '10px 20px' }}>
+            <button onClick={() => handleSetActiveView('login')} className="btn btn-primary" style={{ padding: '10px 20px' }}>
               Đăng Nhập Ngay
             </button>
-            <button onClick={() => setActiveView('deals')} className="btn btn-outline" style={{ padding: '10px 20px' }}>
+            <button onClick={() => handleSetActiveView('deals')} className="btn btn-outline" style={{ padding: '10px 20px' }}>
               Quay Lại Trang Chủ
             </button>
           </div>
@@ -411,7 +419,7 @@ export default function AccountPortal({
   }
 
   const tabProps = {
-    currentUser, setActiveView, theme, likedProductIds, onToggleLike: handleToggleLike, products, orders, onAddOrder, tradeins: userTradeins, onAddTradeIn, feedbacks: userFeedbacks, onAddFeedback, onUpdateProfile: handleUpdateProfile, onAddSupportTicket,
+    currentUser, setActiveView: handleSetActiveView, theme, likedProductIds, onToggleLike: handleToggleLike, products, orders, onAddOrder, tradeins: userTradeins, onAddTradeIn, feedbacks: userFeedbacks, onAddFeedback, onUpdateProfile: handleUpdateProfile, onAddSupportTicket,
     activeTab, setActiveTab, selectedOrder, setSelectedOrder, supportProduct, setSupportProduct, supportOrderId, setSupportOrderId, supportMessage, setSupportMessage, supportUrgency, setSupportUrgency, supportType, setSupportType, supportSuccess, setSupportSuccess,
     feedbackTitle, setFeedbackTitle, feedbackContent, setFeedbackContent, feedbackSuccess, setFeedbackSuccess, profileForm, setProfileForm, profileSuccess, setProfileSuccess, passwordForm, setPasswordForm, passwordError, setPasswordError, passwordSuccess, setPasswordSuccess,
     formatVND, userOrders, recentOrders, userTradeins, favoriteProducts, warrantyProducts, vouchers, handleCopyVoucher, handleFeedbackSubmit, handleSupportRequestSubmit, handleProfileUpdate, handlePasswordChange

@@ -112,7 +112,6 @@ export class OrdersService {
         data: {
           userId,
           userAddressId: dto.userAddressId,
-          shippingAddress: dto.shippingAddress,
           couponId: dto.couponId,
           totalAmount,
           paymentMethod: dto.paymentMethod,
@@ -203,7 +202,7 @@ export class OrdersService {
     return this.prisma.order.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        User: { select: { fullName: true, email: true, phone: true } },
+        User: { select: { fullName: true, email: true, phoneNumber: true } },
         OrderItem: {
           include: {
             ProductVariant: {

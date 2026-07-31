@@ -23,6 +23,7 @@ import { FavoritesModule } from './modules/core/favorites/favorites.module';
 import { KnowledgeBaseModule } from './modules/support/knowledge-base/knowledge-base.module';
 import { BannersModule } from './modules/core/banners/banners.module';
 import { WarrantiesModule } from './modules/support/warranties/warranties.module';
+import { BuilderModule } from './modules/ecommerce/builder/builder.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { WarrantiesModule } from './modules/support/warranties/warranties.module
     KnowledgeBaseModule,
     BannersModule,
     WarrantiesModule,
+    BuilderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

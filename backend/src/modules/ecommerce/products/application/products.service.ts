@@ -22,12 +22,63 @@ export class ProductsService {
     }
     return this.prisma.product.create({
       data,
-      include: { ProductImage: true, Category: true, ProductVariant: true },
+      include: {
+        ProductImage: true,
+        Category: true,
+        ProductVariant: true,
+        PcComponentSpec: true,
+      },
     });
   }
 
+  private parseSpecPayload(dto: any) {
+    if (!dto.componentType) return undefined;
+
+    const parseArray = (val: any) => {
+      if (!val) return [];
+      if (Array.isArray(val)) return val;
+      try {
+        const parsed = JSON.parse(val);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {}
+      return val
+        .split(',')
+        .map((s) => s.trim())
+        .filter((s) => s);
+    };
+
+    return {
+      componentType: dto.componentType,
+      socket: dto.socket ? parseArray(dto.socket) : undefined,
+      chipset: dto.chipset,
+      ramType: dto.ramType,
+      ramSpeed: dto.ramSpeed ? parseInt(dto.ramSpeed) : undefined,
+      ramModules: dto.ramModules ? parseInt(dto.ramModules) : undefined,
+      ramSlots: dto.ramSlots ? parseInt(dto.ramSlots) : undefined,
+      ramCapacity: dto.ramCapacity ? parseInt(dto.ramCapacity) : undefined,
+      formFactor: dto.formFactor ? parseArray(dto.formFactor) : undefined,
+      length: dto.length ? parseInt(dto.length) : undefined,
+      maxGpuLength: dto.maxGpuLength ? parseInt(dto.maxGpuLength) : undefined,
+      height: dto.height ? parseInt(dto.height) : undefined,
+      maxCoolerHeight: dto.maxCoolerHeight
+        ? parseInt(dto.maxCoolerHeight)
+        : undefined,
+      wattage: dto.wattage ? parseInt(dto.wattage) : undefined,
+      psuEfficiency: dto.psuEfficiency,
+      pcie8Pin: dto.pcie8Pin ? parseInt(dto.pcie8Pin) : undefined,
+      pcie12Vhpwr: dto.pcie12Vhpwr ? parseInt(dto.pcie12Vhpwr) : undefined,
+      eps8Pin: dto.eps8Pin ? parseInt(dto.eps8Pin) : undefined,
+      sataPorts: dto.sataPorts ? parseInt(dto.sataPorts) : undefined,
+      m2Slots: dto.m2Slots ? parseInt(dto.m2Slots) : undefined,
+      m2FormFactor: dto.m2FormFactor ? parseArray(dto.m2FormFactor) : undefined,
+      radiatorSize: dto.radiatorSize ? parseInt(dto.radiatorSize) : undefined,
+      supportedRadiators: dto.supportedRadiators
+        ? parseArray(dto.supportedRadiators).map((n) => parseInt(n))
+        : undefined,
+    };
+  }
+
   async createAdminProduct(dto: any, file?: Express.Multer.File) {
-    // Find or create category
     let category = await this.prisma.category.findFirst({
       where: { name: { equals: dto.category, mode: 'insensitive' } },
     });
@@ -38,13 +89,8 @@ export class ProductsService {
       });
     }
 
-    const description = JSON.stringify({
-      cpu: dto.cpu || 'N/A',
-      ram: dto.ram || 'N/A',
-      storage: dto.storage || 'N/A',
-      gpu: dto.gpu || 'N/A',
-      tags: dto.tags || '',
-    });
+    const description = dto.description || '';
+    const pcComponentSpecPayload = this.parseSpecPayload(dto);
 
     let imageUrl = '';
     if (file) {
@@ -55,7 +101,7 @@ export class ProductsService {
     const newProduct = await this.prisma.product.create({
       data: {
         name: dto.name,
-        brand: 'Khác',
+        brand: dto.brand || 'Khác',
         description,
         categoryId: category.id,
         ProductVariant: {
@@ -64,19 +110,91 @@ export class ProductsService {
             stockQuantity: dto.inStock === 'false' ? 0 : 100,
           },
         },
-        ...(imageUrl && {
-          ProductImage: {
-            create: {
-              imageUrl,
-              isThumbnail: true,
-            },
-          },
-        }),
+        ...(imageUrl
+          ? {
+              ProductImage: {
+                create: {
+                  imageUrl,
+                  isThumbnail: true,
+                },
+              },
+            }
+          : {}),
+        ...(pcComponentSpecPayload
+          ? {
+              PcComponentSpec: {
+                create: pcComponentSpecPayload,
+              },
+            }
+          : {}),
       },
-      include: { ProductImage: true, Category: true, ProductVariant: true },
+      include: {
+        ProductImage: true,
+        Category: true,
+        ProductVariant: true,
+        PcComponentSpec: true,
+      },
     });
 
     return newProduct;
+  }
+
+  async updateAdminProduct(id: string, dto: any, file?: Express.Multer.File) {
+    const product = await this.findOne(id);
+
+    let imageUrl = undefined;
+    if (file) {
+      const uploadResult = await this.cloudinary.uploadFile(file);
+      imageUrl = uploadResult.secure_url;
+    }
+
+    let categoryId = product.categoryId;
+    if (dto.category) {
+      let category = await this.prisma.category.findFirst({
+        where: { name: { equals: dto.category, mode: 'insensitive' } },
+      });
+      if (!category) {
+        category = await this.prisma.category.create({
+          data: { name: dto.category },
+        });
+      }
+      categoryId = category.id;
+    }
+
+    const pcComponentSpecPayload = this.parseSpecPayload(dto);
+
+    return this.prisma.product.update({
+      where: { id },
+      data: {
+        ...(dto.name ? { name: dto.name } : {}),
+        ...(dto.brand ? { brand: dto.brand } : {}),
+        ...(dto.description ? { description: dto.description } : {}),
+        categoryId,
+        ...(imageUrl
+          ? {
+              ProductImage: {
+                create: { imageUrl, isThumbnail: true },
+              },
+            }
+          : {}),
+        ...(pcComponentSpecPayload
+          ? {
+              PcComponentSpec: {
+                upsert: {
+                  create: pcComponentSpecPayload,
+                  update: pcComponentSpecPayload,
+                },
+              },
+            }
+          : {}),
+      },
+      include: {
+        ProductImage: true,
+        Category: true,
+        ProductVariant: true,
+        PcComponentSpec: true,
+      },
+    });
   }
 
   async findAll() {
@@ -86,6 +204,7 @@ export class ProductsService {
         Category: true,
         ProductImage: true,
         ProductVariant: true,
+        PcComponentSpec: true,
       },
     });
   }
@@ -97,6 +216,7 @@ export class ProductsService {
         Category: true,
         ProductImage: true,
         ProductVariant: true,
+        PcComponentSpec: true,
       },
     });
     if (!product) throw new NotFoundException('Product not found');
@@ -121,7 +241,12 @@ export class ProductsService {
     return this.prisma.product.update({
       where: { id },
       data,
-      include: { ProductImage: true, Category: true, ProductVariant: true },
+      include: {
+        ProductImage: true,
+        Category: true,
+        ProductVariant: true,
+        PcComponentSpec: true,
+      },
     });
   }
 

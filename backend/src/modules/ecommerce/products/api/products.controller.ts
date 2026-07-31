@@ -41,10 +41,10 @@ export class ProductsController {
   @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
-    @Body() updateProductDto: Prisma.ProductUpdateInput,
+    @Body() updateProductDto: any,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.productsService.update(id, updateProductDto, file);
+    return this.productsService.updateAdminProduct(id, updateProductDto, file);
   }
 
   @Delete(':id')

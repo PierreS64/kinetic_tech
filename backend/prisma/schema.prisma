@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -116,9 +116,8 @@ model Feedback {
   userId    String   @db.Uuid
   title     String   @db.VarChar(255)
   content   String
-  createdAt DateTime  @default(now())
-  deletedAt DateTime?
-  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model KnowledgeBase {
@@ -130,22 +129,21 @@ model KnowledgeBase {
 }
 
 model Order {
-  id              String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId          String         @db.Uuid
-  userAddressId   String?        @db.Uuid
-  shippingAddress String?        @db.Text
-  couponId        String?        @db.Uuid
-  totalAmount     Float
-  status          OrderStatus?   @default(PENDING)
-  paymentMethod   PaymentMethod
-  paymentStatus   PaymentStatus? @default(PENDING)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @default(now())
-  Coupon          Coupon?        @relation(fields: [couponId], references: [id], onUpdate: NoAction)
-  UserAddress     UserAddress?   @relation(fields: [userAddressId], references: [id], onUpdate: NoAction)
-  User            User           @relation(fields: [userId], references: [id], onUpdate: NoAction)
-  OrderItem       OrderItem[]
-  Transaction     Transaction[]
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String         @db.Uuid
+  userAddressId String?        @db.Uuid
+  couponId      String?        @db.Uuid
+  totalAmount   Float
+  status        OrderStatus?   @default(PENDING)
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus? @default(PENDING)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  Coupon        Coupon?        @relation(fields: [couponId], references: [id], onUpdate: NoAction)
+  UserAddress   UserAddress?   @relation(fields: [userAddressId], references: [id], onUpdate: NoAction)
+  User          User           @relation(fields: [userId], references: [id], onUpdate: NoAction)
+  OrderItem     OrderItem[]
+  Transaction   Transaction[]
 }
 
 model OrderItem {
@@ -167,6 +165,7 @@ model Product {
   deletedAt             DateTime?
   CouponProduct         CouponProduct[]
   Favorite              Favorite[]
+  PcComponentSpec       PcComponentSpec?
   Category              Category                @relation(fields: [categoryId], references: [id], onUpdate: NoAction)
   ProductAttributeValue ProductAttributeValue[]
   ProductImage          ProductImage[]
@@ -261,10 +260,7 @@ model User {
   fullName                                   String        @db.VarChar(255)
   phoneNumber                                String?       @unique @db.VarChar(20)
   email                                      String        @unique @db.VarChar(255)
-  password                                   String?       @db.VarChar(255)
-  provider                                   AuthProvider? @default(LOCAL)
-  providerId                                 String?       @db.VarChar(255)
-  phone                                      String?
+  password                                   String        @db.VarChar(255)
   role                                       Role?         @default(CUSTOMER)
   createdAt                                  DateTime      @default(now())
   updatedAt                                  DateTime      @default(now())
@@ -305,6 +301,34 @@ model UserDevice {
   Ticket             Ticket[]
   Product            Product  @relation(fields: [productId], references: [id], onUpdate: NoAction)
   User               User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model PcComponentSpec {
+  productId          String        @id @db.Uuid
+  componentType      ComponentType
+  socket             String[]
+  chipset            String?       @db.VarChar(100)
+  ramType            String?       @db.VarChar(50)
+  ramSpeed           Int?
+  ramModules         Int?
+  ramSlots           Int?
+  ramCapacity        Int?
+  formFactor         String[]
+  length             Int?
+  maxGpuLength       Int?
+  height             Int?
+  maxCoolerHeight    Int?
+  wattage            Int?
+  psuEfficiency      String?       @db.VarChar(50)
+  pcie8Pin           Int?
+  pcie12Vhpwr        Int?
+  eps8Pin            Int?
+  sataPorts          Int?
+  m2Slots            Int?
+  m2FormFactor       String[]
+  radiatorSize       Int?
+  supportedRadiators Int[]
+  Product            Product       @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 enum AppointmentStatus {
@@ -382,9 +406,13 @@ enum TradeInStatus {
   CANCELLED
 }
 
-enum AuthProvider {
-  LOCAL
-  GOOGLE
-  FACEBOOK
+enum ComponentType {
+  CPU
+  GPU
+  MOTHERBOARD
+  RAM
+  PSU
+  CASE
+  COOLER
+  STORAGE
 }
-

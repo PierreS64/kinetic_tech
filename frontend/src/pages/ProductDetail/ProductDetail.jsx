@@ -270,7 +270,18 @@ export default function ProductDetail() {
                 rows="4" 
                 placeholder="Chia sẻ cảm nhận của bạn về sản phẩm này..."
                 value={newReview.comment}
-                className="kinetic-input" 
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  borderRadius: 'var(--rounded)',
+                  background: theme === 'light' ? '#f8fafc' : 'rgba(255, 255, 255, 0.05)',
+                  color: 'var(--color-on-surface)',
+                  border: theme === 'light' ? '1px solid #e2e8f0' : '1px solid rgba(255, 255, 255, 0.1)',
+                  outline: 'none',
+                  resize: 'vertical',
+                  fontSize: '14px',
+                  fontFamily: 'inherit'
+                }}
                 onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
               />
             </div>

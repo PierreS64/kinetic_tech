@@ -4,8 +4,10 @@ import { ChevronRight, ShoppingBag, Tag, Heart, X, ShieldCheck, RotateCcw, Check
 
 import { useAppContext } from '../../contexts/AppContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function OverviewTab(props) {
+  const navigate = useNavigate();
   const { theme, likedProductIds, orders, tradeins, feedbacks, setSelectedDetailProduct } = useAppContext();
   const { currentUser } = useAuth();
   const { setActiveView, onToggleLike, products, onAddOrder, onAddTradeIn, onAddFeedback, onUpdateProfile, onAddSupportTicket, activeTab, setActiveTab, selectedOrder, setSelectedOrder, supportProduct, setSupportProduct, supportOrderId, setSupportOrderId, supportMessage, setSupportMessage, supportUrgency, setSupportUrgency, supportSuccess, setSupportSuccess, feedbackTitle, setFeedbackTitle, feedbackContent, setFeedbackContent, feedbackSuccess, setFeedbackSuccess, profileForm, setProfileForm, profileSuccess, setProfileSuccess, passwordForm, setPasswordForm, passwordError, setPasswordError, passwordSuccess, setPasswordSuccess, formatVND, userOrders, recentOrders, userTradeins, favoriteProducts, warrantyProducts, vouchers, handleCopyVoucher, handleFeedbackSubmit, handleSupportRequestSubmit, handleProfileUpdate, handlePasswordChange } = props;
@@ -193,7 +195,7 @@ export default function OverviewTab(props) {
                                 borderRadius: '4px',
                                 fontWeight: '700'
                               }}>
-                                {order.status === 'DELIVERED' ? 'Đã giao' : order.status === 'CANCELLED' ? 'Đã hủy' : order.status === 'PROCESSING' ? 'Đang xử lý' : 'Chờ duyệt'}
+                                {order.status === 'DELIVERED' ? 'Đã giao' : order.status === 'CANCELLED' ? 'Đã hủy' : order.status === 'PROCESSING' ? 'Đang giao hàng' : 'Chờ duyệt'}
                               </span>
                             </div>
                           </div>
@@ -283,7 +285,7 @@ export default function OverviewTab(props) {
 
                           <button 
                             onClick={() => {
-                              setSelectedDetailProduct(prod);
+                              navigate('/product/' + (prod.id || prod.variantId));
                             }}
                             className="btn btn-primary" 
                             style={{ padding: '6px 10px', fontSize: '10px', width: '100%', marginTop: 'auto' }}

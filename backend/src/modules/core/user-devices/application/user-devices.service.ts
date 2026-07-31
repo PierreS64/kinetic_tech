@@ -55,7 +55,7 @@ export class UserDevicesService {
     return this.prisma.userDevice.findMany({
       include: {
         Product: true,
-        User: { select: { fullName: true, email: true, phone: true } },
+        User: { select: { fullName: true, email: true, phoneNumber: true } },
       },
       orderBy: { purchaseDate: 'desc' },
     });

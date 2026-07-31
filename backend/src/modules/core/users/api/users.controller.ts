@@ -1,4 +1,14 @@
-import { Controller, Patch, Body, Param, UseGuards, Get, BadRequestException, NotFoundException, Request } from '@nestjs/common';
+import {
+  Controller,
+  Patch,
+  Body,
+  Param,
+  UseGuards,
+  Get,
+  BadRequestException,
+  NotFoundException,
+  Request,
+} from '@nestjs/common';
 import { UsersService } from '../application/users.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Prisma } from '@prisma/client';
@@ -27,7 +37,7 @@ export class UsersController {
   async updateProfile(@Param('id') id: string, @Body() body: any) {
     const updateData: Prisma.UserUpdateInput = {};
     if (body.fullName) updateData.fullName = body.fullName;
-    if (body.phone) updateData.phone = body.phone;
+    if (body.phone) updateData.phoneNumber = body.phone;
 
     if (body.address) {
       await this.usersService.upsertAddress(id, body.address);

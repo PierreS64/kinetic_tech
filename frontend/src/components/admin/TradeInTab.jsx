@@ -10,13 +10,13 @@ export default function TradeInTab(props) {
 
   return (
 
-              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', height: '620px', display: 'flex', flexDirection: 'column' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', color: textColor }}>Thu Cũ Đổi Mới (Trade-in)</h3>
 
-                <div style={{ overflowX: 'auto' }}>
+                <div style={{ flex: 1, overflowY: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}  className="zebra-table">
-                    <thead>
-                      <tr style={{ background: 'var(--color-surface-container-high)' }}>
+                    <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                      <tr style={{ background: 'var(--color-surface-container-high)', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
 
                         <th style={{ padding: '10px 12px', fontWeight: '700', color: textColor, whiteSpace: 'nowrap' }}>Khách Hàng</th>
                         <th style={{ padding: '10px 12px', fontWeight: '700', width: '22%', color: textColor }}>Thiết Bị Cũ</th>

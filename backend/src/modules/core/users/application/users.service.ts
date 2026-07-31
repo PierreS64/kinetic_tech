@@ -7,11 +7,17 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async findByEmail(email: string): Promise<any> {
-    return this.prisma.user.findUnique({ where: { email }, include: { UserAddress: true } });
+    return this.prisma.user.findUnique({
+      where: { email },
+      include: { UserAddress: true },
+    });
   }
 
   async findById(id: string): Promise<any> {
-    return this.prisma.user.findUnique({ where: { id }, include: { UserAddress: true } });
+    return this.prisma.user.findUnique({
+      where: { id },
+      include: { UserAddress: true },
+    });
   }
 
   async create(data: Prisma.UserCreateInput): Promise<User> {
@@ -26,7 +32,9 @@ export class UsersService {
   }
 
   async upsertAddress(userId: string, address: string) {
-    const addresses = await this.prisma.userAddress.findMany({ where: { userId } });
+    const addresses = await this.prisma.userAddress.findMany({
+      where: { userId },
+    });
     if (addresses.length > 0) {
       return this.prisma.userAddress.update({
         where: { id: addresses[0].id },
@@ -46,7 +54,7 @@ export class UsersService {
         id: true,
         email: true,
         fullName: true,
-        phone: true,
+        phoneNumber: true,
         role: true,
         password: false,
         createdAt: true,

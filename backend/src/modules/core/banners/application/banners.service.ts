@@ -26,9 +26,9 @@ export class BannersService {
   }
 
   async remove(id: string) {
-    return this.prisma.banner.update({ 
+    return this.prisma.banner.update({
       where: { id },
-      data: { isActive: false }
+      data: { isActive: false },
     });
   }
 }

@@ -10,15 +10,15 @@ export default function FeedbacksTab(props) {
 
   return (
 
-              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', height: '620px', display: 'flex', flexDirection: 'column' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px', color: theme === 'light' ? '#0f172a' : 'white' }}>
                   Ý Kiến & Góp Ý Từ Khách Hàng
                 </h3>
 
-                <div style={{ overflowX: 'auto' }}>
+                <div style={{ flex: 1, overflowY: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
-                    <thead>
-                      <tr style={{ background: 'var(--color-surface-container-high)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                    <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                      <tr style={{ background: 'var(--color-surface-container-high)', borderBottom: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
 
                         <th style={{ padding: '12px 16px', fontWeight: '700', color: theme === 'light' ? '#0f172a' : 'white' }}>Khách Hàng</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700', width: '33%', color: theme === 'light' ? '#0f172a' : 'white' }}>Tiêu Đề</th>

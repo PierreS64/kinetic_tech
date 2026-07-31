@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 import { TradeInService } from '../application/trade-in.service';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateTradeInDto, UpdateTradeInStatusDto } from '../application/dtos/trade-in.dto';
+import {
+  CreateTradeInDto,
+  UpdateTradeInStatusDto,
+} from '../application/dtos/trade-in.dto';
 
 @Controller('trade-in')
 @UseGuards(AuthGuard('jwt'))

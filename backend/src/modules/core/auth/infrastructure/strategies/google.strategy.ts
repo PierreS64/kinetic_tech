@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../../application/auth.service';
-import { AuthProvider } from '@prisma/client';
+// import removed
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
@@ -21,10 +21,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     profile: any,
     done: VerifyCallback,
   ): Promise<any> {
-    const user = await this.authService.validateOAuthLogin(
-      profile,
-      AuthProvider.GOOGLE,
-    );
+    const user = await this.authService.validateOAuthLogin(profile, 'GOOGLE');
     done(null, user);
   }
 }

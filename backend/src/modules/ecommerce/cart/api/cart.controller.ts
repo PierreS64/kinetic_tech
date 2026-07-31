@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 import { CartService } from '../application/cart.service';
 import { AuthGuard } from '@nestjs/passport';
-import { AddCartItemDto, UpdateCartItemDto } from '../application/dtos/cart.dto';
+import {
+  AddCartItemDto,
+  UpdateCartItemDto,
+} from '../application/dtos/cart.dto';
 
 @Controller('cart')
 @UseGuards(AuthGuard('jwt'))

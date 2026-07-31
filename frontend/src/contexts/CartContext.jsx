@@ -87,9 +87,8 @@ export function CartProvider({ children, userId = 'guest' }) {
   };
 
   const handleBuyNow = async (product) => {
-    await handleAddToCart(product);
     setCartOpen(false);
-    navigate('/checkout');
+    navigate('/checkout', { state: { buyNowItem: { ...product, quantity: 1 } } });
   };
 
   const handleAddPartsToCart = async (parts) => {

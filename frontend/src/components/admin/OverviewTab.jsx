@@ -85,7 +85,14 @@ export default function OverviewTab(props) {
                             <stop offset="95%" stopColor="#007bff" stopOpacity={0}/>
                           </linearGradient>
                         </defs>
-                        <XAxis dataKey="date" stroke="var(--color-on-surface-variant)" fontSize={11} tickLine={false} axisLine={false} />
+                        <XAxis 
+                          dataKey="date" 
+                          stroke="var(--color-on-surface-variant)" 
+                          fontSize={11} 
+                          tickLine={false} 
+                          axisLine={false} 
+                          ticks={chartData.length > 0 ? [chartData[0].date, chartData[chartData.length - 1].date] : []}
+                        />
                         <YAxis stroke="var(--color-on-surface-variant)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={formatYAxis} />
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                         <Tooltip 
@@ -133,7 +140,7 @@ export default function OverviewTab(props) {
                               color: order.status === 'DELIVERED' ? '#81c784' : order.status === 'PENDING' ? '#ffb77d' : '#adc7ff',
                               padding: '2px 6px'
                             }} className="status-badge">
-                              {order.status === 'DELIVERED' ? 'Đã Giao' : order.status === 'PENDING' ? 'Chờ duyệt' : 'Đang xử lý'}
+                              {order.status === 'DELIVERED' ? 'Đã Giao' : order.status === 'PENDING' ? 'Chờ duyệt' : 'Đang giao hàng'}
                             </span>
                           </div>
                         </div>

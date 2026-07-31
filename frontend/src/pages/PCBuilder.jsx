@@ -9,9 +9,16 @@ import { useAppContext } from '../contexts/AppContext';
 
 const checkMatch = (str1, str2) => {
   if (!str1 || !str2) return false;
-  const s1 = String(str1).toLowerCase().trim();
-  const s2 = String(str2).toLowerCase().trim();
-  return s1 === s2;
+  const normalize = (s) => {
+    return String(s)
+      .toLowerCase()
+      .replace(/socket|intel|amd|for/g, '')
+      .replace(/[^a-z0-9]/g, '');
+  };
+  const s1 = normalize(str1);
+  const s2 = normalize(str2);
+  if (!s1 || !s2) return false;
+  return s1 === s2 || s1.includes(s2) || s2.includes(s1);
 };
 export default function PCBuilder({ onAddPartsToCart }) {
   const { storeProducts = [] } = useAppContext();

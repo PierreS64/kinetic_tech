@@ -37,9 +37,9 @@ export class TicketsService {
 
   async getCustomerTickets(customerId: string) {
     return this.prisma.ticket.findMany({
-      where: { 
+      where: {
         customerId,
-        userDeviceId: null
+        userDeviceId: null,
       },
       orderBy: { createdAt: 'desc' },
       include: { UserDevice: { include: { Product: true } } },
@@ -49,7 +49,7 @@ export class TicketsService {
   async getAllTickets() {
     return this.prisma.ticket.findMany({
       where: {
-        userDeviceId: null
+        userDeviceId: null,
       },
       orderBy: { createdAt: 'desc' },
       include: {

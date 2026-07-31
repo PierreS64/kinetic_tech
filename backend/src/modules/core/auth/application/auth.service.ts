@@ -6,7 +6,7 @@ import {
 import { UsersService } from '../../users/application/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User, AuthProvider } from '@prisma/client';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +26,10 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { email: user.email, sub: user.id, role: user.role };
-    const address = user.UserAddress && user.UserAddress.length > 0 ? user.UserAddress[0].address : null;
+    const address =
+      user.UserAddress && user.UserAddress.length > 0
+        ? user.UserAddress[0].address
+        : null;
     return {
       access_token: this.jwtService.sign(payload),
       user: {
@@ -40,7 +43,7 @@ export class AuthService {
     };
   }
 
-  async validateOAuthLogin(profile: any, provider: AuthProvider) {
+  async validateOAuthLogin(profile: any, provider: any) {
     try {
       let user = await this.usersService.findByEmail(profile.emails[0].value);
 
@@ -48,9 +51,8 @@ export class AuthService {
         user = await this.usersService.create({
           email: profile.emails[0].value,
           fullName: profile.displayName || 'OAuth User',
-          provider: provider,
-          providerId: profile.id,
-        });
+          password: 'OAuth_Placeholder_Password_123!',
+        } as any);
       }
 
       return user;
@@ -81,8 +83,7 @@ export class AuthService {
       email,
       password: hashedPassword,
       fullName,
-      phone,
-      provider: AuthProvider.LOCAL,
+      phoneNumber: phone,
     });
 
     const { password: _, ...result } = user as any;

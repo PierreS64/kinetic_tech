@@ -8,6 +8,7 @@ export default function PromotionsTab(props) {
   const { setTickets, setWarranties, setTradeins, setFeedbacks, selectedOrder, setSelectedOrder, promotions, setPromotions, isAddingPromo, setIsAddingPromo, newPromo, setNewPromo, selectedPromoForEdit, setSelectedPromoForEdit, productToAddToPromo, setProductToAddToPromo, handleAddPromo, handleDeletePromo, handleAddProductToPromo, handleRemoveProductFromPromo, handleRemoveAllProductsFromPromo, handlePromoProductPriceChange, selectedTicket, setSelectedTicket, ticketReplyText, setTicketReplyText, selectedWarranty, setSelectedWarranty, selectedTradeIn, setSelectedTradeIn, offeredTradeInValuation, setOfferedTradeInValuation, isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort, priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput, detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal, textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts, totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount } = props;
 
   const [promoSearchTerm, setPromoSearchTerm] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleApplyToAll = () => {
     const missingProducts = storeProducts.filter(p => !selectedPromoForEdit.productIds.includes(p.id));
@@ -18,7 +19,7 @@ export default function PromotionsTab(props) {
 
   return (
 
-              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', height: '620px', display: 'flex', flexDirection: 'column' }} className="glass-panel">
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                   <h3 style={{ fontSize: '18px', fontWeight: '800' }}>Chương Trình Khuyến Mãi</h3>
 
@@ -102,9 +103,9 @@ export default function PromotionsTab(props) {
                   </div>
                 )}
 
-                <div style={{ display: 'grid', gap: '24px' }}   className="grid-responsive-sidebar-wide promotions-grid">
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <h4 style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--color-outline)' }}>Danh sách chương trình</h4>
+                <div style={{ display: 'grid', gap: '24px', flex: 1, minHeight: 0 }}   className="grid-responsive-sidebar-wide promotions-grid">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', height: '100%', overflowY: 'auto', paddingRight: '4px' }}>
+                    <h4 style={{ fontSize: '12px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--color-outline)', position: 'sticky', top: 0, background: theme === 'light' ? '#f8fafc' : 'rgba(15, 23, 42, 1)', zIndex: 1, paddingBottom: '8px' }}>Danh sách chương trình</h4>
                     {promotions.length === 0 ? (
                       <div style={{ padding: '20px', textAlign: 'center', color: 'var(--color-outline)', border: '1px dashed rgba(255,255,255,0.08)', borderRadius: '6px' }}>
                         Chưa có chương trình khuyến mãi nào.
@@ -152,10 +153,10 @@ export default function PromotionsTab(props) {
                     )}
                   </div>
 
-                  <div  style={{ borderRadius: 'var(--rounded)', padding: '18px', background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(5, 13, 24, 0.15)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : 'none', minHeight: '400px' }} className="glass-panel">
+                  <div  style={{ borderRadius: 'var(--rounded)', padding: '18px', background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(5, 13, 24, 0.15)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : 'none', height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }} className="glass-panel">
                     {selectedPromoForEdit ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        <div style={{ borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingBottom: '14px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
+                        <div style={{ borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingBottom: '14px', flexShrink: 0 }}>
                           <h4 style={{ fontSize: '16px', fontWeight: '800', color: textColor }}>{selectedPromoForEdit.name}</h4>
                           <span style={{ fontSize: '12px', color: 'var(--color-outline)' }}>Áp dụng từ: {selectedPromoForEdit.startDate} đến {selectedPromoForEdit.endDate}</span>
 
@@ -171,63 +172,99 @@ export default function PromotionsTab(props) {
                           </div>
                         </div>
 
-                        <div>
-                          <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase', marginBottom: '8px' }}>Thêm sản phẩm vào chương trình</h5>
-                          
-                          <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                            <div style={{ position: 'relative', flex: 1 }}>
-                              <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)' }} />
-                              <input 
-                                type="text"
-                                placeholder="Tìm theo tên sản phẩm..."
-                                value={promoSearchTerm}
-                                onChange={(e) => setPromoSearchTerm(e.target.value)}
-                                className="form-input"
-                                style={{ fontSize: '12px', padding: '8px 10px 8px 30px', width: '100%' }}
-                              />
-                            </div>
+                        <div style={{ flexShrink: 0 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase' }}>Thêm sản phẩm vào chương trình</h5>
                             <button
                               onClick={handleApplyToAll}
-                              
-                              style={{ padding: '8px 16px', fontSize: '12px', whiteSpace: 'nowrap' }}
-                             className="btn btn-secondary">
+                              style={{ padding: '4px 10px', fontSize: '11px', whiteSpace: 'nowrap' }}
+                              className="btn btn-secondary">
                               Áp dụng cho tất cả
                             </button>
                           </div>
-
-                          <div style={{ display: 'flex', gap: '8px' }}>
-                            <select
-                              value={productToAddToPromo}
-                              onChange={(e) => setProductToAddToPromo(e.target.value)}
-                              className="form-input"
-                              style={{ fontSize: '12px', padding: '8px', flex: 1 }}
-                            >
-                              <option value="">-- Chọn sản phẩm để áp dụng --</option>
-                              {storeProducts
-                                .filter(p => !selectedPromoForEdit.productIds.includes(p.id))
-                                .filter(p => p.name.toLowerCase().includes(promoSearchTerm.toLowerCase()))
-                                .map(p => (
-                                  <option key={p.id} value={p.id}>
-                                    {p.name} - {formatVND(p.price)}
-                                  </option>
-                                ))}
-                            </select>
-                            <button
-                              onClick={() => {
-                                handleAddProductToPromo(selectedPromoForEdit.id, productToAddToPromo);
-                                setProductToAddToPromo('');
+                          
+                          <div style={{ position: 'relative' }}>
+                            <div 
+                              style={{ 
+                                display: 'flex', alignItems: 'center', 
+                                background: theme === 'light' ? '#ffffff' : 'rgba(255,255,255,0.02)', 
+                                border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.1)', 
+                                borderRadius: '4px',
+                                padding: '8px 12px',
+                                cursor: 'text'
                               }}
-                              disabled={!productToAddToPromo}
-                              className="btn btn-primary"
-                              style={{ padding: '8px 16px', fontSize: '12px', whiteSpace: 'nowrap' }}
+                              onClick={() => setIsDropdownOpen(true)}
                             >
-                              Thêm sản phẩm
-                            </button>
+                              <Search size={14} style={{ color: 'var(--color-outline)', marginRight: '8px' }} />
+                              <input 
+                                type="text"
+                                placeholder="Tìm và chọn sản phẩm..."
+                                value={promoSearchTerm}
+                                onChange={(e) => {
+                                  setPromoSearchTerm(e.target.value);
+                                  setIsDropdownOpen(true);
+                                }}
+                                onFocus={() => setIsDropdownOpen(true)}
+                                onBlur={() => {
+                                  // delay to allow click on items
+                                  setTimeout(() => setIsDropdownOpen(false), 200);
+                                }}
+                                style={{ 
+                                  background: 'transparent', border: 'none', outline: 'none', 
+                                  color: textColor, width: '100%', fontSize: '12px' 
+                                }}
+                              />
+                              <ChevronRight size={14} style={{ color: 'var(--color-outline)', transform: isDropdownOpen ? 'rotate(90deg)' : 'rotate(0deg)', transition: '0.2s' }} />
+                            </div>
+
+                            {isDropdownOpen && (
+                              <div style={{ 
+                                position: 'absolute', top: '100%', left: 0, right: 0, 
+                                background: theme === 'light' ? '#ffffff' : '#1e293b', 
+                                border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.1)', 
+                                borderRadius: '4px', 
+                                marginTop: '4px', 
+                                maxHeight: '200px', overflowY: 'auto', 
+                                zIndex: 10,
+                                boxShadow: '0 10px 25px rgba(0,0,0,0.2)'
+                              }}>
+                                {storeProducts
+                                  .filter(p => !selectedPromoForEdit.productIds.includes(p.id))
+                                  .filter(p => p.name.toLowerCase().includes(promoSearchTerm.toLowerCase()))
+                                  .map(p => (
+                                    <div 
+                                      key={p.id}
+                                      onMouseDown={() => {
+                                        handleAddProductToPromo(selectedPromoForEdit.id, p.id);
+                                        setPromoSearchTerm('');
+                                        setIsDropdownOpen(false);
+                                      }}
+                                      style={{ 
+                                        padding: '10px 12px', 
+                                        fontSize: '12px', 
+                                        color: textColor,
+                                        cursor: 'pointer',
+                                        borderBottom: theme === 'light' ? '1px solid #f1f5f9' : '1px solid rgba(255,255,255,0.05)',
+                                      }}
+                                      onMouseEnter={(e) => e.target.style.background = theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.05)'}
+                                      onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                                    >
+                                      <span style={{ display: 'block', fontWeight: '600', marginBottom: '2px' }}>{p.name}</span>
+                                      <span style={{ color: 'var(--color-primary-dim)', fontSize: '11px' }}>{formatVND(p.price)}</span>
+                                    </div>
+                                  ))}
+                                {storeProducts.filter(p => !selectedPromoForEdit.productIds.includes(p.id) && p.name.toLowerCase().includes(promoSearchTerm.toLowerCase())).length === 0 && (
+                                  <div style={{ padding: '12px', fontSize: '12px', color: 'var(--color-outline)', textAlign: 'center' }}>
+                                    Không tìm thấy sản phẩm phù hợp.
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
 
-                        <div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexShrink: 0 }}>
                             <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', textTransform: 'uppercase' }}>Danh sách sản phẩm áp dụng</h5>
                             {selectedPromoForEdit.productIds.length > 0 && (
                               <button
@@ -244,10 +281,10 @@ export default function PromotionsTab(props) {
                               Chưa có sản phẩm nào thuộc chương trình này. Chọn sản phẩm ở trên để thêm.
                             </div>
                           ) : (
-                            <div style={{ overflowX: 'auto' }}>
+                            <div style={{ flex: 1, overflowY: 'auto' }}>
                               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
-                                <thead>
-                                  <tr style={{ background: 'var(--color-surface-container-high)' }}>
+                                <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                                  <tr style={{ background: 'var(--color-surface-container-high)', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                                     <th style={{ padding: '8px 12px', fontWeight: '700', color: textColor }}>Sản phẩm</th>
                                     <th style={{ padding: '8px 12px', fontWeight: '700', color: textColor }}>Giá gốc (VND)</th>
                                     <th style={{ padding: '8px 12px', fontWeight: '700', color: textColor }}>Mức giảm</th>
@@ -266,22 +303,8 @@ export default function PromotionsTab(props) {
                                             <strong style={{ color: textColor, display: 'block' }}>{p.name}</strong>
                                             <span style={{ fontSize: '9px', color: 'var(--color-outline)' }}>ID: {p.id}</span>
                                           </td>
-                                          <td>
-                                            <input
-                                              type="text"
-                                              value={p.price}
-                                              onChange={(e) => handlePromoProductPriceChange(p.id, e.target.value)}
-                                              style={{
-                                                background: 'none',
-                                                border: 'none',
-                                                borderBottom: theme === 'light' ? '1px dashed #cbd5e1' : '1px dashed var(--color-outline)',
-                                                color: textColor,
-                                                fontWeight: '700',
-                                                width: '90px',
-                                                outline: 'none',
-                                                fontSize: '12px'
-                                              }}
-                                            />
+                                          <td style={{ fontWeight: '700', color: textColor, fontSize: '13px' }}>
+                                            {formatVND(p.price)}
                                           </td>
                                           <td>
                                             <span style={{ color: '#ffb77d', fontWeight: '600' }}>-{selectedPromoForEdit.discountPercent}%</span>

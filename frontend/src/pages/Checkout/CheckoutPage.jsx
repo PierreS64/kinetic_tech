@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import EmptyCart from '../../components/checkout/EmptyCart';
 import OrderReceipt from '../../components/checkout/OrderReceipt';
 import CheckoutSidebar from '../../components/checkout/CheckoutSidebar';
@@ -23,12 +23,78 @@ import api from '../../utils/api';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity, onRemoveItem, onAddOrder }) {
   const { currentUser } = useAuth();
-  const { cartItems, setCartItems, handleUpdateQuantity, handleRemoveItem } = useCart();
+  const { cartItems, handleUpdateQuantity, handleRemoveItem, handleClearCart } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
+  const buyNowItem = location.state?.buyNowItem;
+  const [localBuyNowItem, setLocalBuyNowItem] = useState(buyNowItem ? [buyNowItem] : null);
+  
+  useEffect(() => {
+    const item = location.state?.buyNowItem;
+    setLocalBuyNowItem(item ? [item] : null);
+  }, [location.state]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const status = params.get('status');
+    const orderId = params.get('orderId');
+    if (status === 'success') {
+      const type = localStorage.getItem('pending_checkout_type');
+      if (type === 'cart' && handleClearCart) {
+        handleClearCart();
+      }
+      localStorage.removeItem('pending_checkout_type');
+      
+      if (orderId) {
+        api.get(`/orders/${orderId}`).then(res => {
+          const data = res.data;
+          const today = new Date(data.createdAt).toLocaleDateString('vi-VN', {
+            year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+          });
+          setOrderReceipt({
+            orderId: data.id,
+            date: today,
+            customerName: data.User?.fullName || '',
+            phone: data.User?.phoneNumber || '',
+            email: data.User?.email || '',
+            address: 'Thanh toán trực tuyến',
+            paymentMethod: 'Thanh toán trực tuyến (PayOS)',
+            items: data.OrderItem.map(i => ({ ...i, ...i.ProductVariant, name: i.ProductVariant.Product.name })),
+            subtotal: data.totalAmount,
+            shippingCost: 0,
+            vatTax: 0,
+            discountAmount: 0,
+            total: data.totalAmount,
+            notes: ''
+          });
+        }).catch(console.error);
+      }
+    }
+  }, [location.search, handleClearCart]);
+
+  const effectiveCartItems = localBuyNowItem || cartItems;
+
+  const localHandleUpdateQuantity = (id, quantity) => {
+    if (localBuyNowItem) {
+      setLocalBuyNowItem(prev => prev.map(item => item.id === id ? { ...item, quantity } : item));
+    } else {
+      handleUpdateQuantity(id, quantity);
+    }
+  };
+
+  const localHandleRemoveItem = (id) => {
+    if (localBuyNowItem) {
+      setLocalBuyNowItem([]);
+    } else {
+      handleRemoveItem(id);
+    }
+  };
+
   const [formData, setFormData] = useState({
     fullName: currentUser?.fullName || '',
     phone: currentUser?.phone || '',
@@ -55,8 +121,8 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
 
   // Cart calculations
   const subtotal = useMemo(() => {
-    return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  }, [cartItems]);
+    return effectiveCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  }, [effectiveCartItems]);
 
   const shippingCost = useMemo(() => {
     if (subtotal > 15000000 || (appliedPromo && appliedPromo.code === 'FREESHIP')) {
@@ -129,7 +195,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
 
     
     // Check cart
-    if (cartItems.length === 0) {
+    if (effectiveCartItems.length === 0) {
       alert('Giỏ hàng trống! Vui lòng chọn sản phẩm trước.');
       return;
     }
@@ -154,7 +220,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
         shippingAddress: fullAddress,
         paymentMethod: paymentMethod === 'cod' ? 'COD' : 'PAYOS',
         ...(appliedPromo?.id && { couponId: appliedPromo.id }),
-        items: cartItems.map(i => ({ productId: i.id, quantity: i.quantity }))
+        items: effectiveCartItems.map(i => ({ productId: i.id, quantity: i.quantity }))
       };
       
       const res = await api.post('/orders', payload);
@@ -162,6 +228,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
       
       if (data.checkoutUrl) {
         // Redirect to PayOS
+        localStorage.setItem('pending_checkout_type', localBuyNowItem ? 'buynow' : 'cart');
         window.location.href = data.checkoutUrl;
       } else {
         // COD Success
@@ -183,7 +250,7 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
           email: formData.email,
           address: fullAddress,
           paymentMethod: 'Thanh toán COD (Tiền mặt khi nhận hàng)',
-          items: [...cartItems],
+          items: [...effectiveCartItems],
           subtotal,
           shippingCost,
           vatTax,
@@ -193,7 +260,11 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
         });
         
         // Clear cart immediately after successful order
-        if (setCartItems) setCartItems([]);
+        if (!localBuyNowItem && handleClearCart) {
+          await handleClearCart();
+        } else if (localBuyNowItem) {
+          setLocalBuyNowItem([]); // clear local cart
+        }
       }
     } catch (err) {
       console.error(err);
@@ -203,12 +274,11 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
   };
 
   const handleFinish = () => {
-    if (setCartItems) setCartItems([]);
     navigate('/');
   };
 
-  // If cart is empty and no order placed yet, render empty cart state
-  if (cartItems.length === 0 && !orderReceipt) return <EmptyCart setActiveView={setActiveView} />;
+  // If empty and no receipt, show empty cart
+  if (effectiveCartItems.length === 0 && !orderReceipt) return <EmptyCart setActiveView={setActiveView} />;
 
   // If order is completed, render Receipt page
   if (orderReceipt) return <OrderReceipt orderReceipt={orderReceipt} formatVND={formatVND} handleFinish={handleFinish} />;
@@ -590,8 +660,8 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
           </div>
         </form>
         <CheckoutSidebar 
-          cartItems={cartItems} formatVND={formatVND} onUpdateQuantity={handleUpdateQuantity} 
-          onRemoveItem={handleRemoveItem} promoCode={promoCode} setPromoCode={setPromoCode} 
+          cartItems={effectiveCartItems} formatVND={formatVND} onUpdateQuantity={localHandleUpdateQuantity} 
+          onRemoveItem={localHandleRemoveItem} promoCode={promoCode} setPromoCode={setPromoCode} 
           promoError={promoError} setPromoError={setPromoError} handleApplyPromo={handleApplyPromo} 
           appliedPromo={appliedPromo} handleRemovePromo={handleRemovePromo} subtotal={subtotal} 
           shippingCost={shippingCost} vatTax={vatTax} discountAmount={discountAmount} 

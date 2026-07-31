@@ -9,13 +9,13 @@ export default function TicketsTab(props) {
 
   return (
 
-              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', height: '620px', display: 'flex', flexDirection: 'column' }} className="glass-panel">
                 <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '16px' }}>Hỗ Trợ Kỹ Thuật (Hệ thống Ticket)</h3>
 
-                <div style={{ display: 'grid', gap: '20px' }}   className="grid-responsive-2col tickets-subgrid">
+                <div style={{ display: 'grid', gap: '20px', flex: 1, minHeight: 0 }}   className="grid-responsive-2col tickets-subgrid">
 
                   {/* Left Column: List */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '500px', overflowY: 'auto', paddingRight: '4px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', height: '100%', overflowY: 'auto', paddingRight: '4px' }}>
                     {tickets.map(ticket => (
                       <div
                         key={ticket.id}
@@ -51,7 +51,7 @@ export default function TicketsTab(props) {
                   </div>
 
                   {/* Right Column: Chat Box Details */}
-                  <div  style={{ borderRadius: 'var(--rounded)', padding: '16px', display: 'flex', flexDirection: 'column', height: '500px', background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(5, 13, 24, 0.15)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : 'none' }} className="glass-panel">
+                  <div  style={{ borderRadius: 'var(--rounded)', padding: '16px', display: 'flex', flexDirection: 'column', height: '100%', background: theme === 'light' ? 'rgba(0,0,0,0.02)' : 'rgba(5, 13, 24, 0.15)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : 'none' }} className="glass-panel">
                     {selectedTicket ? (
                       <>
                         {/* Box Header */}

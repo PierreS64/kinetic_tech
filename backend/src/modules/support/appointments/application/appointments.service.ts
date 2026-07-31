@@ -27,7 +27,7 @@ export class AppointmentsService {
       orderBy: { date: 'asc' },
       include: {
         User_Appointment_technicianIdToUser: {
-          select: { id: true, fullName: true, phone: true },
+          select: { id: true, fullName: true, phoneNumber: true },
         },
       },
     });
@@ -38,10 +38,10 @@ export class AppointmentsService {
       orderBy: { date: 'asc' },
       include: {
         User_Appointment_customerIdToUser: {
-          select: { id: true, fullName: true, phone: true },
+          select: { id: true, fullName: true, phoneNumber: true },
         },
         User_Appointment_technicianIdToUser: {
-          select: { id: true, fullName: true, phone: true },
+          select: { id: true, fullName: true, phoneNumber: true },
         },
       },
     });

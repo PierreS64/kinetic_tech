@@ -9,7 +9,7 @@ export default function ProductsTab(props) {
 
   return (
 
-              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px' }} className="glass-panel">
+              <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '24px', height: '620px', display: 'flex', flexDirection: 'column' }} className="glass-panel">
 
                 {/* Header Controls */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
@@ -50,7 +50,7 @@ export default function ProductsTab(props) {
                         value={productSearch}
                         onChange={(e) => setProductSearch(e.target.value)}
                         className="form-input"
-                        style={{ paddingLeft: '34px', fontSize: '12px', padding: '8px' }}
+                        style={{ fontSize: '12px', padding: '8px', paddingLeft: '34px' }}
                       />
                       <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)' }} />
                     </div>
@@ -217,10 +217,10 @@ export default function ProductsTab(props) {
                 )}
 
                 {/* Product List Table */}
-                <div style={{ overflowX: 'auto' }}>
+                <div style={{ flex: 1, overflowY: 'auto' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}  className="zebra-table">
-                    <thead>
-                      <tr style={{ background: 'var(--color-surface-container-high)' }}>
+                    <thead style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+                      <tr style={{ background: 'var(--color-surface-container-high)', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
                         <th style={{ padding: '12px 16px', fontWeight: '700', color: theme === 'light' ? '#0f172a' : 'white' }}>Ảnh</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700', color: theme === 'light' ? '#0f172a' : 'white' }}>Tên Sản Phẩm</th>
                         <th style={{ padding: '12px 16px', fontWeight: '700', color: theme === 'light' ? '#0f172a' : 'white' }}>Danh Mục</th>
