@@ -14,6 +14,7 @@ CREATE TYPE "SenderType" AS ENUM ('CUSTOMER', 'AI', 'TECHNICIAN');
 CREATE TYPE "AppointmentType" AS ENUM ('IN_STORE', 'AT_HOME');
 CREATE TYPE "AppointmentStatus" AS ENUM ('PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED');
 CREATE TYPE "CouponType" AS ENUM ('ORDER_DISCOUNT', 'PRODUCT_DISCOUNT');
+CREATE TYPE "ComponentType" AS ENUM ('CPU', 'GPU', 'MOTHERBOARD', 'RAM', 'PSU', 'CASE', 'COOLER', 'STORAGE');
 
 -- 2. Bảng: Người Dùng (User)
 CREATE TABLE "User" (
@@ -76,6 +77,46 @@ CREATE TABLE "ProductAttributeValue" (
     "productId" UUID NOT NULL REFERENCES "Product"("id") ON DELETE CASCADE,
     "attributeId" UUID NOT NULL REFERENCES "Attribute"("id") ON DELETE CASCADE,
     "value" VARCHAR(255) NOT NULL
+);
+
+-- 4.4 Bảng: Thông số kỹ thuật chuyên sâu cho Build PC (PcComponentSpec)
+CREATE TABLE "PcComponentSpec" (
+    "productId" UUID PRIMARY KEY REFERENCES "Product"("id") ON DELETE CASCADE,
+    "componentType" "ComponentType" NOT NULL,
+    
+    -- 1. CPU, Motherboard, Cooler
+    "socket" TEXT[], -- VD: {'LGA1700'} (CPU/Mainboard) hoặc {'LGA1700', 'AM5'} (Cooler)
+    "chipset" VARCHAR(100), -- VD: Z790, B650
+    
+    -- 2. RAM & Motherboard
+    "ramType" VARCHAR(50), -- VD: DDR4, DDR5
+    "ramSpeed" INT, -- Tốc độ MHz (VD: 3200, 5600)
+    "ramModules" INT, -- Số thanh RAM trong kit (VD: 2)
+    "ramSlots" INT, -- Số khe cắm RAM trên Mainboard (VD: 4)
+    "ramCapacity" INT, -- Tổng dung lượng GB (của RAM) hoặc Hỗ trợ tối đa (của Mainboard)
+    
+    -- 3. Kích thước (Form Factor & Clearance)
+    "formFactor" TEXT[], -- VD: {'ATX', 'Micro-ATX'} (Mainboard, Case, PSU)
+    "length" INT, -- Chiều dài mm (GPU, PSU)
+    "maxGpuLength" INT, -- Hỗ trợ GPU dài tối đa mm (Case)
+    "height" INT, -- Chiều cao mm (Tản nhiệt CPU)
+    "maxCoolerHeight" INT, -- Hỗ trợ tản nhiệt cao tối đa mm (Case)
+    
+    -- 4. Điện năng (Power)
+    "wattage" INT, -- Công suất W (TDP của CPU/GPU, Công suất cấp của PSU)
+    "psuEfficiency" VARCHAR(50), -- VD: 80+ Gold, 80+ Bronze
+    "pcie8Pin" INT, -- Số lượng đầu cắm 8-pin PCIe (GPU cần / PSU có)
+    "pcie12Vhpwr" INT, -- Số lượng đầu cắm 16-pin (GPU cần / PSU có)
+    "eps8Pin" INT, -- Số lượng đầu cắm 8-pin CPU (Mainboard cần / PSU có)
+    
+    -- 5. Lưu trữ (Storage)
+    "sataPorts" INT, -- Số cổng SATA (Mainboard)
+    "m2Slots" INT, -- Số khe M.2 (Mainboard)
+    "m2FormFactor" TEXT[], -- Hỗ trợ kích thước M.2 (VD: {'2280', '22110'})
+    
+    -- 6. Tản nhiệt nước (AIO) & Case
+    "radiatorSize" INT, -- Chiều dài Radiator mm (VD: 240, 360) (Cooler)
+    "supportedRadiators" INT[] -- Các kích thước Radiator hỗ trợ mm (Case)
 );
 
 -- 5. Bảng: Biến thể Sản phẩm (ProductVariant)
