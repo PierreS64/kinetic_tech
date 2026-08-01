@@ -40,3 +40,6 @@ Thumbs.db
 # Các file cơ sở dữ liệu tạm thời (nếu có dùng SQLite chạy thử qua Prisma)
 /prisma/*.db
 /prisma/*.db-journal
+
+# Custom agents customization directories
+.agents/
