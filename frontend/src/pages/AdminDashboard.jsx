@@ -401,15 +401,11 @@ export default function AdminDashboard() {
   const [newProduct, setNewProduct] = useState({
     name: '',
     category: 'laptop',
-    price: '',
-    oldPrice: '',
-    cpu: '',
-    ram: '',
-    storage: '',
-    gpu: '',
-    inStock: true,
     tags: '',
-    file: null
+    file: null,
+    variants: [
+      { id: Date.now(), price: '', stockQuantity: '', color: '', cpu: '', ram: '', storage: '', gpu: '', screen: '', soc: '', battery: '', gearType: '', connectivity: '', switchType: '', socket: '', wattage: '' }
+    ]
   });
 
   // Search & Filter
@@ -496,22 +492,21 @@ export default function AdminDashboard() {
     setStoreProducts(prev => prev.map(p => p.id === prodId ? { ...p, price: numeric } : p));
   };
 
-  const handleAddProduct = async (e) => {
-    e.preventDefault();
-    if (!newProduct.name || !newProduct.price) return;
+  const handleAddProduct = async (e, keepOpen = false) => {
+    if (e) e.preventDefault();
+    if (!newProduct.name || newProduct.variants.length === 0) return;
+    const v0 = newProduct.variants[0];
 
     try {
       const formData = new FormData();
       formData.append('name', newProduct.name);
       formData.append('category', newProduct.category);
-      formData.append('price', newProduct.price);
-      if (newProduct.oldPrice) formData.append('oldPrice', newProduct.oldPrice);
-      if (newProduct.cpu) formData.append('cpu', newProduct.cpu);
-      if (newProduct.ram) formData.append('ram', newProduct.ram);
-      if (newProduct.storage) formData.append('storage', newProduct.storage);
-      if (newProduct.gpu) formData.append('gpu', newProduct.gpu);
+      if (newProduct.componentType) formData.append('componentType', newProduct.componentType);
+
+      // Pass variants as JSON string
+      formData.append('variants', JSON.stringify(newProduct.variants));
+
       if (newProduct.tags) formData.append('tags', newProduct.tags);
-      formData.append('inStock', newProduct.inStock ? 'true' : 'false');
 
       if (newProduct.file) {
         formData.append('image', newProduct.file);
@@ -525,19 +520,18 @@ export default function AdminDashboard() {
 
       const p = res.data;
 
-      // Map API product to UI format
+      // Map API product to UI format for the local state mock
       let specs = {};
-      try { specs = JSON.parse(p.description); } catch { specs = { Brand: p.brand }; }
+      try { specs = JSON.parse(p.description); } catch { specs = { Brand: p.brand, ...v0 }; }
       const image = p.ProductImage?.find(img => img.isThumbnail)?.imageUrl ||
         p.ProductImage?.[0]?.imageUrl || 'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&q=80&w=400';
-      const variant = p.ProductVariant?.[0] || {};
+      const variant = p.ProductVariant?.[0] || v0 || {};
 
       const productToAdd = {
         id: p.id,
         name: p.name,
         category: p.Category?.name || newProduct.category,
-        price: variant.price || parseFloat(newProduct.price),
-        oldPrice: (variant.price || parseFloat(newProduct.price)) * 1.1,
+        price: variant.price || parseFloat(v0.price || 0),
         image: image,
         specs: specs,
         ...specs,
@@ -545,15 +539,22 @@ export default function AdminDashboard() {
         reviews: 0,
         tags: newProduct.tags ? newProduct.tags.split(',').map(t => t.trim()) : [newProduct.category],
         featured: false,
-        inStock: newProduct.inStock
+        inStock: (variant.stockQuantity || parseInt(v0.stockQuantity) || 0) > 0
       };
 
       setStoreProducts(prev => [productToAdd, ...prev]);
       setIsAddingProduct(false);
-      setNewProduct({
-        name: '', category: 'laptop', price: '', oldPrice: '',
-        cpu: '', ram: '', storage: '', gpu: '', inStock: true, tags: '', file: null
-      });
+      if (!keepOpen) {
+        setNewProduct({
+          name: '', category: 'laptop', tags: '', file: null,
+          variants: [{ id: Date.now(), price: '', stockQuantity: '', color: '', cpu: '', ram: '', storage: '', gpu: '', screen: '', soc: '', battery: '', gearType: '', connectivity: '', switchType: '', socket: '', wattage: '' }]
+        });
+      } else {
+        setNewProduct(prev => ({
+          ...prev, name: '', tags: '', file: null,
+          variants: [{ id: Date.now(), price: '', stockQuantity: '', color: '', cpu: '', ram: '', storage: '', gpu: '', screen: '', soc: '', battery: '', gearType: '', connectivity: '', switchType: '', socket: '', wattage: '' }]
+        }));
+      }
     } catch (error) {
       console.error(error);
       alert('Lỗi khi thêm sản phẩm: ' + (error.response?.data?.message || error.message));
@@ -654,6 +655,37 @@ export default function AdminDashboard() {
     setProductEditDraft(null);
   };
 
+  const handleUpdateProduct = async (productId, formData) => {
+    try {
+      // Bọc variants thành chuỗi JSON nếu nó là object (tuỳ theo API)
+      // Dựa theo cách thêm mới thì formData.variants có thể cần JSON.stringify
+      const submitData = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (key === 'image' && typeof formData[key] === 'object' && formData[key] !== null) {
+          submitData.append('image', formData[key]);
+        } else if (key === 'variants') {
+          submitData.append('variants', JSON.stringify(formData[key]));
+        } else if (key === 'tags' && Array.isArray(formData[key])) {
+          formData[key].forEach(tag => submitData.append('tags[]', tag));
+        } else if (key !== 'ProductVariant' && key !== 'PcComponentSpec') {
+          submitData.append(key, formData[key]);
+        }
+      });
+
+      const res = await api.patch(`/products/${productId}`, submitData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      setStoreProducts(prev => prev.map(p => p.id === productId ? res.data : p));
+      setDetailedItem(res.data);
+      setProductConfirmModal(false);
+      alert('Cập nhật sản phẩm thành công!');
+    } catch (err) {
+      console.error(err);
+      alert('Lỗi cập nhật sản phẩm');
+    }
+  };
+
   const handleDeleteProduct = async (productId) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
       try {
@@ -707,7 +739,7 @@ export default function AdminDashboard() {
     orderSearch, setOrderSearch, productSearch, setProductSearch, selectedCategoryFilter, setSelectedCategoryFilter, inventorySort, setInventorySort,
     priceConfirmModal, setPriceConfirmModal, tempPriceInput, setTempPriceInput,
     detailedItem, setDetailedItem, productEditDraft, setProductEditDraft, productConfirmModal, setProductConfirmModal,
-    textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleDeleteProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts,
+    textColor, getSoldThisMonth, formatVND, updateOrderStatus, toggleStock, updateProductPrice, handleManualPriceChange, handleAddProduct, handleUpdateProduct, handleDeleteProduct, handleReplyTicket, closeTicket, updateWarrantyStatus, submitTradeInValuation, handleInputBlurOrEnter, handleCloseDetailedModal, filteredOrders, filteredInventoryProducts,
     totalRevenue, pendingOrdersCount, outOfStockCount, activeTicketsCount
   };
 

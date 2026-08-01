@@ -34,6 +34,14 @@ export class ProductsService {
   private parseSpecPayload(dto: any) {
     if (!dto.componentType) return undefined;
 
+    let v0: any = dto;
+    if (dto.variants) {
+      try {
+        const parsed = JSON.parse(dto.variants);
+        if (parsed && parsed.length > 0) v0 = parsed[0];
+      } catch (e) {}
+    }
+
     const parseArray = (val: any) => {
       if (!val) return [];
       if (Array.isArray(val)) return val;
@@ -43,37 +51,37 @@ export class ProductsService {
       } catch (e) {}
       return val
         .split(',')
-        .map((s) => s.trim())
-        .filter((s) => s);
+        .map((s: string) => s.trim())
+        .filter((s: string) => s);
     };
 
     return {
       componentType: dto.componentType,
-      socket: dto.socket ? parseArray(dto.socket) : undefined,
-      chipset: dto.chipset,
-      ramType: dto.ramType,
-      ramSpeed: dto.ramSpeed ? parseInt(dto.ramSpeed) : undefined,
-      ramModules: dto.ramModules ? parseInt(dto.ramModules) : undefined,
-      ramSlots: dto.ramSlots ? parseInt(dto.ramSlots) : undefined,
-      ramCapacity: dto.ramCapacity ? parseInt(dto.ramCapacity) : undefined,
-      formFactor: dto.formFactor ? parseArray(dto.formFactor) : undefined,
-      length: dto.length ? parseInt(dto.length) : undefined,
-      maxGpuLength: dto.maxGpuLength ? parseInt(dto.maxGpuLength) : undefined,
-      height: dto.height ? parseInt(dto.height) : undefined,
-      maxCoolerHeight: dto.maxCoolerHeight
-        ? parseInt(dto.maxCoolerHeight)
+      socket: v0.socket ? parseArray(v0.socket) : undefined,
+      chipset: v0.chipset,
+      ramType: v0.ramType,
+      ramSpeed: v0.ramSpeed ? parseInt(v0.ramSpeed) : undefined,
+      ramModules: v0.ramModules ? parseInt(v0.ramModules) : undefined,
+      ramSlots: v0.ramSlots ? parseInt(v0.ramSlots) : undefined,
+      ramCapacity: v0.ramCapacity ? parseInt(v0.ramCapacity) : undefined,
+      formFactor: v0.formFactor ? parseArray(v0.formFactor) : undefined,
+      length: v0.length ? parseInt(v0.length) : undefined,
+      maxGpuLength: v0.maxGpuLength ? parseInt(v0.maxGpuLength) : undefined,
+      height: v0.height ? parseInt(v0.height) : undefined,
+      maxCoolerHeight: v0.maxCoolerHeight
+        ? parseInt(v0.maxCoolerHeight)
         : undefined,
-      wattage: dto.wattage ? parseInt(dto.wattage) : undefined,
-      psuEfficiency: dto.psuEfficiency,
-      pcie8Pin: dto.pcie8Pin ? parseInt(dto.pcie8Pin) : undefined,
-      pcie12Vhpwr: dto.pcie12Vhpwr ? parseInt(dto.pcie12Vhpwr) : undefined,
-      eps8Pin: dto.eps8Pin ? parseInt(dto.eps8Pin) : undefined,
-      sataPorts: dto.sataPorts ? parseInt(dto.sataPorts) : undefined,
-      m2Slots: dto.m2Slots ? parseInt(dto.m2Slots) : undefined,
-      m2FormFactor: dto.m2FormFactor ? parseArray(dto.m2FormFactor) : undefined,
-      radiatorSize: dto.radiatorSize ? parseInt(dto.radiatorSize) : undefined,
-      supportedRadiators: dto.supportedRadiators
-        ? parseArray(dto.supportedRadiators).map((n) => parseInt(n))
+      wattage: v0.wattage ? parseInt(v0.wattage) : undefined,
+      psuEfficiency: v0.psuEfficiency,
+      pcie8Pin: v0.pcie8Pin ? parseInt(v0.pcie8Pin) : undefined,
+      pcie12Vhpwr: v0.pcie12Vhpwr ? parseInt(v0.pcie12Vhpwr) : undefined,
+      eps8Pin: v0.eps8Pin ? parseInt(v0.eps8Pin) : undefined,
+      sataPorts: v0.sataPorts ? parseInt(v0.sataPorts) : undefined,
+      m2Slots: v0.m2Slots ? parseInt(v0.m2Slots) : undefined,
+      m2FormFactor: v0.m2FormFactor ? parseArray(v0.m2FormFactor) : undefined,
+      radiatorSize: v0.radiatorSize ? parseInt(v0.radiatorSize) : undefined,
+      supportedRadiators: v0.supportedRadiators
+        ? parseArray(v0.supportedRadiators).map((n: string) => parseInt(n))
         : undefined,
     };
   }
@@ -89,7 +97,25 @@ export class ProductsService {
       });
     }
 
-    const description = dto.description || '';
+    let parsedVariants: any[] = [];
+    if (dto.variants) {
+      try {
+        parsedVariants = JSON.parse(dto.variants);
+      } catch (e) {}
+    }
+    
+    // Default fallback if no variants provided
+    if (parsedVariants.length === 0) {
+      parsedVariants.push({ price: parseFloat(dto.price) || 0, stockQuantity: dto.inStock === 'false' ? 0 : 100 });
+    }
+
+    // Save specs in description for legacy frontend support (using first variant)
+    const firstVar = parsedVariants[0];
+    const { id, price, stockQuantity, color, ...specs } = firstVar;
+    // Clean up empty specs
+    const cleanSpecs = Object.fromEntries(Object.entries(specs).filter(([_, v]) => v !== '' && v !== undefined && v !== null));
+    const description = dto.description || (Object.keys(cleanSpecs).length > 0 ? JSON.stringify(cleanSpecs) : '');
+
     const pcComponentSpecPayload = this.parseSpecPayload(dto);
 
     let imageUrl = '';
@@ -105,9 +131,12 @@ export class ProductsService {
         description,
         categoryId: category.id,
         ProductVariant: {
-          create: {
-            price: parseFloat(dto.price) || 0,
-            stockQuantity: dto.inStock === 'false' ? 0 : 100,
+          createMany: {
+            data: parsedVariants.map(v => ({
+              price: parseFloat(v.price) || 0,
+              stockQuantity: parseInt(v.stockQuantity) || 0,
+              color: v.color || null
+            }))
           },
         },
         ...(imageUrl
@@ -161,6 +190,21 @@ export class ProductsService {
       categoryId = category.id;
     }
 
+    let parsedVariants: any[] = [];
+    if (dto.variants) {
+      try { parsedVariants = JSON.parse(dto.variants); } catch (e) {}
+    }
+
+    let description = dto.description;
+    if (parsedVariants.length > 0) {
+      const firstVar = parsedVariants[0];
+      const { id: vId, price, stockQuantity, color, ...specs } = firstVar;
+      const cleanSpecs = Object.fromEntries(Object.entries(specs).filter(([_, v]) => v !== '' && v !== undefined && v !== null));
+      if (Object.keys(cleanSpecs).length > 0) {
+        description = JSON.stringify(cleanSpecs);
+      }
+    }
+
     const pcComponentSpecPayload = this.parseSpecPayload(dto);
 
     return this.prisma.product.update({
@@ -168,8 +212,22 @@ export class ProductsService {
       data: {
         ...(dto.name ? { name: dto.name } : {}),
         ...(dto.brand ? { brand: dto.brand } : {}),
-        ...(dto.description ? { description: dto.description } : {}),
+        ...(description ? { description } : {}),
         categoryId,
+        ...(parsedVariants.length > 0
+          ? {
+              ProductVariant: {
+                deleteMany: {},
+                createMany: {
+                  data: parsedVariants.map(v => ({
+                    price: parseFloat(v.price) || 0,
+                    stockQuantity: parseInt(v.stockQuantity) || 0,
+                    color: v.color || null
+                  }))
+                }
+              }
+            }
+          : {}),
         ...(imageUrl
           ? {
               ProductImage: {

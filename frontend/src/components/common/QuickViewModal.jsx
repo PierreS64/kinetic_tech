@@ -53,7 +53,7 @@ export default function QuickViewModal({
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
   };
 
-  const discount = selectedProduct.oldPrice ? Math.round(((selectedProduct.oldPrice - selectedProduct.price) / selectedProduct.oldPrice) * 100) : 0;
+  const discount = 0;
   const related = storeProducts.filter(p => p.category === selectedProduct.category && p.id !== selectedProduct.id);
 
   return (
@@ -146,16 +146,6 @@ export default function QuickViewModal({
                 <span style={{ fontSize: '24px', fontWeight: '800', color: 'var(--color-secondary-dim)' }}>
                   {formatVND(selectedProduct.price)}
                 </span>
-                {selectedProduct.oldPrice && (
-                  <>
-                    <span style={{ fontSize: '14px', textDecoration: 'line-through', color: 'var(--color-outline)' }}>
-                      {formatVND(selectedProduct.oldPrice)}
-                    </span>
-                    <span style={{ fontSize: '10px', padding: '1px 6px' }} className="status-badge status-badge-sale">
-                      -{discount}%
-                    </span>
-                  </>
-                )}
               </div>
 
               {/* Vouchers and Promo Description Section */}

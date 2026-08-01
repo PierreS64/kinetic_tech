@@ -85,7 +85,6 @@ export function AppProvider({ children, userId = 'guest' }) {
             brand: p.brand || '',
             category: p.Category?.name || 'khác',
             price: p.ProductVariant?.[0]?.price || 0,
-            oldPrice: (p.ProductVariant?.[0]?.price || 0) * 1.1,
             image: p.ProductImage?.[0]?.imageUrl || '',
             specs: specsObj,
             rating: 4.8,
@@ -93,6 +92,7 @@ export function AppProvider({ children, userId = 'guest' }) {
             tags: tagsArr,
             featured: true,
             inStock: (p.ProductVariant?.[0]?.stockQuantity || 0) > 0,
+            stock: p.ProductVariant?.reduce((acc, curr) => acc + (curr.stockQuantity || 0), 0) || 0,
             variantId: p.ProductVariant?.[0]?.id
           };
         });

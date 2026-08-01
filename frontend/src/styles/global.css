@@ -268,7 +268,7 @@ body.light-theme .brand-logo-subtext {
 .grid-responsive-4col { display: grid; grid-template-columns: repeat(4, 1fr); }
 .grid-responsive-sidebar { display: grid; grid-template-columns: 250px 1fr; }
 .grid-responsive-sidebar-wide { display: grid; grid-template-columns: 300px 1fr; }
-.grid-responsive-sidebar-narrow { display: grid; grid-template-columns: 220px 1fr; }
+.grid-responsive-sidebar-narrow { display: grid; grid-template-columns: 260px 1fr; }
 .grid-responsive-checkout { display: grid; grid-template-columns: 1fr 400px; }
 .grid-responsive-pcbuilder { display: grid; grid-template-columns: 1.6fr 1fr; }
 .grid-responsive-overview { display: grid; grid-template-columns: 1.2fr 1fr; }

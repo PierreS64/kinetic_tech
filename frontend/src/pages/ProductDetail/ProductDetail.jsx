@@ -70,9 +70,7 @@ export default function ProductDetail() {
     }
   };
 
-  const discount = product.oldPrice 
-    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
-    : 0;
+  const discount = 0;
 
   const formatVND = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
@@ -122,16 +120,6 @@ export default function ProductDetail() {
             <span style={{ fontSize: '32px', fontWeight: '800', color: 'var(--color-secondary-dim)' }}>
               {formatVND(product.price)}
             </span>
-            {product.oldPrice && (
-              <>
-                <span style={{ fontSize: '18px', textDecoration: 'line-through', color: 'var(--color-outline)' }}>
-                  {formatVND(product.oldPrice)}
-                </span>
-                <span style={{ fontSize: '12px', padding: '2px 8px' }} className="status-badge status-badge-sale">
-                  Tiết kiệm {discount}%
-                </span>
-              </>
-            )}
           </div>
 
           {product.specs && (

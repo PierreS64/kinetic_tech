@@ -5,10 +5,316 @@ import { useAppContext } from '../../contexts/AppContext';
 
 export default function AdminModals(props) {
   const { theme, setStoreProducts } = useAppContext();
-  const { detailedItem, setDetailedItem, handleCloseDetailedModal, textColor, productEditDraft, setProductEditDraft, handleInputBlurOrEnter, selectedOrder, setSelectedOrder, formatVND, updateOrderStatus, priceConfirmModal, setPriceConfirmModal, updateProductPrice, productConfirmModal, setProductConfirmModal } = props;
+  const { isAddingProduct, setIsAddingProduct, newProduct, setNewProduct, handleAddProduct, detailedItem, setDetailedItem, handleCloseDetailedModal, textColor, productEditDraft, setProductEditDraft, handleInputBlurOrEnter, selectedOrder, setSelectedOrder, formatVND, updateOrderStatus, priceConfirmModal, setPriceConfirmModal, updateProductPrice, productConfirmModal, setProductConfirmModal, handleUpdateProduct } = props;
+
+  const updateVariant = (index, field, value) => {
+    setNewProduct(prev => {
+      const newVariants = [...(prev.variants || [])];
+      if (!newVariants[index]) return prev;
+      newVariants[index] = { ...newVariants[index], [field]: value };
+      return { ...prev, variants: newVariants };
+    });
+  };
+
+  const addVariant = () => {
+    setNewProduct(prev => ({
+      ...prev,
+      variants: [
+        ...(prev.variants || []),
+        { id: Date.now(), price: '', stockQuantity: '', color: '', cpu: '', ram: '', storage: '', gpu: '', screen: '', soc: '', battery: '', gearType: '', connectivity: '', switchType: '', socket: '', wattage: '' }
+      ]
+    }));
+  };
+
+
+  const updateEditVariant = (index, field, value) => {
+    setProductEditDraft(prev => {
+      const newVariants = [...(prev.variants || [])];
+      newVariants[index] = { ...newVariants[index], [field]: value };
+      return { ...prev, variants: newVariants };
+    });
+  };
+
+  const addEditVariant = () => {
+    setProductEditDraft(prev => ({
+      ...prev,
+      variants: [
+        ...(prev.variants || []),
+        { id: Date.now(), price: '', stockQuantity: '', color: '', cpu: '', ram: '', storage: '', gpu: '', screen: '', soc: '', battery: '', gearType: '', connectivity: '', switchType: '', socket: '', wattage: '' }
+      ]
+    }));
+  };
+
+  const removeEditVariant = (index) => {
+    setProductEditDraft(prev => {
+      if (!prev.variants || prev.variants.length <= 1) return prev;
+      const newVariants = [...prev.variants];
+      newVariants.splice(index, 1);
+      return { ...prev, variants: newVariants };
+    });
+  };
+
+  const removeVariant = (index) => {
+    setNewProduct(prev => {
+      if (!prev.variants || prev.variants.length <= 1) return prev;
+      const newVariants = [...prev.variants];
+      newVariants.splice(index, 1);
+      return { ...prev, variants: newVariants };
+    });
+  };
 
   return (
     <>
+      {/* Adding Product Form Overlay */}
+      {isAddingProduct && (
+        <div  className="modal-overlay" onClick={() => setIsAddingProduct(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ width: '100%', maxWidth: '560px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
+            <div style={{ padding: '16px 20px', borderBottom: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
+              <h4 style={{ fontSize: '15px', fontWeight: '800', color: textColor }}>Tạo sản phẩm mới</h4>
+              <button onClick={() => setIsAddingProduct(false)} className="btn btn-ghost" style={{ padding: '4px', borderRadius: '50%' }}>
+                <X size={18} color={theme === 'light' ? '#334155' : 'white'} />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddProduct} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '75vh', overflowY: 'auto' }}>
+              {/* CATEGORY BUTTONS */}
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '8px' }}>CHỌN DANH MỤC *</label>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {['laptop', 'điện thoại', 'gaming gear', 'linh kiện'].map(cat => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setNewProduct(prev => ({ ...prev, category: cat, componentType: cat === 'linh kiện' ? 'CPU' : undefined }))}
+                      style={{
+                        padding: '8px 16px',
+                        borderRadius: '20px',
+                        border: newProduct.category === cat ? 'none' : (theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.2)'),
+                        background: newProduct.category === cat ? 'var(--color-primary)' : 'transparent',
+                        color: newProduct.category === cat ? 'white' : textColor,
+                        fontWeight: newProduct.category === cat ? 'bold' : 'normal',
+                        cursor: 'pointer',
+                        textTransform: 'capitalize'
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* COMPONENT TYPE BUTTONS (IF LINH KIỆN) */}
+              {newProduct.category === 'linh kiện' && (
+                <div style={{ marginTop: '-4px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '8px' }}>LOẠI LINH KIỆN *</label>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {['CPU', 'Mainboard', 'VGA', 'RAM', 'Nguồn', 'Vỏ Case', 'Tản Nhiệt', 'Ổ Cứng'].map(type => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setNewProduct(prev => ({ ...prev, componentType: type }))}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          border: newProduct.componentType === type ? '1px solid var(--color-primary)' : (theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.2)'),
+                          background: newProduct.componentType === type ? 'rgba(0,123,255,0.1)' : 'transparent',
+                          color: newProduct.componentType === type ? 'var(--color-primary)' : textColor,
+                          fontSize: '13px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* COMMON BASIC INFO */}
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Tên Sản Phẩm *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Nhập tên sản phẩm..."
+                  value={newProduct.name || ''}
+                  onChange={(e) => setNewProduct(prev => ({ ...prev, name: e.target.value }))}
+                  className="form-input"
+                  style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                />
+              </div>
+
+
+              {/* VARIANTS SECTION */}
+              <div style={{ borderTop: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingTop: '16px' }}>
+                <span style={{ display: 'block', fontSize: '14px', fontWeight: '800', color: textColor, marginBottom: '16px' }}>
+                  Các biến thể sản phẩm
+                </span>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {(newProduct.variants || []).map((variant, index) => (
+                    <div key={variant.id || index} style={{ border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.1)', padding: '16px', borderRadius: '8px', position: 'relative', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
+                      <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        Biến thể {index + 1}
+                        {newProduct.variants.length > 1 && (
+                          <button type="button" onClick={() => removeVariant(index)} className="btn btn-ghost" style={{ color: 'var(--color-error)' }}>
+                            <X size={14} /> Xóa
+                          </button>
+                        )}
+                      </h5>
+
+                      <div style={{ display: 'grid', gap: '10px' }} className="grid-responsive-2col">
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Giá Bán (VND) *</label>
+                          <input type="number" required placeholder="Ví dụ: 15900000" value={variant.price || ''} onChange={(e) => updateVariant(index, 'price', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Tồn kho *</label>
+                          <input type="number" required placeholder="Ví dụ: 100" value={variant.stockQuantity || ''} onChange={(e) => updateVariant(index, 'stockQuantity', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Màu sắc (nếu có)</label>
+                          <input type="text" placeholder="Ví dụ: Space Gray" value={variant.color || ''} onChange={(e) => updateVariant(index, 'color', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                        </div>
+                      </div>
+
+                      {/* SPECIFIC FIELDS PER CATEGORY INSIDE VARIANT */}
+                      <div style={{ marginTop: '12px' }}>
+                        <span style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '8px', textTransform: 'uppercase' }}>Thông số kỹ thuật ({newProduct.category === 'linh kiện' ? newProduct.componentType : newProduct.category})</span>
+                        <div style={{ display: 'grid', gap: '10px' }} className="grid-responsive-2col">
+                          {/* LAPTOP */}
+                          {newProduct.category === 'laptop' && (
+                            <>
+                              <input type="text" placeholder="CPU (ví dụ: Intel i7)" value={variant.cpu || ''} onChange={(e) => updateVariant(index, 'cpu', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="RAM (ví dụ: 16GB)" value={variant.ram || ''} onChange={(e) => updateVariant(index, 'ram', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="Ổ Cứng (ví dụ: 512GB SSD)" value={variant.storage || ''} onChange={(e) => updateVariant(index, 'storage', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="VGA / GPU (ví dụ: RTX 4060)" value={variant.gpu || ''} onChange={(e) => updateVariant(index, 'gpu', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            </>
+                          )}
+
+                          {/* ĐIỆN THOẠI */}
+                          {newProduct.category === 'điện thoại' && (
+                            <>
+                              <input type="text" placeholder="Màn hình (ví dụ: 6.1 inch OLED)" value={variant.screen || ''} onChange={(e) => updateVariant(index, 'screen', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="SoC / CPU (ví dụ: Snapdragon 8 Gen 2)" value={variant.soc || ''} onChange={(e) => updateVariant(index, 'soc', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="RAM (ví dụ: 8GB)" value={variant.ram || ''} onChange={(e) => updateVariant(index, 'ram', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="Bộ nhớ (ví dụ: 256GB)" value={variant.storage || ''} onChange={(e) => updateVariant(index, 'storage', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="Pin (ví dụ: 5000 mAh)" value={variant.battery || ''} onChange={(e) => updateVariant(index, 'battery', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            </>
+                          )}
+
+                          {/* GAMING GEAR */}
+                          {newProduct.category === 'gaming gear' && (
+                            <>
+                              <input type="text" placeholder="Loại (Chuột, Bàn phím...)" value={variant.gearType || ''} onChange={(e) => updateVariant(index, 'gearType', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="Kết nối (Có dây, Không dây...)" value={variant.connectivity || ''} onChange={(e) => updateVariant(index, 'connectivity', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                              <input type="text" placeholder="Switch (ví dụ: Red Switch)" value={variant.switchType || ''} onChange={(e) => updateVariant(index, 'switchType', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            </>
+                          )}
+
+                          {/* LINH KIỆN */}
+                          {newProduct.category === 'linh kiện' && (
+                            <>
+                              {newProduct.componentType === 'CPU' && (
+                                <>
+                                  <input type="text" placeholder="Socket (ví dụ: LGA 1700)" value={variant.socket || ''} onChange={(e) => updateVariant(index, 'socket', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="Chipset hỗ trợ" value={variant.chipset || ''} onChange={(e) => updateVariant(index, 'chipset', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                </>
+                              )}
+                              {newProduct.componentType === 'Mainboard' && (
+                                <>
+                                  <input type="text" placeholder="Socket (ví dụ: AM5)" value={variant.socket || ''} onChange={(e) => updateVariant(index, 'socket', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="Chipset (ví dụ: X670E)" value={variant.chipset || ''} onChange={(e) => updateVariant(index, 'chipset', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="Form Factor (ví dụ: ATX)" value={variant.formFactor || ''} onChange={(e) => updateVariant(index, 'formFactor', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                </>
+                              )}
+                              {newProduct.componentType === 'VGA' && (
+                                <>
+                                  <input type="text" placeholder="Chiều dài (ví dụ: 300mm)" value={variant.length || ''} onChange={(e) => updateVariant(index, 'length', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="Nguồn (ví dụ: 1x 8-pin)" value={variant.powerPin || ''} onChange={(e) => updateVariant(index, 'powerPin', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                </>
+                              )}
+                              {newProduct.componentType === 'RAM' && (
+                                <>
+                                  <input type="text" placeholder="Dung lượng (ví dụ: 16GB)" value={variant.capacity || ''} onChange={(e) => updateVariant(index, 'capacity', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="Loại RAM (ví dụ: DDR5)" value={variant.ramType || ''} onChange={(e) => updateVariant(index, 'ramType', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="Bus (ví dụ: 6000MHz)" value={variant.bus || ''} onChange={(e) => updateVariant(index, 'bus', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                </>
+                              )}
+                              {newProduct.componentType === 'Nguồn' && (
+                                <>
+                                  <input type="text" placeholder="Công suất (ví dụ: 750W)" value={variant.wattage || ''} onChange={(e) => updateVariant(index, 'wattage', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="Chuẩn (ví dụ: 80 Plus Gold)" value={variant.efficiency || ''} onChange={(e) => updateVariant(index, 'efficiency', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                </>
+                              )}
+                              {newProduct.componentType === 'Vỏ Case' && (
+                                <>
+                                  <input type="text" placeholder="Form Factor (ví dụ: Mid Tower)" value={variant.formFactor || ''} onChange={(e) => updateVariant(index, 'formFactor', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="VGA hỗ trợ tối đa (ví dụ: 350mm)" value={variant.maxGpuLength || ''} onChange={(e) => updateVariant(index, 'maxGpuLength', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                </>
+                              )}
+                              {newProduct.componentType === 'Tản Nhiệt' && (
+                                <>
+                                  <input type="text" placeholder="Chiều cao tản (Khí) / Kích thước (Nước)" value={variant.coolerSize || ''} onChange={(e) => updateVariant(index, 'coolerSize', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                </>
+                              )}
+                              {newProduct.componentType === 'Ổ Cứng' && (
+                                <>
+                                  <input type="text" placeholder="Dung lượng (ví dụ: 1TB)" value={variant.capacity || ''} onChange={(e) => updateVariant(index, 'capacity', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                  <input type="text" placeholder="Form Factor (ví dụ: M.2 NVMe)" value={variant.storageFormFactor || ''} onChange={(e) => updateVariant(index, 'storageFormFactor', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                </>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <button type="button" onClick={addVariant} className="btn btn-ghost" style={{ alignSelf: 'flex-start', color: 'var(--color-primary-dim)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>+</span> Thêm biến thể
+                  </button>
+                </div>
+              </div>
+
+              {/* COMMON FIELDS (Tags, Image) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Mã Tags (cách nhau bằng dấu phẩy)</label>
+                  <input
+                    type="text"
+                    placeholder="Ví dụ: Gaming, RTX4060, Intel"
+                    value={newProduct.tags || ''}
+                    onChange={(e) => setNewProduct(prev => ({ ...prev, tags: e.target.value }))}
+                    className="form-input"
+                    style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Hình ảnh sản phẩm *</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setNewProduct(prev => ({ ...prev, file: e.target.files[0] }))}
+                    className="form-input"
+                    style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                  />
+                </div>
+              </div>
+
+              {/* SUBMIT BUTTONS */}
+              <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
+                <button type="button" onClick={(e) => handleAddProduct(e, false)} style={{ flex: 1, padding: '12px', fontWeight: '700' }} className="btn btn-secondary">
+                  LƯU VÀ ĐÓNG
+                </button>
+                <button type="button" onClick={(e) => handleAddProduct(e, true)} style={{ flex: 1, padding: '12px', fontWeight: '700' }} className="btn btn-primary">
+                  LƯU VÀ THÊM MỚI
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       {detailedItem && (
         <div  onClick={handleCloseDetailedModal} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 1000 }} className="modal-overlay">
           <div  className="glass-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', maxWidth: '600px', borderRadius: 'var(--rounded-lg)', overflow: 'hidden', zIndex: 1001, background: theme === 'light' ? '#ffffff' : undefined, border: theme === 'light' ? '1px solid #cbd5e1' : undefined }}>
@@ -196,8 +502,6 @@ export default function AdminModals(props) {
                       type="text"
                       value={productEditDraft.name || ''}
                       onChange={(e) => setProductEditDraft(prev => ({ ...prev, name: e.target.value }))}
-                      onBlur={handleInputBlurOrEnter}
-                      onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
                       className="form-input"
                       style={{
                         width: '100%',
@@ -212,14 +516,12 @@ export default function AdminModals(props) {
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
+                                    <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
                     <div>
                       <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Danh Mục *</label>
                       <select
                         value={productEditDraft.category || ''}
                         onChange={(e) => setProductEditDraft(prev => ({ ...prev, category: e.target.value }))}
-                        onBlur={handleInputBlurOrEnter}
-                        onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
                         className="form-input"
                         style={{
                           width: '100%',
@@ -238,211 +540,181 @@ export default function AdminModals(props) {
                         <option value="linh kiện">Linh kiện</option>
                       </select>
                     </div>
+                  </div>
 
-                    <div>
-                      <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Tình Trạng Kho</label>
-                      <select
-                        value={productEditDraft.inStock ? 'true' : 'false'}
-                        onChange={(e) => setProductEditDraft(prev => ({ ...prev, inStock: e.target.value === 'true' }))}
-                        onBlur={handleInputBlurOrEnter}
-                        onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                        className="form-input"
+              {/* COMPONENT TYPE BUTTONS (IF LINH KIỆN) */}
+              {productEditDraft.category === 'linh kiện' && (
+                <div style={{ marginTop: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '8px' }}>LOẠI LINH KIỆN *</label>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {['CPU', 'Mainboard', 'VGA', 'RAM', 'Nguồn', 'Vỏ Case', 'Tản Nhiệt', 'Ổ Cứng'].map(type => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setProductEditDraft(prev => ({ ...prev, componentType: type }))}
                         style={{
-                          width: '100%',
-                          padding: '8px 12px',
+                          padding: '6px 12px',
                           borderRadius: '6px',
-                          border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                          background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                          color: textColor,
+                          border: productEditDraft.componentType === type ? '1px solid var(--color-primary)' : (theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.2)'),
+                          background: productEditDraft.componentType === type ? 'rgba(0,123,255,0.1)' : 'transparent',
+                          color: productEditDraft.componentType === type ? 'var(--color-primary)' : textColor,
                           fontSize: '13px',
-                          outline: 'none'
+                          cursor: 'pointer'
                         }}
                       >
-                        <option value="true">Còn hàng</option>
-                        <option value="false">Hết hàng</option>
-                      </select>
-                    </div>
+                        {type}
+                      </button>
+                    ))}
                   </div>
+                </div>
+              )}
 
-                  <div style={{ display: 'grid', gap: '12px' }}  className="grid-responsive-2col">
-                    <div>
-                      <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Giá Bán (VND) *</label>
-                      <input
-                        type="number"
-                        value={productEditDraft.price || ''}
-                        onChange={(e) => setProductEditDraft(prev => ({ ...prev, price: Number(e.target.value) || 0 }))}
-                        onBlur={handleInputBlurOrEnter}
-                        onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                        className="form-input"
-                        style={{
-                          width: '100%',
-                          padding: '8px 12px',
-                          borderRadius: '6px',
-                          border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                          background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                          color: textColor,
-                          fontSize: '13px',
-                          outline: 'none'
-                        }}
-                      />
-                    </div>
+              {/* VARIANTS SECTION */}
+              <div style={{ borderTop: theme === 'light' ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', marginTop: '12px' }}>
+                <span style={{ display: 'block', fontSize: '14px', fontWeight: '800', color: textColor, marginBottom: '16px' }}>
+                  Các biến thể sản phẩm
+                </span>
 
-                    <div>
-                      <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Giá Cũ (Gốc)</label>
-                      <input
-                        type="number"
-                        value={productEditDraft.oldPrice || ''}
-                        onChange={(e) => setProductEditDraft(prev => ({ ...prev, oldPrice: Number(e.target.value) || 0 }))}
-                        onBlur={handleInputBlurOrEnter}
-                        onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                        className="form-input"
-                        style={{
-                          width: '100%',
-                          padding: '8px 12px',
-                          borderRadius: '6px',
-                          border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                          background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                          color: textColor,
-                          fontSize: '13px',
-                          outline: 'none'
-                        }}
-                      />
-                    </div>
-                  </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {(productEditDraft.variants || []).map((variant, index) => (
+                    <div key={variant.id || index} style={{ border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255,255,255,0.1)', padding: '16px', borderRadius: '8px', position: 'relative', background: theme === 'light' ? '#f8fafc' : 'rgba(255,255,255,0.02)' }}>
+                      <h5 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        Biến thể {index + 1}
+                        {productEditDraft.variants.length > 1 && (
+                          <button type="button" onClick={() => removeEditVariant(index)} className="btn btn-ghost" style={{ color: 'var(--color-error)' }}>
+                            <X size={14} /> Xóa
+                          </button>
+                        )}
+                      </h5>
 
-                  <div>
-                    <span style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: 'var(--color-primary-dim)', marginBottom: '8px' }}>Thông số cấu hình kỹ thuật</span>
-                    <div style={{ display: 'grid', gap: '10px' }}  className="grid-responsive-2col">
-                      <div>
-                        <label style={{ display: 'block', fontSize: '10px', color: 'var(--color-outline)', marginBottom: '2px' }}>CPU</label>
-                        <input
-                          type="text"
-                          value={(productEditDraft.specs && productEditDraft.specs.cpu) || ''}
-                          onChange={(e) => setProductEditDraft(prev => ({ ...prev, specs: { ...prev.specs, cpu: e.target.value } }))}
-                          onBlur={handleInputBlurOrEnter}
-                          onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                          className="form-input"
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            borderRadius: '6px',
-                            border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                            background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                            color: textColor,
-                            fontSize: '13px',
-                            outline: 'none'
-                          }}
-                        />
+                      <div style={{ display: 'grid', gap: '10px' }} className="grid-responsive-2col">
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Giá Bán (VND) *</label>
+                          <input
+                            type="number"
+                            required
+                            placeholder="Ví dụ: 15900000"
+                            value={variant.price || ''}
+                            onChange={(e) => updateEditVariant(index, 'price', e.target.value)}
+                            className="form-input"
+                            style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Tồn kho *</label>
+                          <input
+                            type="number"
+                            required
+                            placeholder="Ví dụ: 100"
+                            value={variant.stockQuantity || ''}
+                            onChange={(e) => updateEditVariant(index, 'stockQuantity', e.target.value)}
+                            className="form-input"
+                            style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Màu sắc (nếu có)</label>
+                          <input
+                            type="text"
+                            placeholder="Ví dụ: Space Gray"
+                            value={variant.color || ''}
+                            onChange={(e) => updateEditVariant(index, 'color', e.target.value)}
+                            className="form-input"
+                            style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '10px', color: 'var(--color-outline)', marginBottom: '2px' }}>RAM</label>
-                        <input
-                          type="text"
-                          value={(productEditDraft.specs && productEditDraft.specs.ram) || ''}
-                          onChange={(e) => setProductEditDraft(prev => ({ ...prev, specs: { ...prev.specs, ram: e.target.value } }))}
-                          onBlur={handleInputBlurOrEnter}
-                          onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                          className="form-input"
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            borderRadius: '6px',
-                            border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                            background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                            color: textColor,
-                            fontSize: '13px',
-                            outline: 'none'
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '10px', color: 'var(--color-outline)', marginBottom: '2px' }}>Ổ Cứng</label>
-                        <input
-                          type="text"
-                          value={(productEditDraft.specs && productEditDraft.specs.storage) || ''}
-                          onChange={(e) => setProductEditDraft(prev => ({ ...prev, specs: { ...prev.specs, storage: e.target.value } }))}
-                          onBlur={handleInputBlurOrEnter}
-                          onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                          className="form-input"
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            borderRadius: '6px',
-                            border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                            background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                            color: textColor,
-                            fontSize: '13px',
-                            outline: 'none'
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: '10px', color: 'var(--color-outline)', marginBottom: '2px' }}>VGA / GPU</label>
-                        <input
-                          type="text"
-                          value={(productEditDraft.specs && productEditDraft.specs.gpu) || ''}
-                          onChange={(e) => setProductEditDraft(prev => ({ ...prev, specs: { ...prev.specs, gpu: e.target.value } }))}
-                          onBlur={handleInputBlurOrEnter}
-                          onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                          className="form-input"
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            borderRadius: '6px',
-                            border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                            background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                            color: textColor,
-                            fontSize: '13px',
-                            outline: 'none'
-                          }}
-                        />
+
+                      {/* SPECS */}
+                      <div style={{ marginTop: '16px' }}>
+                        <span style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: 'var(--color-outline)', textTransform: 'uppercase', marginBottom: '8px' }}>
+                          THÔNG SỐ KỸ THUẬT ({productEditDraft.category?.toUpperCase()})
+                        </span>
+                        
+                        {productEditDraft.category === 'laptop' && (
+                          <div style={{ display: 'grid', gap: '10px' }} className="grid-responsive-2col">
+                            <input type="text" placeholder="CPU (ví dụ: Intel i7)" value={variant.cpu || ''} onChange={(e) => updateEditVariant(index, 'cpu', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            <input type="text" placeholder="RAM (ví dụ: 16GB)" value={variant.ram || ''} onChange={(e) => updateEditVariant(index, 'ram', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            <input type="text" placeholder="Ô Cứng (ví dụ: 512GB SSD)" value={variant.storage || ''} onChange={(e) => updateEditVariant(index, 'storage', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            <input type="text" placeholder="VGA / GPU (ví dụ: RTX 4060)" value={variant.gpu || ''} onChange={(e) => updateEditVariant(index, 'gpu', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                          </div>
+                        )}
+
+                        {productEditDraft.category === 'điện thoại' && (
+                          <div style={{ display: 'grid', gap: '10px' }} className="grid-responsive-2col">
+                            <input type="text" placeholder="Màn hình" value={variant.screen || ''} onChange={(e) => updateEditVariant(index, 'screen', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            <input type="text" placeholder="SoC (Chip)" value={variant.soc || ''} onChange={(e) => updateEditVariant(index, 'soc', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            <input type="text" placeholder="RAM" value={variant.ram || ''} onChange={(e) => updateEditVariant(index, 'ram', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            <input type="text" placeholder="Pin" value={variant.battery || ''} onChange={(e) => updateEditVariant(index, 'battery', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                          </div>
+                        )}
+
+                        {productEditDraft.category === 'gaming gear' && (
+                          <div style={{ display: 'grid', gap: '10px' }} className="grid-responsive-2col">
+                            <input type="text" placeholder="Loại (Chuột/Phím...)" value={variant.gearType || ''} onChange={(e) => updateEditVariant(index, 'gearType', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            <input type="text" placeholder="Kết nối (Có dây/Không dây)" value={variant.connectivity || ''} onChange={(e) => updateEditVariant(index, 'connectivity', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                            <input type="text" placeholder="Switch (Nếu là bàn phím)" value={variant.switchType || ''} onChange={(e) => updateEditVariant(index, 'switchType', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                          </div>
+                        )}
+
+                        {productEditDraft.category === 'linh kiện' && (
+                          <div style={{ display: 'grid', gap: '10px' }} className="grid-responsive-2col">
+                            {['CPU', 'Mainboard'].includes(productEditDraft.componentType) && <input type="text" placeholder="Socket" value={variant.socket || ''} onChange={(e) => updateEditVariant(index, 'socket', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />}
+                            {['CPU', 'Nguồn'].includes(productEditDraft.componentType) && <input type="text" placeholder="Công suất (W)" value={variant.wattage || ''} onChange={(e) => updateEditVariant(index, 'wattage', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />}
+                            {['RAM'].includes(productEditDraft.componentType) && (
+                               <>
+                                 <input type="text" placeholder="Dung lượng RAM" value={variant.ramCapacity || ''} onChange={(e) => updateEditVariant(index, 'ramCapacity', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                                 <input type="text" placeholder="Tốc độ RAM (MHz)" value={variant.ramSpeed || ''} onChange={(e) => updateEditVariant(index, 'ramSpeed', e.target.value)} className="form-input" style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }} />
+                               </>
+                            )}
+                            {/* ... more fields as needed ... */}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
+                  ))}
 
-                  <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Mã Tags (cách nhau bằng dấu phẩy)</label>
-                    <input
-                      type="text"
-                      value={productEditDraft.tags ? (Array.isArray(productEditDraft.tags) ? productEditDraft.tags.join(', ') : productEditDraft.tags) : ''}
-                      onChange={(e) => setProductEditDraft(prev => ({ ...prev, tags: e.target.value.split(',').map(t => t.trim()) }))}
-                      onBlur={handleInputBlurOrEnter}
-                      onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                      className="form-input"
-                      style={{
-                        width: '100%',
-                        padding: '8px 12px',
-                        borderRadius: '6px',
-                        border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                        background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                        color: textColor,
-                        fontSize: '13px',
-                        outline: 'none'
-                      }}
-                    />
-                  </div>
+                  <button type="button" onClick={addEditVariant} className="btn btn-ghost" style={{ alignSelf: 'flex-start', color: 'var(--color-primary-dim)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>+</span> Thêm biến thể
+                  </button>
+                </div>
+              </div>
 
-                  <div>
-                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Đường dẫn ảnh sản phẩm</label>
-                    <input
-                      type="text"
-                      value={productEditDraft.image || ''}
-                      onChange={(e) => setProductEditDraft(prev => ({ ...prev, image: e.target.value }))}
-                      onBlur={handleInputBlurOrEnter}
-                      onKeyDown={(e) => e.key === 'Enter' && handleInputBlurOrEnter(e)}
-                      className="form-input"
-                      style={{
-                        width: '100%',
-                        padding: '8px 12px',
-                        borderRadius: '6px',
-                        border: theme === 'light' ? '1px solid #cbd5e1' : '1px solid rgba(255, 255, 255, 0.1)',
-                        background: theme === 'light' ? '#ffffff' : 'rgba(255, 255, 255, 0.02)',
-                        color: textColor,
-                        fontSize: '13px',
-                        outline: 'none'
-                      }}
-                    />
-                  </div>
+              {/* COMMON FIELDS (Tags, Image) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Mã Tags (cách nhau bằng dấu phẩy)</label>
+                  <input
+                    type="text"
+                    placeholder="Ví dụ: Gaming, RTX4060, Intel"
+                    value={productEditDraft.tags ? (Array.isArray(productEditDraft.tags) ? productEditDraft.tags.join(', ') : productEditDraft.tags) : ''}
+                    onChange={(e) => setProductEditDraft(prev => ({ ...prev, tags: e.target.value.split(',').map(t => t.trim()) }))}
+                    className="form-input"
+                    style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: theme === 'light' ? '#475569' : 'var(--color-outline)', marginBottom: '4px' }}>Đường dẫn ảnh sản phẩm</label>
+                  <input
+                    type="text"
+                    value={productEditDraft.image || ''}
+                    onChange={(e) => setProductEditDraft(prev => ({ ...prev, image: e.target.value }))}
+                    className="form-input"
+                    style={{ border: theme === 'light' ? '1px solid #cbd5e1' : undefined, color: textColor, background: theme === 'light' ? '#ffffff' : undefined }}
+                  />
+                </div>
+                
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px' }}>
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary" 
+                    onClick={() => props.handleUpdateProduct ? props.handleUpdateProduct(productEditDraft.id, productEditDraft) : setProductConfirmModal(true)}
+                  >
+                    HOÀN TẤT CHỈNH SỬA
+                  </button>
+                </div>
+              </div>
+
                 </div>
               )}
 

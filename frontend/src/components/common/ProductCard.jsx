@@ -14,14 +14,14 @@ export default function ProductCard({ product, onViewDetails }) {
   const onAddToCart = () => handleAddToCart(product);
   const onBuyNow = () => handleBuyNow(product);
 
-  const { id, name, price, oldPrice, image, specs, rating, reviews, tags, inStock } = product;
+  const { id, name, price, image, specs, rating, reviews, tags, inStock } = product;
 
   // Format currency to VND
   const formatVND = (value) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
   };
 
-  const discount = oldPrice ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
+  const discount = 0;
 
   return (
     <div  className="product-card" onClick={() => onViewDetails && onViewDetails(product)} style={{ width: '100%', minWidth: '0', boxSizing: 'border-box', height: '100%', cursor: 'pointer' }}>
@@ -152,28 +152,7 @@ export default function ProductCard({ product, onViewDetails }) {
 
         {/* Price Row */}
         <div style={{ marginTop: 'auto', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          {oldPrice && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{
-                fontSize: '12px',
-                textDecoration: 'line-through',
-                color: 'var(--color-outline)'
-              }}>
-                {formatVND(oldPrice)}
-              </span>
-              {discount > 0 && (
-                <span  style={{ fontSize: '10px', padding: '1px 4px', textTransform: 'none' }} className="status-badge status-badge-sale">
-                  -{discount}%
-                </span>
-              )}
-            </div>
-          )}
-          <span style={{
-            fontSize: '18px',
-            fontWeight: '700',
-            color: 'var(--color-secondary-dim)',
-            display: 'block'
-          }}>
+          <span style={{ fontSize: '18px', fontWeight: '800', color: 'var(--color-secondary)' }}>
             {formatVND(price)}
           </span>
         </div>
