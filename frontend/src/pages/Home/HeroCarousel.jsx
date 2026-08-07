@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './heroCarousel.css';
 import api from '../../utils/api';
 import { ArrowLeft, ArrowRight, Flame } from 'lucide-react';
-import ProductCard from '../../components/Common/ProductCard';
+import ProductCard from '../../components/common/ProductCard';
 
 import { useAppContext } from '../../contexts/AppContext';
 

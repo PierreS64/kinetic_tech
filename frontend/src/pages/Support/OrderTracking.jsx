@@ -61,8 +61,19 @@ export default function OrderTracking({ orders = [] }) {
     }
 
     try {
-      const res = await api.get(`/orders/track/${cleanId}`);
-      const data = res.data;
+      let data = null;
+      try {
+        const res = await api.get(`/orders/track/${cleanId}`);
+        data = res.data;
+      } catch (trackErr) {
+        // Fallback: try /orders/:id (if track endpoint doesn't exist)
+        try {
+          const res = await api.get(`/orders/${cleanId}`);
+          data = res.data;
+        } catch (orderErr) {
+          throw orderErr;
+        }
+      }
 
       // Map raw API order to frontend format
       const mappedOrder = {
@@ -73,10 +84,11 @@ export default function OrderTracking({ orders = [] }) {
         status: (data.status || 'pending').toLowerCase() === 'delivered' ? 'completed' : (data.status || 'pending').toLowerCase(),
         customerName: data.User?.fullName || 'Khách hàng',
         phone: data.User?.phone || data.User?.phoneNumber || 'N/A',
-        address: data.shippingAddress || 'Hà Nội',
+        address: data.UserAddress?.address || data.shippingAddress || 'Hà Nội',
+        paymentMethod: data.paymentMethod === 'COD' ? 'Thanh toán khi nhận hàng (COD)' : 'Thanh toán online (PayOS)',
         items: data.OrderItem ? data.OrderItem.map(oi => ({
           id: oi.productVariantId || oi.id,
-          name: oi.ProductVariant?.Product?.name || 'Linh kiện PC',
+          name: oi.ProductVariant?.Product?.name || 'Sản phẩm',
           quantity: oi.quantity,
           price: oi.price,
           image: oi.ProductVariant?.Product?.ProductImage?.[0]?.imageUrl || ''

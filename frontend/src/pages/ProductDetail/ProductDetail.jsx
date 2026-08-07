@@ -17,10 +17,14 @@ export default function ProductDetail() {
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [activeImage, setActiveImage] = useState('');
 
   useEffect(() => {
-    if (product && product.id) {
-      fetchReviews();
+    if (product) {
+      setActiveImage(product.image);
+      if (product.id) {
+        fetchReviews();
+      }
     }
   }, [product]);
 
@@ -87,16 +91,42 @@ export default function ProductDetail() {
       </button>
 
       <div style={{ display: 'grid', gap: '48px', background: 'var(--color-surface-container)', padding: '32px', borderRadius: 'var(--rounded-lg)', border: theme === 'light' ? '1px solid rgba(0,0,0,0.06)' : '1px solid rgba(255,255,255,0.04)' }} className="grid-responsive-2col">
-        {/* Left: Image */}
-        <div style={{ background: 'var(--color-surface-container-low)', borderRadius: 'var(--rounded)', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img 
-            src={product.image} 
-            alt={product.name} 
-            style={{ width: '100%', maxHeight: '400px', objectFit: 'contain' }} 
-            onError={(e) => {
-              e.target.src = 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&q=80&w=400';
-            }}
-          />
+        {/* Left: Image & Thumbnails */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ background: 'var(--color-surface-container-low)', borderRadius: 'var(--rounded)', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '320px' }}>
+            <img 
+              src={activeImage || product.image} 
+              alt={product.name} 
+              style={{ width: '100%', maxHeight: '400px', objectFit: 'contain', transition: 'all 0.3s ease' }} 
+              onError={(e) => {
+                e.target.src = 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&q=80&w=400';
+              }}
+            />
+          </div>
+
+          {/* Thumbnails list if multiple images exist */}
+          {product.images && product.images.length > 1 && (
+            <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '4px' }}>
+              {product.images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImage(img)}
+                  style={{
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '8px',
+                    border: (activeImage || product.image) === img ? '2px solid var(--color-primary)' : '1px solid rgba(255,255,255,0.1)',
+                    padding: '4px',
+                    background: 'var(--color-surface-container-low)',
+                    cursor: 'pointer',
+                    flexShrink: 0
+                  }}
+                >
+                  <img src={img} alt={`${product.name} ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right: Info */}

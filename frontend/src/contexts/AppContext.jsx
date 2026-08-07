@@ -79,21 +79,27 @@ export function AppProvider({ children, userId = 'guest' }) {
             }
           }
           
+          const rawImages = p.ProductImage?.map(img => img.imageUrl).filter(Boolean) || [];
+          const uniqueImages = Array.from(new Set(rawImages));
+          const primaryImage = uniqueImages[0] || 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&q=80&w=400';
+
           return {
             id: p.id,
             name: p.name,
             brand: p.brand || '',
             category: p.Category?.name || 'khác',
             price: p.ProductVariant?.[0]?.price || 0,
-            image: p.ProductImage?.[0]?.imageUrl || '',
+            image: primaryImage,
+            images: uniqueImages.length > 0 ? uniqueImages : [primaryImage],
             specs: specsObj,
             rating: 4.8,
             reviews: Math.floor(Math.random() * 100) + 20,
             tags: tagsArr,
             featured: true,
-            inStock: (p.ProductVariant?.[0]?.stockQuantity || 0) > 0,
             stock: p.ProductVariant?.reduce((acc, curr) => acc + (curr.stockQuantity || 0), 0) || 0,
-            variantId: p.ProductVariant?.[0]?.id
+            inStock: p.ProductVariant?.some(v => (v.stockQuantity || 0) > 0) || false,
+            variantId: p.ProductVariant?.[0]?.id,
+            ProductVariant: p.ProductVariant
           };
         });
         setStoreProducts(mappedProducts);

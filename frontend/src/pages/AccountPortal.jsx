@@ -159,7 +159,7 @@ export default function AccountPortal({
         name: oi.ProductVariant?.Product?.name || 'Linh kiện PC',
         quantity: oi.quantity,
         price: oi.price,
-        image: oi.ProductVariant?.Product?.ProductImage?.[0]?.url || ''
+        image: oi.ProductVariant?.Product?.ProductImage?.[0]?.imageUrl || oi.ProductVariant?.Product?.ProductImage?.[0]?.url || ''
       })) : [])
     }));
   }, [orders, currentUser]);
@@ -344,6 +344,10 @@ export default function AccountPortal({
       alert('Vui lòng điền đầy đủ Họ tên và Số điện thoại.');
       return;
     }
+    if (!/^[0-9]{10,11}$/.test(profileForm.phone.replace(/\s/g, ''))) {
+      alert('Số điện thoại không hợp lệ! Vui lòng nhập 10-11 chữ số (ví dụ: 0912345678).');
+      return;
+    }
 
     try {
       const response = await api.patch(`/users/${currentUser.id}`, {
@@ -377,8 +381,16 @@ export default function AccountPortal({
       setPasswordError('Mật khẩu mới không khớp.');
       return;
     }
-    if (passwordForm.newPassword.length < 6) {
-      setPasswordError('Mật khẩu mới phải có ít nhất 6 ký tự.');
+    if (passwordForm.newPassword.length < 8) {
+      setPasswordError('Mật khẩu mới phải có ít nhất 8 ký tự.');
+      return;
+    }
+    if (!/[A-Z]/.test(passwordForm.newPassword)) {
+      setPasswordError('Mật khẩu mới phải có ít nhất 1 chữ hoa (A-Z).');
+      return;
+    }
+    if (!/[0-9]/.test(passwordForm.newPassword)) {
+      setPasswordError('Mật khẩu mới phải có ít nhất 1 chữ số (0-9).');
       return;
     }
 

@@ -10,6 +10,7 @@ import FeedbacksTab from '../components/admin/FeedbacksTab';
 import PromotionsTab from '../components/admin/PromotionsTab';
 import VouchersTab from '../components/admin/VouchersTab';
 import AppointmentsTab from '../components/admin/AppointmentsTab';
+
 import {
   TrendingUp,
   ShoppingBag,
@@ -494,8 +495,21 @@ export default function AdminDashboard() {
 
   const handleAddProduct = async (e, keepOpen = false) => {
     if (e) e.preventDefault();
-    if (!newProduct.name || newProduct.variants.length === 0) return;
+    if (!newProduct.name || newProduct.variants.length === 0) {
+      alert('Vui lòng nhập tên sản phẩm.');
+      return;
+    }
     const v0 = newProduct.variants[0];
+    const priceVal = parseFloat(v0.price) || 0;
+    const stockVal = parseInt(v0.stockQuantity) || 0;
+    if (priceVal <= 0) {
+      alert('Giá sản phẩm phải lớn hơn 0.');
+      return;
+    }
+    if (stockVal < 0) {
+      alert('Số lượng tồn kho không thể âm.');
+      return;
+    }
 
     try {
       const formData = new FormData();
@@ -745,7 +759,25 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ padding: '30px 0', minHeight: '80vh' }}>
-      <div  className="container">
+      {/* RBAC Guard: block CUSTOMER role */}
+      {currentUser && currentUser.role === 'CUSTOMER' && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <div className="glass-panel" style={{ padding: '48px 40px', textAlign: 'center', maxWidth: '480px', borderRadius: 'var(--rounded-lg)', border: '1px solid rgba(255,76,76,0.3)' }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🚫</div>
+            <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#ffb4ab', marginBottom: '12px' }}>Truy Cập Bị Từ Chối</h2>
+            <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', lineHeight: '1.6', marginBottom: '24px' }}>
+              Trang quản trị chỉ dành cho nhân viên và quản trị viên Kinetic Tech.
+              Tài khoản của bạn không có quyền truy cập vào khu vực này.
+            </p>
+            <button onClick={() => window.location.href = '/'} className="btn btn-primary" style={{ padding: '10px 24px' }}>
+              Quay Về Trang Chủ
+            </button>
+          </div>
+        </div>
+      )}
+      {(!currentUser || currentUser.role !== 'CUSTOMER') && (
+        <>
+          <div className="container">
 
         {/* Dashboard Title & Stats Overview */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
@@ -988,6 +1020,7 @@ export default function AdminDashboard() {
                 </button>
               </>
             )}
+            {/* AI Agent Panel - removed, using global AIAdvisor bubble */}
           </div>
 
           {/* Right Work Area */}
@@ -1030,6 +1063,8 @@ export default function AdminDashboard() {
 
       {/* Product Confirmation Modal */}
 
+        </>
+      )}
     </div>
   );
 }

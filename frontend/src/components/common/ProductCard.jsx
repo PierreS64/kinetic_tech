@@ -24,7 +24,7 @@ export default function ProductCard({ product, onViewDetails }) {
   const discount = 0;
 
   return (
-    <div  className="product-card" onClick={() => onViewDetails && onViewDetails(product)} style={{ width: '100%', minWidth: '0', boxSizing: 'border-box', height: '100%', cursor: 'pointer' }}>
+    <div  className="product-card" onClick={() => onViewDetails && onViewDetails(product)} style={{ width: '100%', minWidth: '0', boxSizing: 'border-box', height: 'auto', cursor: 'pointer' }}>
       {/* Stock Status Badge */}
       <div style={{
         position: 'absolute',
@@ -151,7 +151,7 @@ export default function ProductCard({ product, onViewDetails }) {
         </div>
 
         {/* Price Row */}
-        <div style={{ marginTop: 'auto', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+        <div style={{ marginTop: '4px', paddingTop: '4px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
           <span style={{ fontSize: '18px', fontWeight: '800', color: 'var(--color-secondary)' }}>
             {formatVND(price)}
           </span>
@@ -162,7 +162,7 @@ export default function ProductCard({ product, onViewDetails }) {
       <div style={{
         display: 'flex',
         gap: '8px',
-        marginTop: '12px',
+        marginTop: '8px',
         width: '100%'
       }}>
         <button

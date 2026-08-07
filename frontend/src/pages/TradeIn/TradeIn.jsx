@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../../utils/api';
+import { useAppContext } from '../../contexts/AppContext';
 import { 
   Cpu,
   Laptop, 
@@ -34,6 +35,7 @@ const COMPONENT_TYPES = [
 ];
 
 export default function TradeIn({ currentUser, onAddTradeIn }) {
+  const { storeProducts } = useAppContext();
   const [deviceType, setDeviceType] = useState('vga');
   const [modelName, setModelName] = useState('');
   const [usageTime, setUsageTime] = useState('');
@@ -359,15 +361,17 @@ export default function TradeIn({ currentUser, onAddTradeIn }) {
                 name="targetDevice"
                 value={formData.targetDevice}
                 onChange={handleInputChange}
-                
                 style={{ fontSize: '13px', background: 'var(--color-surface-container-lowest)' }}
                className="form-input">
-                <option value="Laptop ASUS ROG Strix G16 (2024)">Laptop ASUS ROG Strix G16 (2024) [RTX 4060]</option>
-                <option value="MacBook Pro 14 inch M3 (2024)">MacBook Pro 14 inch M3 (2024) [M3 Chip]</option>
-                <option value="iPhone 15 Pro Max 256GB">iPhone 15 Pro Max 256GB [Titanium]</option>
-                <option value="Samsung Galaxy S24 Ultra 256GB">Samsung Galaxy S24 Ultra 256GB [S-Pen]</option>
-                <option value="Card Màn Hình ASUS ROG Strix RTX 4080 Super OC 16GB">Card ASUS ROG Strix RTX 4080 Super [16GB]</option>
-                <option value="Cấu hình PC Custom (Theo yêu cầu)">Lên đời PC Custom / Tự ráp linh kiện mới</option>
+                <option value="">-- Chọn sản phẩm muốn nâng cấp lên --</option>
+                {/* Sản phẩm thực từ cửa hàng */}
+                {storeProducts && storeProducts.slice(0, 30).map(p => (
+                  <option key={p.id} value={p.name}>
+                    {p.name} {p.price ? `(${p.price.toLocaleString('vi-VN')}₫)` : ''}
+                  </option>
+                ))}
+                {/* Option bổ sung */}
+                <option value="Cấu hình PC Custom (Theo yêu cầu)">🔧 Lên đời PC Custom / Tự ráp linh kiện mới</option>
               </select>
             </div>
 

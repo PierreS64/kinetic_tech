@@ -33,10 +33,22 @@ export default function SupportTicket({ theme, currentUser }) {
   });
   const [replyText, setReplyText] = useState('');
   const [simulatingReply, setSimulatingReply] = useState(false);
+  const [userDevices, setUserDevices] = useState([]);
+  const [selectedDeviceId, setSelectedDeviceId] = useState('');
 
   useEffect(() => {
     fetchTickets();
+    fetchUserDevices();
   }, []);
+
+  const fetchUserDevices = async () => {
+    try {
+      const res = await api.get('/user-devices').catch(() => ({ data: [] }));
+      setUserDevices(res.data || []);
+    } catch (err) {
+      console.error('Failed to fetch user devices', err);
+    }
+  };
 
   const fetchTickets = async () => {
     try {
@@ -117,6 +129,9 @@ export default function SupportTicket({ theme, currentUser }) {
       const formData = new FormData();
       formData.append('description', `[${newTicket.subject}] - [${newTicket.category}] - ${newTicket.description}`);
       formData.append('severity', newTicket.urgency === 'Rất gấp' ? 'HIGH' : (newTicket.urgency === 'Gấp' ? 'MEDIUM' : 'LOW'));
+      if (selectedDeviceId) {
+        formData.append('userDeviceId', selectedDeviceId);
+      }
       
       await api.post('/tickets', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -128,6 +143,7 @@ export default function SupportTicket({ theme, currentUser }) {
         urgency: 'Thường',
         description: ''
       });
+      setSelectedDeviceId('');
       setIsCreating(false);
       fetchTickets();
       alert('Tạo ticket thành công!');
@@ -335,6 +351,23 @@ export default function SupportTicket({ theme, currentUser }) {
                   <option value="Rất gấp">Rất gấp (Ưu tiên xử lý lập tức)</option>
                 </select>
               </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '12px', fontWeight: '600', color: isLight ? 'var(--color-on-surface)' : 'white' }}>Thiết bị liên quan (nếu có)</label>
+              <select
+                value={selectedDeviceId}
+                onChange={(e) => setSelectedDeviceId(e.target.value)}
+                className="form-input"
+                style={{ fontSize: '13px', background: 'var(--color-surface-container-lowest)' }}
+              >
+                <option value="">-- Không liên quan đến thiết bị cụ thể --</option>
+                {userDevices.map(device => (
+                  <option key={device.id} value={device.id}>
+                    {device.Product?.name || 'Thiết bị'} (SN: {device.serialNumber})
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>

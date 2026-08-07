@@ -206,6 +206,11 @@ export default function Checkout({ onClearCart, setActiveView, onUpdateQuantity,
       return;
     }
 
+    if (!/^[0-9]{10,11}$/.test(formData.phone.replace(/\s/g, ''))) {
+      alert('Số điện thoại giao hàng không hợp lệ! Vui lòng nhập 10-11 chữ số (ví dụ: 0912345678).');
+      return;
+    }
+
     if (paymentMethod === 'card' && (!cardData.number || !cardData.cvv)) {
       alert('Vui lòng điền đầy đủ thông tin thẻ tín dụng.');
       return;

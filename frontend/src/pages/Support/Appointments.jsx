@@ -9,14 +9,28 @@ export default function Appointments() {
   const { theme } = useAppContext();
   const [appointments, setAppointments] = useState([]);
   const [technicians, setTechnicians] = useState([]);
+  const [techLoading, setTechLoading] = useState(true);
   
   const todayStr = new Date().toISOString().split('T')[0];
+
+  const SERVICE_TYPES = [
+    { value: 'Vệ sinh máy tính', label: '🧹 Vệ sinh máy tính' },
+    { value: 'Thay keo tản nhiệt', label: '🌡️ Thay keo tản nhiệt' },
+    { value: 'Sửa phần cứng', label: '🔧 Sửa phần cứng' },
+    { value: 'Cài đặt phần mềm', label: '💻 Cài đặt phần mềm' },
+    { value: 'Nâng cấp linh kiện', label: '⚙️ Nâng cấp linh kiện' },
+    { value: 'Kiểm tra bảo hành', label: '🛡️ Kiểm tra bảo hành' },
+    { value: 'Tư vấn kỹ thuật', label: '💬 Tư vấn kỹ thuật' },
+    { value: 'Khác', label: '📋 Khác' },
+  ];
 
   const [formData, setFormData] = useState({
     technicianId: '',
     date: todayStr,
     timeSlot: '09:00 - 10:00',
-    type: 'IN_STORE'
+    type: 'IN_STORE',
+    serviceType: 'Vệ sinh máy tính',
+    notes: ''
   });
   
   const [loading, setLoading] = useState(false);
@@ -44,14 +58,18 @@ export default function Appointments() {
   };
 
   const fetchTechnicians = async () => {
+    setTechLoading(true);
     try {
       const res = await api.get('/users/technicians');
-      setTechnicians(res.data);
-      if (res.data.length > 0) {
+      setTechnicians(res.data || []);
+      if (res.data && res.data.length > 0) {
         setFormData(prev => ({ ...prev, technicianId: res.data[0].id }));
       }
     } catch (err) {
       console.error('Lỗi khi tải danh sách kỹ thuật viên:', err);
+      setTechnicians([]);
+    } finally {
+      setTechLoading(false);
     }
   };
 
@@ -77,16 +95,25 @@ export default function Appointments() {
     setSuccess(false);
     
     try {
-      await api.post('/appointments', formData);
+      const payload = {
+        technicianId: formData.technicianId || undefined,
+        date: formData.date,
+        timeSlot: `[${formData.serviceType}] ${formData.timeSlot}${formData.notes ? ' - ' + formData.notes : ''}`,
+        type: formData.type
+      };
+      await api.post('/appointments', payload);
       setSuccess(true);
       fetchAppointments();
       setFormData(prev => ({
         ...prev,
         date: todayStr,
-        timeSlot: '09:00 - 10:00'
+        timeSlot: '09:00 - 10:00',
+        serviceType: 'Vệ sinh máy tính',
+        notes: ''
       }));
+      setTimeout(() => setSuccess(false), 4000);
     } catch (err) {
-      setError('Có lỗi xảy ra khi đặt lịch. Vui lòng thử lại.');
+      setError(err.response?.data?.message || 'Có lỗi xảy ra khi đặt lịch. Vui lòng thử lại.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -96,7 +123,7 @@ export default function Appointments() {
   const isLight = theme === 'light';
 
   return (
-    <div className="animate-fade-in-up">
+    <div className="animate-fade-in-up" style={{ padding: '0 16px' }}>
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Montserrat' }}>ĐẶT LỊCH SỬA CHỮA</h2>
         <p style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>
@@ -108,7 +135,7 @@ export default function Appointments() {
         
         {/* Form Đặt Lịch */}
         <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--rounded-lg)' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '20px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '20px', borderBottom: isLight ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
             Tạo Lịch Hẹn Mới
           </h3>
 
@@ -135,40 +162,64 @@ export default function Appointments() {
                 <button
                   type="button"
                   className={`btn ${formData.type === 'IN_STORE' ? 'btn-primary' : 'btn-outline'}`}
-                  style={{ flex: 1, padding: '10px' }}
-                  onClick={() => setFormData({ ...formData, type: 'IN_STORE' })}
+                  style={{ flex: 1, padding: '10px', fontSize: '13px' }}
+                  onClick={() => setFormData(prev => ({ ...prev, type: 'IN_STORE' }))}
                 >
                   <MapPin size={16} style={{ marginRight: '6px' }} /> Tại cửa hàng
                 </button>
                 <button
                   type="button"
                   className={`btn ${formData.type === 'AT_HOME' ? 'btn-primary' : 'btn-outline'}`}
-                  style={{ flex: 1, padding: '10px' }}
-                  onClick={() => setFormData({ ...formData, type: 'AT_HOME' })}
+                  style={{ flex: 1, padding: '10px', fontSize: '13px' }}
+                  onClick={() => setFormData(prev => ({ ...prev, type: 'AT_HOME' }))}
                 >
                   <User size={16} style={{ marginRight: '6px' }} /> Tại nhà
                 </button>
               </div>
             </div>
 
+            {/* Loại dịch vụ */}
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', marginBottom: '8px', color: 'var(--color-on-surface-variant)' }}>
+                Dịch vụ cần thực hiện *
+              </label>
+              <select 
+                className="form-input" 
+                name="serviceType" 
+                value={formData.serviceType} 
+                onChange={handleChange}
+                required
+                style={{ fontSize: '13px' }}
+              >
+                {SERVICE_TYPES.map(s => (
+                  <option key={s.value} value={s.value}>{s.label}</option>
+                ))}
+              </select>
+            </div>
+
             {/* Kỹ thuật viên */}
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', marginBottom: '8px', color: 'var(--color-on-surface-variant)' }}>
-                Chọn Kỹ thuật viên
+                Kỹ thuật viên phụ trách
               </label>
               <select 
                 className="form-input" 
                 name="technicianId" 
                 value={formData.technicianId} 
                 onChange={handleChange}
-                required
+                style={{ fontSize: '13px' }}
               >
-                {technicians.length === 0 ? (
+                {techLoading ? (
                   <option value="">Đang tải danh sách...</option>
+                ) : technicians.length === 0 ? (
+                  <option value="">Hệ thống tự phân công kỹ thuật viên</option>
                 ) : (
-                  technicians.map(tech => (
-                    <option key={tech.id} value={tech.id}>{tech.fullName}</option>
-                  ))
+                  <>
+                    <option value="">-- Hệ thống tự phân công --</option>
+                    {technicians.map(tech => (
+                      <option key={tech.id} value={tech.id}>{tech.fullName}</option>
+                    ))}
+                  </>
                 )}
               </select>
             </div>
@@ -176,7 +227,7 @@ export default function Appointments() {
             {/* Ngày hẹn */}
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', marginBottom: '8px', color: 'var(--color-on-surface-variant)' }}>
-                Ngày hẹn
+                Ngày hẹn *
               </label>
               <input 
                 type="date" 
@@ -192,7 +243,7 @@ export default function Appointments() {
             {/* Khung giờ */}
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', marginBottom: '8px', color: 'var(--color-on-surface-variant)' }}>
-                Khung giờ
+                Khung giờ *
               </label>
               <select 
                 className="form-input" 
@@ -200,11 +251,28 @@ export default function Appointments() {
                 value={formData.timeSlot} 
                 onChange={handleChange}
                 required
+                style={{ fontSize: '13px' }}
               >
                 {timeSlots.map(slot => (
                   <option key={slot} value={slot}>{slot}</option>
                 ))}
               </select>
+            </div>
+
+            {/* Ghi chú */}
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', marginBottom: '8px', color: 'var(--color-on-surface-variant)' }}>
+                Ghi chú thêm (Không bắt buộc)
+              </label>
+              <textarea 
+                className="form-input" 
+                name="notes" 
+                value={formData.notes} 
+                onChange={handleChange}
+                rows={3}
+                placeholder="Mô tả thêm tình trạng thiết bị hoặc yêu cầu đặc biệt..."
+                style={{ resize: 'vertical', fontFamily: 'inherit', fontSize: '13px' }}
+              />
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ marginTop: '10px', padding: '12px' }} disabled={loading}>
@@ -215,7 +283,7 @@ export default function Appointments() {
 
         {/* Danh sách lịch hẹn */}
         <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--rounded-lg)' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '20px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '20px', borderBottom: isLight ? '1px solid rgba(0,0,0,0.08)' : '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '10px' }}>
             Lịch Hẹn Của Bạn
           </h3>
 
@@ -231,49 +299,60 @@ export default function Appointments() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {appointments.map(app => (
-                <div key={app.id} style={{ 
-                  background: isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)', 
-                  border: isLight ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.08)', 
-                  padding: '16px', 
-                  borderRadius: 'var(--rounded-md)' 
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 'bold' }}>
-                      {app.type === 'IN_STORE' ? 'Mang máy tới cửa hàng' : 'Sửa chữa tại nhà'}
-                    </span>
-                    <span className="status-badge" style={{
-                      fontSize: '10px',
-                      background: app.status === 'PENDING' ? 'rgba(253,139,0,0.15)' : 
-                                  app.status === 'CONFIRMED' ? 'rgba(0,123,255,0.15)' : 
-                                  app.status === 'COMPLETED' ? 'rgba(76,175,80,0.15)' : 'rgba(255,76,76,0.15)',
-                      color: app.status === 'PENDING' ? '#ffb77d' : 
-                             app.status === 'CONFIRMED' ? '#adc7ff' : 
-                             app.status === 'COMPLETED' ? '#81c784' : '#ffb4ab',
-                      padding: '2px 8px'
-                    }}>
-                      {app.status === 'PENDING' ? 'Chờ xác nhận' : 
-                       app.status === 'CONFIRMED' ? 'Đã xác nhận' : 
-                       app.status === 'COMPLETED' ? 'Hoàn thành' : 'Đã hủy'}
-                    </span>
+              {appointments.map(app => {
+                // Parse service type from timeSlot field if encoded as [ServiceType] timeslot
+                let displayTimeSlot = app.timeSlot || '';
+                let displayService = '';
+                const serviceMatch = displayTimeSlot.match(/^\[(.*?)\]\s*(.*)/);
+                if (serviceMatch) {
+                  displayService = serviceMatch[1];
+                  displayTimeSlot = serviceMatch[2];
+                }
+                return (
+                  <div key={app.id} style={{ 
+                    background: isLight ? 'rgba(0,0,0,0.02)' : 'rgba(255,255,255,0.03)', 
+                    border: isLight ? '1px solid rgba(0,0,0,0.05)' : '1px solid rgba(255,255,255,0.08)', 
+                    padding: '16px', 
+                    borderRadius: 'var(--rounded-md)' 
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 'bold', color: isLight ? '#0f172a' : 'white' }}>
+                        {app.type === 'IN_STORE' ? '🏪 Tại cửa hàng' : '🏠 Tại nhà'}
+                        {displayService && <span style={{ fontSize: '12px', marginLeft: '8px', color: 'var(--color-primary-dim)', fontWeight: 'normal' }}>— {displayService}</span>}
+                      </span>
+                      <span className="status-badge" style={{
+                        fontSize: '10px',
+                        background: app.status === 'PENDING' ? 'rgba(253,139,0,0.15)' : 
+                                    app.status === 'CONFIRMED' ? 'rgba(0,123,255,0.15)' : 
+                                    app.status === 'COMPLETED' ? 'rgba(76,175,80,0.15)' : 'rgba(255,76,76,0.15)',
+                        color: app.status === 'PENDING' ? '#ffb77d' : 
+                               app.status === 'CONFIRMED' ? '#adc7ff' : 
+                               app.status === 'COMPLETED' ? '#81c784' : '#ffb4ab',
+                        padding: '2px 8px'
+                      }}>
+                        {app.status === 'PENDING' ? 'Chờ xác nhận' : 
+                         app.status === 'CONFIRMED' ? 'Đã xác nhận' : 
+                         app.status === 'COMPLETED' ? 'Hoàn thành' : 'Đã hủy'}
+                      </span>
+                    </div>
+                    
+                    <div style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Calendar size={14} color="var(--color-primary-dim)" />
+                        Ngày hẹn: {new Date(app.date).toLocaleDateString('vi-VN')}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Clock size={14} color="var(--color-secondary-dim)" />
+                        Khung giờ: {displayTimeSlot}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <User size={14} color="var(--color-outline)" />
+                        KTV: {app.User_Appointment_technicianIdToUser?.fullName || 'Đang phân công'}
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Calendar size={14} color="var(--color-primary-dim)" />
-                      Ngày hẹn: {new Date(app.date).toLocaleDateString('vi-VN')}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Clock size={14} color="var(--color-secondary-dim)" />
-                      Khung giờ: {app.timeSlot}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <User size={14} color="var(--color-outline)" />
-                      KTV: {app.User_Appointment_technicianIdToUser?.fullName || 'N/A'}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
