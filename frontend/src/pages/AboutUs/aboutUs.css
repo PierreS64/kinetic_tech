@@ -128,6 +128,10 @@
           border-bottom: 1px solid var(--color-outline-variant);
         }
 
+        body.light-theme .about-manifesto {
+          background-color: #f1f5f9;
+        }
+
         .manifesto-wrap {
           max-width: 800px;
           margin: 0 auto;
@@ -150,6 +154,7 @@
         .text-gradient {
           background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
           -webkit-background-clip: text;
+          background-clip: text;
           -webkit-text-fill-color: transparent;
           font-weight: 800;
         }
@@ -190,6 +195,12 @@
           justify-content: space-between;
           backdrop-filter: blur(16px);
           z-index: 1;
+        }
+
+        body.light-theme .bento-cell {
+          background: linear-gradient(135deg, rgba(240, 246, 255, 0.9), rgba(226, 238, 255, 0.85));
+          border-color: rgba(0, 123, 255, 0.15);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
         /* Ambient mesh grid background pattern for ALL cards */

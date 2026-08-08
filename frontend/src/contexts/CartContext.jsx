@@ -38,6 +38,8 @@ export function CartProvider({ children, userId = 'guest' }) {
           quantity: item.quantity,
           inStock: item.ProductVariant.stockQuantity > 0
         }));
+        // Sort by cartItemId (creation order) to keep stable order on quantity update
+        mappedCart.sort((a, b) => a.cartItemId.localeCompare(b.cartItemId));
         setCartItems(mappedCart);
       }
     } catch (err) {

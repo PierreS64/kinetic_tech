@@ -565,7 +565,7 @@ export default function Navbar()  {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div  style={{
-          position: 'absolute',
+          position: 'fixed',
           top: '72px',
           left: 0,
           width: '100%',
@@ -574,7 +574,9 @@ export default function Navbar()  {
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
-          zIndex: 89
+          zIndex: 89,
+          maxHeight: 'calc(100vh - 72px)',
+          overflowY: 'auto'
         }} className="glass-panel animate-fade-in-up">
           {/* User Account Info on Mobile */}
           <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '16px', marginBottom: '8px' }}>

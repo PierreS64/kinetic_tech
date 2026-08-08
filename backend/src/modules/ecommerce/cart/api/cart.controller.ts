@@ -14,6 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import {
   AddCartItemDto,
   UpdateCartItemDto,
+  AddBulkCartDto,
 } from '../application/dtos/cart.dto';
 
 @Controller('cart')
@@ -29,6 +30,18 @@ export class CartController {
   @Post('items')
   addItem(@Request() req, @Body() dto: AddCartItemDto) {
     return this.cartService.addItem(req.user.id, dto);
+  }
+
+  @Post('add-bulk')
+  addBulk(@Request() req, @Body() dto: AddBulkCartDto) {
+    const rawIds = dto.items || dto.productVariantIds || [];
+    return this.cartService.addBulk(req.user.id, rawIds);
+  }
+
+  @Post('bulk-add')
+  bulkAdd(@Request() req, @Body() dto: AddBulkCartDto) {
+    const rawIds = dto.items || dto.productVariantIds || [];
+    return this.cartService.addBulk(req.user.id, rawIds);
   }
 
   @Patch('items/:itemId')

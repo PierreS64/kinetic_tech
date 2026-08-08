@@ -6,19 +6,33 @@ import { createPortal } from 'react-dom';
 import { ChevronRight, Settings, Cpu, Layers, HardDrive, Fan, Plus, Info, CheckCircle, Trash2, ArrowRight, Check, AlertTriangle, Wrench, ShoppingCart, RefreshCw, Search, X, Filter } from 'lucide-react';
 
 import { useAppContext } from '../contexts/AppContext';
+import { useCart } from '../contexts/CartContext';
 
-const checkMatch = (str1, str2) => {
-  if (!str1 || !str2) return false;
+const checkMatch = (val1, val2) => {
+  if (!val1 || !val2) return false;
+
   const normalize = (s) => {
     return String(s)
       .toLowerCase()
       .replace(/socket|intel|amd|for/g, '')
       .replace(/[^a-z0-9]/g, '');
   };
-  const s1 = normalize(str1);
-  const s2 = normalize(str2);
-  if (!s1 || !s2) return false;
-  return s1 === s2 || s1.includes(s2) || s2.includes(s1);
+
+  const arr1 = Array.isArray(val1) ? val1 : [val1];
+  const arr2 = Array.isArray(val2) ? val2 : [val2];
+
+  for (const s1 of arr1) {
+    const norm1 = normalize(s1);
+    if (!norm1) continue;
+    for (const s2 of arr2) {
+      const norm2 = normalize(s2);
+      if (!norm2) continue;
+      if (norm1 === norm2 || norm1.includes(norm2) || norm2.includes(norm1)) {
+        return true;
+      }
+    }
+  }
+  return false;
 };
 export default function PCBuilder({ onAddPartsToCart }) {
   const { storeProducts = [] } = useAppContext();
@@ -132,9 +146,22 @@ export default function PCBuilder({ onAddPartsToCart }) {
           enriched.ramType = enriched.ram;
         } else if (enriched.type && String(enriched.type).toLowerCase().includes('ddr')) {
           enriched.ramType = enriched.type;
+        } else if (enriched.name) {
+          // Extract DDR4/DDR5 from name
+          const ramMatch = enriched.name.match(/DDR[45]/i);
+          if (ramMatch) enriched.ramType = ramMatch[0].toUpperCase();
         }
       }
-      
+
+      // Extract socket from name if missing
+      if (!enriched.socket && enriched.name) {
+        const nameLower = enriched.name.toLowerCase();
+        if (nameLower.includes('am5')) enriched.socket = ['AM5'];
+        else if (nameLower.includes('am4')) enriched.socket = ['AM4'];
+        else if (nameLower.includes('lga1700') || nameLower.includes('lga 1700') || nameLower.includes('1700')) enriched.socket = ['LGA 1700'];
+        else if (nameLower.includes('lga1200') || nameLower.includes('lga 1200') || nameLower.includes('1200')) enriched.socket = ['LGA 1200'];
+      }
+
       return enriched;
     };
 
@@ -310,10 +337,16 @@ export default function PCBuilder({ onAddPartsToCart }) {
     });
   };
 
-  const handleAddAllToCart = () => {
+  const { handleAddPartsToCart: cartContextAddParts } = useCart();
+
+  const handleAddAllToCart = async () => {
     const activeParts = Object.values(selectedParts).filter(p => p !== null);
     if (activeParts.length === 0) return;
-    onAddPartsToCart(activeParts);
+    if (onAddPartsToCart) {
+      onAddPartsToCart(activeParts);
+    } else if (cartContextAddParts) {
+      await cartContextAddParts(activeParts);
+    }
   };
 
   const formatVND = (value) => {

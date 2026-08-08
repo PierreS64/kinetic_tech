@@ -24,6 +24,7 @@ import { KnowledgeBaseModule } from './modules/support/knowledge-base/knowledge-
 import { BannersModule } from './modules/core/banners/banners.module';
 import { WarrantiesModule } from './modules/support/warranties/warranties.module';
 import { BuilderModule } from './modules/ecommerce/builder/builder.module';
+import { AiAgentModule } from './modules/ai-agent/ai-agent.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { BuilderModule } from './modules/ecommerce/builder/builder.module';
     BannersModule,
     WarrantiesModule,
     BuilderModule,
+    AiAgentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
