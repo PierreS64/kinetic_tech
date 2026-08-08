@@ -197,16 +197,16 @@ export default function OrderTracking({ orders = [] }) {
       {/* Result Display */}
       {!isLoading && searched && (
         trackedOrder ? (
-          <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '30px', border: '1px solid rgba(0, 123, 255, 0.25)' }} className="glass-panel-glow-blue animate-fade-in-up">
+          <div  style={{ borderRadius: 'var(--rounded-lg)', padding: '30px', border: '1px solid var(--color-outline-variant)' }} className="glass-panel animate-fade-in-up">
             {/* Header info */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '16px', marginBottom: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', borderBottom: '1px solid var(--color-outline-variant)', paddingBottom: '16px', marginBottom: '24px' }}>
               <div>
                 <span style={{ fontSize: '12px', color: 'var(--color-outline)' }}>Mã Đơn Hàng</span>
-                <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'white', marginTop: '2px' }}>{trackedOrder.id}</h3>
+                <h3 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--color-on-surface)', marginTop: '2px' }}>{trackedOrder.id}</h3>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <span style={{ fontSize: '12px', color: 'var(--color-outline)' }}>Ngày đặt hàng</span>
-                <span style={{ display: 'block', fontSize: '14px', color: 'white', fontWeight: '600', marginTop: '2px' }}>{trackedOrder.date}</span>
+                <span style={{ display: 'block', fontSize: '14px', color: 'var(--color-on-surface)', fontWeight: '600', marginTop: '2px' }}>{trackedOrder.date}</span>
               </div>
             </div>
 
@@ -239,22 +239,22 @@ export default function OrderTracking({ orders = [] }) {
                   <div style={{
                     position: 'absolute',
                     top: '20px',
-                    left: '5%',
-                    right: '5%',
+                    left: '12.5%',
+                    right: '12.5%',
                     height: '4px',
-                    background: 'rgba(255,255,255,0.08)',
+                    background: 'var(--color-surface-container-highest)',
                     zIndex: 0
                   }} />
                   {/* Colored progress bar line */}
                   <div style={{
                     position: 'absolute',
                     top: '20px',
-                    left: '5%',
+                    left: '12.5%',
                     width: 
                       trackedOrder.status === 'pending' ? '0%' : 
-                      trackedOrder.status === 'processing' ? '33%' : 
-                      trackedOrder.status === 'shipped' ? '66%' : 
-                      (trackedOrder.status === 'completed' || trackedOrder.status === 'delivered') ? '100%' : '0%',
+                      trackedOrder.status === 'processing' ? '33.33%' : 
+                      trackedOrder.status === 'shipped' ? '66.66%' : 
+                      (trackedOrder.status === 'completed' || trackedOrder.status === 'delivered') ? '75%' : '0%',
                     height: '4px',
                     background: 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))',
                     boxShadow: '0 0 10px rgba(0, 123, 255, 0.5)',
@@ -291,7 +291,7 @@ export default function OrderTracking({ orders = [] }) {
                     }
 
                     return (
-                      <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, width: '22%', position: 'relative' }}>
+                      <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 1, width: '25%', position: 'relative' }}>
                         <div style={{
                           width: '44px',
                           height: '44px',
@@ -322,15 +322,15 @@ export default function OrderTracking({ orders = [] }) {
             </div>
 
             {/* Order info details summary */}
-            <div style={{ display: 'grid', gap: '24px', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid rgba(255, 255, 255, 0.04)', padding: '20px', borderRadius: 'var(--rounded)', marginBottom: '24px' }}   className="grid-responsive-overview overview-subgrid">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', background: 'var(--color-surface-container-lowest)', border: '1px solid var(--color-outline-variant)', padding: '20px', borderRadius: 'var(--rounded)', marginBottom: '24px', textAlign: 'left' }}>
               <div>
                 <h4 style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--color-primary-dim)', fontWeight: '700', marginBottom: '12px', letterSpacing: '0.5px' }}>
                   Thông tin người nhận
                 </h4>
                 <div style={{ fontSize: '13px', lineHeight: '1.7', color: 'var(--color-on-surface-variant)' }}>
-                  <p><strong style={{ color: 'white' }}>Khách hàng:</strong> {trackedOrder.customerName}</p>
-                  <p><strong style={{ color: 'white' }}>Số điện thoại:</strong> {trackedOrder.phone}</p>
-                  <p><strong style={{ color: 'white' }}>Địa chỉ nhận hàng:</strong> {trackedOrder.address || 'Hà Nội'}</p>
+                  <p><strong style={{ color: 'var(--color-on-surface)' }}>Khách hàng:</strong> {trackedOrder.customerName}</p>
+                  <p><strong style={{ color: 'var(--color-on-surface)' }}>Số điện thoại:</strong> {trackedOrder.phone}</p>
+                  <p><strong style={{ color: 'var(--color-on-surface)' }}>Địa chỉ nhận hàng:</strong> {trackedOrder.address || 'Hà Nội'}</p>
                 </div>
               </div>
               <div>
@@ -338,9 +338,9 @@ export default function OrderTracking({ orders = [] }) {
                   Thanh toán & Vận chuyển
                 </h4>
                 <div style={{ fontSize: '13px', lineHeight: '1.7', color: 'var(--color-on-surface-variant)' }}>
-                  <p><strong style={{ color: 'white' }}>Hình thức thanh toán:</strong> {trackedOrder.paymentMethod}</p>
-                  <p><strong style={{ color: 'white' }}>Trạng thái thanh toán:</strong> {trackedOrder.status === 'completed' ? 'Đã hoàn thành' : 'Chờ xử lý (COD)'}</p>
-                  <p><strong style={{ color: 'white' }}>Đơn vị vận chuyển:</strong> Kinetic Express (Giao hàng 2h)</p>
+                  <p><strong style={{ color: 'var(--color-on-surface)' }}>Hình thức thanh toán:</strong> {trackedOrder.paymentMethod}</p>
+                  <p><strong style={{ color: 'var(--color-on-surface)' }}>Trạng thái thanh toán:</strong> {trackedOrder.status === 'completed' ? 'Đã hoàn thành' : 'Chờ xử lý (COD)'}</p>
+                  <p><strong style={{ color: 'var(--color-on-surface)' }}>Đơn vị vận chuyển:</strong> Kinetic Express (Giao hàng 2h)</p>
                 </div>
               </div>
             </div>
@@ -357,12 +357,12 @@ export default function OrderTracking({ orders = [] }) {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     padding: '10px 14px',
-                    background: 'rgba(255,255,255,0.01)',
-                    border: '1px solid rgba(255,255,255,0.03)',
+                    background: 'var(--color-surface-container-lowest)',
+                    border: '1px solid var(--color-outline-variant)',
                     borderRadius: 'var(--rounded-sm)'
                   }}>
                     <div>
-                      <span style={{ fontSize: '13px', fontWeight: '600', color: 'white' }}>{item.name}</span>
+                      <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-on-surface)' }}>{item.name}</span>
                       <span style={{ display: 'block', fontSize: '11px', color: 'var(--color-outline)', marginTop: '2px' }}>
                         Số lượng: {item.quantity} x {formatVND(item.price)}
                       </span>
@@ -376,7 +376,7 @@ export default function OrderTracking({ orders = [] }) {
             </div>
 
             {/* Total price */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '20px', marginTop: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--color-outline-variant)', paddingTop: '20px', marginTop: '24px' }}>
               <span style={{ fontSize: '14px', color: 'var(--color-outline)' }}>Tổng chi phí đơn hàng:</span>
               <strong style={{ fontSize: '22px', color: 'var(--color-secondary-dim)', fontWeight: '800' }}>
                 {formatVND(trackedOrder.total)}

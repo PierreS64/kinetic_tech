@@ -187,13 +187,15 @@ export default function Navbar()  {
         </div>
 
         {/* Desktop Navigation with Dropdowns */}
-        <nav style={{ display: 'none', position: 'relative' }}  className="desktop-nav">
+        <nav style={{ display: 'flex', flex: 1, justifyContent: 'center', position: 'relative' }}  className="desktop-nav">
           <ul style={{
             display: 'flex',
             listStyle: 'none',
-            gap: '12px',
+            gap: 'clamp(16px, 4vw, 40px)',
             position: 'relative',
-            alignItems: 'center'
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%'
           }}>
             <span
               aria-hidden="true"

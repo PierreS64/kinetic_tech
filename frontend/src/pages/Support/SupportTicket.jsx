@@ -33,8 +33,7 @@ export default function SupportTicket({ theme, currentUser }) {
   });
   const [replyText, setReplyText] = useState('');
   const [simulatingReply, setSimulatingReply] = useState(false);
-  const [userDevices, setUserDevices] = useState([]);
-  const [selectedDeviceId, setSelectedDeviceId] = useState('');
+  const [relatedDevice, setRelatedDevice] = useState('');
 
   useEffect(() => {
     fetchTickets();
@@ -129,8 +128,8 @@ export default function SupportTicket({ theme, currentUser }) {
       const formData = new FormData();
       formData.append('description', `[${newTicket.subject}] - [${newTicket.category}] - ${newTicket.description}`);
       formData.append('severity', newTicket.urgency === 'Rất gấp' ? 'HIGH' : (newTicket.urgency === 'Gấp' ? 'MEDIUM' : 'LOW'));
-      if (selectedDeviceId) {
-        formData.append('userDeviceId', selectedDeviceId);
+      if (relatedDevice) {
+        formData.append('relatedDevice', relatedDevice);
       }
       
       await api.post('/tickets', formData, {
@@ -143,7 +142,7 @@ export default function SupportTicket({ theme, currentUser }) {
         urgency: 'Thường',
         description: ''
       });
-      setSelectedDeviceId('');
+      setRelatedDevice('');
       setIsCreating(false);
       fetchTickets();
       alert('Tạo ticket thành công!');
@@ -355,19 +354,14 @@ export default function SupportTicket({ theme, currentUser }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label style={{ fontSize: '12px', fontWeight: '600', color: isLight ? 'var(--color-on-surface)' : 'white' }}>Thiết bị liên quan (nếu có)</label>
-              <select
-                value={selectedDeviceId}
-                onChange={(e) => setSelectedDeviceId(e.target.value)}
+              <input
+                type="text"
+                placeholder="Ví dụ: Bàn phím cơ, Chuột Logitech G Pro..."
+                value={relatedDevice}
+                onChange={(e) => setRelatedDevice(e.target.value)}
                 className="form-input"
                 style={{ fontSize: '13px', background: 'var(--color-surface-container-lowest)' }}
-              >
-                <option value="">-- Không liên quan đến thiết bị cụ thể --</option>
-                {userDevices.map(device => (
-                  <option key={device.id} value={device.id}>
-                    {device.Product?.name || 'Thiết bị'} (SN: {device.serialNumber})
-                  </option>
-                ))}
-              </select>
+              />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
